@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Warranty Status – NUTD Automotive</title>
+    <link rel="icon" type="image/svg+xml" href="img/favicon.svg" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        .ws-page {
+            padding-top: var(--nav-h);
+            min-height: 100vh;
+        }
+
+        .ws-hero {
+            background: var(--dark);
+            border-bottom: 1px solid rgba(255, 255, 255, .07);
+            padding: 40px 0;
+        }
+
+        .ws-hero h1 {
+            color: var(--white);
+            font-size: 2rem;
+            margin-bottom: 6px;
+        }
+
+        /* Search card */
+        .search-card {
+            background: var(--dark-2);
+            border: 1px solid rgba(255, 255, 255, .08);
+            border-radius: var(--r-xl);
+            padding: 32px;
+            max-width: 560px;
+            margin: 40px auto;
+        }
+
+        .search-card h3 {
+            color: var(--white);
+            margin-bottom: 6px;
+            font-size: 1.1rem;
+        }
+
+        .search-card .sub {
+            color: var(--gray-500);
+            font-size: .85rem;
+            margin-bottom: 24px;
+        }
+
+        .tab-switch {
+            display: flex;
+            gap: 0;
+            background: var(--dark-3);
+            border-radius: var(--r-md);
+            padding: 4px;
+            margin-bottom: 22px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            text-align: center;
+            padding: 8px;
+            border-radius: calc(var(--r-md) - 2px);
+            font-size: .8rem;
+            font-weight: 600;
+            color: var(--gray-500);
+            cursor: pointer;
+            transition: all .2s;
+        }
+
+        .tab-btn.active {
+            background: var(--red);
+            color: #fff;
+        }
+
+        .lookup-tab {
+            display: none;
+        }
+
+        .lookup-tab.active {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .ws-input {
+            background: var(--dark-3);
+            border: 1px solid rgba(255, 255, 255, .1);
+            border-radius: var(--r-md);
+            padding: 11px 14px;
+            color: var(--white);
+            font-size: .9rem;
+            font-family: var(--font-en);
+            outline: none;
+            width: 100%;
+            transition: border-color .18s;
+        }
+
+        .ws-input:focus {
+            border-color: var(--red);
+        }
+
+        .ws-input.err {
+            border-color: #ef4444;
+        }
+
+        .ws-label {
+            font-size: .75rem;
+            font-weight: 700;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        /* Result */
+        .ws-result {
+            max-width: 560px;
+            margin: 0 auto 40px;
+            display: none;
+        }
+
+        .ws-result.show {
+            display: block;
+        }
+
+        .result-card {
+            background: var(--dark-2);
+            border: 1px solid rgba(255, 255, 255, .08);
+            border-radius: var(--r-xl);
+            overflow: hidden;
+        }
+
+        .result-header {
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .result-header.status-active {
+            background: rgba(34, 197, 94, .08);
+            border-bottom: 1px solid rgba(34, 197, 94, .15);
+        }
+
+        .result-header.status-expired {
+            background: rgba(239, 68, 68, .08);
+            border-bottom: 1px solid rgba(239, 68, 68, .15);
+        }
+
+        .result-header.status-low {
+            background: rgba(245, 158, 11, .08);
+            border-bottom: 1px solid rgba(245, 158, 11, .15);
+        }
+
+        .status-icon {
+            font-size: 2rem;
+        }
+
+        .status-text h4 {
+            color: var(--white);
+            margin: 0 0 3px;
+            font-size: 1rem;
+        }
+
+        .status-text .badge {
+            padding: 3px 10px;
+            border-radius: var(--r-full);
+            font-size: .72rem;
+            font-weight: 700;
+        }
+
+        .badge-active {
+            background: rgba(34, 197, 94, .15);
+            color: #22c55e;
+        }
+
+        .badge-expired {
+            background: rgba(239, 68, 68, .15);
+            color: #ef4444;
+        }
+
+        .badge-expiring {
+            background: rgba(245, 158, 11, .15);
+            color: #f59e0b;
+        }
+
+        .result-body {
+            padding: 16px 24px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 9px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, .05);
+            font-size: .84rem;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-row .dl {
+            color: var(--gray-500);
+        }
+
+        .detail-row .dv {
+            color: var(--white);
+            font-weight: 600;
+            font-family: monospace;
+        }
+
+        .detail-row .dv.normal {
+            font-family: inherit;
+        }
+
+        .result-footer {
+            padding: 16px 24px;
+            border-top: 1px solid rgba(255, 255, 255, .06);
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Not found */
+        .not-found {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .not-found .ico {
+            font-size: 2.5rem;
+            opacity: .35;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        /* Recent table */
+        .recent-wrap {
+            max-width: 800px;
+            margin: 0 auto 60px;
+        }
+
+        .recent-wrap h3 {
+            color: var(--white);
+            margin-bottom: 16px;
+            font-size: 1rem;
+        }
+
+        .warranty-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .83rem;
+        }
+
+        .warranty-table th {
+            color: var(--gray-500);
+            text-transform: uppercase;
+            font-size: .7rem;
+            letter-spacing: .04em;
+            padding: 8px 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, .07);
+            text-align: left;
+        }
+
+        .warranty-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, .05);
+            color: var(--gray-300);
+            vertical-align: middle;
+        }
+
+        .warranty-table td:first-child {
+            font-family: monospace;
+            color: var(--red);
+            font-weight: 700;
+        }
+
+        body.lang-ar .warranty-table th,
+        body.lang-ar .warranty-table td {
+            text-align: right;
+        }
+
+        body.lang-ar .detail-row {
+            flex-direction: row-reverse;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar scrolled" id="navbar">
+        <div class="container">
+            <a href="index.html" class="nav-logo">
+                <img src="img/logo.svg" alt="NUTD" style="height:36px" />
+                <div class="nav-logo-text"><span class="name-en">NUTD</span><span class="name-ar">نماء المتحدة</span>
+                </div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-link" data-en="Home" data-ar="الرئيسية">Home</a></li>
+                <li><a href="catalog.html" class="nav-link" data-en="Products" data-ar="المنتجات">Products</a></li>
+                <li><a href="warranty.html" class="nav-link" data-en="Activate" data-ar="تفعيل الضمان">Activate</a></li>
+                <li><a href="warranty-status.html" class="nav-link active" data-en="Check Status"
+                        data-ar="حالة الضمان">Check Status</a></li>
+            </ul>
+            <div class="nav-actions">
+                <div class="lang-toggle">
+                    <button onclick="setLang('en')" class="active" id="btn-en">EN</button>
+                    <button onclick="setLang('ar')" id="btn-ar">AR</button>
+                </div>
+                <a href="dealer/login.html" class="btn btn-primary btn-sm" data-en="Dealer Portal"
+                    data-ar="بوابة التاجر">Dealer Portal</a>
+            </div>
+            <button class="nav-hamburger"
+                onclick="document.getElementById('mobileMenu').classList.toggle('open')"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="index.html" class="nav-link" data-en="Home" data-ar="الرئيسية">Home</a>
+        <a href="warranty.html" class="nav-link" data-en="Activate Warranty" data-ar="تفعيل الضمان">Activate
+            Warranty</a>
+        <a href="warranty-status.html" class="nav-link" data-en="Check Status" data-ar="حالة الضمان">Check Status</a>
+    </div>
+
+    <div class="ws-page">
+        <div class="ws-hero">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a href="index.html" data-en="Home" data-ar="الرئيسية">Home</a>
+                    <span class="sep"><i class="fa fa-chevron-right" style="font-size:.6rem"></i></span>
+                    <a href="warranty.html" data-en="Warranty" data-ar="الضمان">Warranty</a>
+                    <span class="sep"><i class="fa fa-chevron-right" style="font-size:.6rem"></i></span>
+                    <span class="current" data-en="Check Status" data-ar="حالة الضمان">Check Status</span>
+                </div>
+                <h1 data-en="🔍 Check Warranty Status" data-ar="🔍 تحقق من حالة الضمان">🔍 Check Warranty Status</h1>
+                <p class="text-muted" data-en="Look up your warranty by ID number or mobile + SKU combination."
+                    data-ar="ابحث عن ضمانك برقم الضمان أو الجوال + رقم القطعة.">Look up your warranty by ID number or
+                    mobile + SKU combination.</p>
+            </div>
+        </div>
+
+        <!-- SEARCH CARD -->
+        <div class="search-card">
+            <h3 data-en="Search Your Warranty" data-ar="ابحث عن ضمانك">Search Your Warranty</h3>
+            <p class="sub" data-en="Choose a search method below." data-ar="اختر طريقة البحث أدناه.">Choose a search
+                method below.</p>
+
+            <div class="tab-switch">
+                <div class="tab-btn active" onclick="switchTab('wrn')" id="tab-wrn" data-en="By Warranty ID"
+                    data-ar="برقم الضمان">By Warranty ID</div>
+                <div class="tab-btn" onclick="switchTab('sku')" id="tab-sku" data-en="By SKU + Mobile"
+                    data-ar="بالرقم وJوال">By SKU + Mobile</div>
+            </div>
+
+            <!-- Tab 1: by WRN -->
+            <div class="lookup-tab active" id="tab-content-wrn">
+                <div>
+                    <span class="ws-label" data-en="Warranty Number" data-ar="رقم الضمان">Warranty Number</span>
+                    <input class="ws-input" id="inputWrn" type="text" placeholder="WRN-YYYYMMDD-XXXX"
+                        style="font-family:monospace;text-transform:uppercase"
+                        oninput="this.value=this.value.toUpperCase()" />
+                </div>
+                <button class="btn btn-primary" onclick="searchByWRN()" style="width:100%;justify-content:center">
+                    <i class="fa fa-magnifying-glass"></i> <span data-en="Search" data-ar="بحث">Search</span>
+                </button>
+            </div>
+
+            <!-- Tab 2: by SKU + Phone -->
+            <div class="lookup-tab" id="tab-content-sku">
+                <div>
+                    <span class="ws-label" data-en="SKU / Part Number" data-ar="رقم القطعة">SKU / Part Number</span>
+                    <input class="ws-input" id="inputSku" type="text" placeholder="e.g. BSG-4401"
+                        style="font-family:monospace;text-transform:uppercase"
+                        oninput="this.value=this.value.toUpperCase()" />
+                </div>
+                <div>
+                    <span class="ws-label" data-en="Mobile Number" data-ar="رقم الجوال">Mobile Number</span>
+                    <input class="ws-input" id="inputPhone" type="tel" placeholder="+966 5X XXX XXXX" dir="ltr" />
+                </div>
+                <button class="btn btn-primary" onclick="searchBySkuPhone()" style="width:100%;justify-content:center">
+                    <i class="fa fa-magnifying-glass"></i> <span data-en="Search" data-ar="بحث">Search</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- RESULT AREA -->
+        <div class="ws-result" id="wsResult">
+            <!-- filled by JS -->
+        </div>
+
+        <!-- RECENT REGISTRATIONS (from localStorage) -->
+        <div class="container">
+            <div class="recent-wrap" id="recentWrap" style="display:none">
+                <h3 data-en="Your Registered Warranties" data-ar="ضماناتك المسجلة">Your Registered Warranties</h3>
+                <table class="warranty-table" id="recentTable">
+                    <thead>
+                        <tr>
+                            <th data-en="Warranty #" data-ar="رقم الضمان">Warranty #</th>
+                            <th data-en="Part" data-ar="القطعة">Part</th>
+                            <th data-en="SKU" data-ar="SKU">SKU</th>
+                            <th data-en="Expiry" data-ar="الانتهاء">Expiry</th>
+                            <th data-en="Status" data-ar="الحالة">Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div style="text-align:center;padding:40px 0 80px">
+            <p style="color:var(--gray-500);margin-bottom:16px" data-en="Haven't registered yet?"
+                data-ar="لم تسجّل بعد؟">Haven't registered yet?</p>
+            <a href="warranty.html" class="btn btn-primary"><i class="fa fa-shield-halved"></i> <span
+                    data-en="Activate Warranty Now" data-ar="فعّل الضمان الآن">Activate Warranty Now</span></a>
+        </div>
+    </div>
+
+    <script>
+        let currentLang = localStorage.getItem('lang') || 'en';
+        function setLang(l) {
+            currentLang = l;
+            localStorage.setItem('lang', l);
+            document.documentElement.lang = l;
+            document.documentElement.dir = l === 'ar' ? 'rtl' : 'ltr';
+            document.body.classList.toggle('lang-ar', l === 'ar');
+            document.getElementById('btn-en').classList.toggle('active', l === 'en');
+            document.getElementById('btn-ar').classList.toggle('active', l === 'ar');
+            document.querySelectorAll('[data-en]').forEach(el => {
+                if (el.tagName === 'INPUT') el.placeholder = l === 'ar' ? (el.dataset.ar || '') : (el.dataset.en || '');
+                else el.textContent = l === 'ar' ? (el.dataset.ar || el.textContent) : (el.dataset.en || el.textContent);
+            });
+            loadRecent();
+        }
+
+        function switchTab(t) {
+            ['wrn', 'sku'].forEach(id => {
+                document.getElementById('tab-' + id).classList.toggle('active', id === t);
+                document.getElementById('tab-content-' + id).classList.toggle('active', id === t);
+            });
+            document.getElementById('wsResult').classList.remove('show');
+        }
+
+        const warrantyMonths = { borsching: 24, kdd: 12, vika: 12 };
+        const brandNames = { borsching: 'Borsching (DE)', kdd: 'KDD (CN)', vika: 'Vika (CN)' };
+
+        function getStatus(expiryStr) {
+            const exp = new Date(expiryStr);
+            const now = new Date();
+            const diff = (exp - now) / (1000 * 60 * 60 * 24);
+            if (diff < 0) return 'expired';
+            if (diff < 30) return 'expiring';
+            return 'active';
+        }
+
+        function getStatusLabel(status) {
+            const ar = currentLang === 'ar';
+            if (status === 'active') return ar ? '✅ ساري' : '✅ Active';
+            if (status === 'expiring') return ar ? '⚠️ ينتهي قريباً' : '⚠️ Expiring Soon';
+            return ar ? '❌ منتهي' : '❌ Expired';
+        }
+
+        function getStatusClass(status) {
+            if (status === 'active') return 'badge-active';
+            if (status === 'expiring') return 'badge-expiring';
+            return 'badge-expired';
+        }
+
+        function fmt(d) {
+            return new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
+        }
+
+        function renderResult(record) {
+            const ar = currentLang === 'ar';
+            const status = getStatus(record.expiry);
+            const headerClass = status === 'active' ? 'status-active' : status === 'expiring' ? 'status-low' : 'status-expired';
+            const icon = status === 'active' ? '🛡️' : status === 'expiring' ? '⚠️' : '❌';
+            const daysLeft = Math.max(0, Math.ceil((new Date(record.expiry) - new Date()) / (1000 * 60 * 60 * 24)));
+            const el = document.getElementById('wsResult');
+            el.innerHTML = `
+      <div class="result-card">
+        <div class="result-header ${headerClass}">
+          <div class="status-icon">${icon}</div>
+          <div class="status-text">
+            <h4>${ar ? record.productNameAr : record.productName}</h4>
+            <span class="badge ${getStatusClass(status)}">${getStatusLabel(status)}</span>
+            ${status !== 'expired' ? `<div style="font-size:.72rem;color:var(--gray-500);margin-top:4px">${ar ? daysLeft + ' يوم متبقٍ' : daysLeft + ' days remaining'}</div>` : ''}
+          </div>
+        </div>
+        <div class="result-body">
+          <div class="detail-row"><span class="dl">${ar ? 'رقم الضمان' : 'Warranty #'}</span><span class="dv">${record.wrnNum}</span></div>
+          <div class="detail-row"><span class="dl">${ar ? 'رقم القطعة' : 'SKU'}</span><span class="dv">${record.sku}</span></div>
+          <div class="detail-row"><span class="dl">${ar ? 'العلامة' : 'Brand'}</span><span class="dv normal">${brandNames[record.brand] || record.brand}</span></div>
+          <div class="detail-row"><span class="dl">${ar ? 'الاسم المسجل' : 'Registered Name'}</span><span class="dv normal">${record.name}</span></div>
+          <div class="detail-row"><span class="dl">${ar ? 'المدينة' : 'City'}</span><span class="dv normal">${record.city}</span></div>
+          <div class="detail-row"><span class="dl">${ar ? 'الوكيل' : 'Dealer'}</span><span class="dv normal">${record.dealer}</span></div>
+          <div class="detail-row"><span class="dl">${ar ? 'تاريخ الشراء' : 'Purchase Date'}</span><span class="dv normal">${fmt(record.purchaseDate)}</span></div>
+          <div class="detail-row"><span class="dl">${ar ? 'تاريخ التسجيل' : 'Registration Date'}</span><span class="dv normal">${fmt(record.registrationDate)}</span></div>
+          <div class="detail-row"><span class="dl">${ar ? 'تاريخ الانتهاء' : 'Expiry Date'}</span><span class="dv normal" style="color:${status === 'active' ? '#22c55e' : '#ef4444'}">${fmt(record.expiry)}</span></div>
+        </div>
+        <div class="result-footer">
+          <a href="warranty.html" class="btn btn-ghost btn-sm"><i class="fa fa-plus"></i> ${ar ? 'تسجيل آخر' : 'Register Another'}</a>
+          <a href="contact.html" class="btn btn-primary btn-sm"><i class="fa fa-headset"></i> ${ar ? 'تقديم مطالبة' : 'File a Claim'}</a>
+        </div>
+      </div>`;
+            el.classList.add('show');
+            el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function renderNotFound() {
+            const ar = currentLang === 'ar';
+            const el = document.getElementById('wsResult');
+            el.innerHTML = `<div class="result-card"><div class="not-found">
+      <span class="ico">🔍</span>
+      <strong style="color:var(--white);display:block;margin-bottom:8px">${ar ? 'لم يتم العثور على ضمان' : 'No Warranty Found'}</strong>
+      <p style="color:var(--gray-500);font-size:.85rem">${ar ? 'تأكد من صحة البيانات أو سجّل ضمانك أولاً.' : 'Please verify your details or register your warranty first.'}</p>
+      <a href="warranty.html" class="btn btn-primary" style="margin-top:16px">${ar ? 'تفعيل الضمان' : 'Activate Warranty'}</a>
+    </div></div>`;
+            el.classList.add('show');
+        }
+
+        function searchByWRN() {
+            const v = document.getElementById('inputWrn').value.trim().toUpperCase();
+            if (!v) { document.getElementById('inputWrn').classList.add('err'); return; }
+            document.getElementById('inputWrn').classList.remove('err');
+            const records = JSON.parse(localStorage.getItem('nutd_warranties') || '[]');
+            const found = records.find(r => r.wrnNum === v);
+            found ? renderResult(found) : renderNotFound();
+        }
+
+        function searchBySkuPhone() {
+            const sku = document.getElementById('inputSku').value.trim().toUpperCase();
+            const phone = document.getElementById('inputPhone').value.trim().replace(/\s/g, '');
+            if (!sku || !phone) return;
+            const records = JSON.parse(localStorage.getItem('nutd_warranties') || '[]');
+            const found = records.find(r => r.sku === sku && r.phone.replace(/\s/g, '') === phone);
+            found ? renderResult(found) : renderNotFound();
+        }
+
+        function loadRecent() {
+            const records = JSON.parse(localStorage.getItem('nutd_warranties') || '[]');
+            const wrap = document.getElementById('recentWrap');
+            if (!records.length) { wrap.style.display = 'none'; return; }
+            wrap.style.display = 'block';
+            const ar = currentLang === 'ar';
+            document.getElementById('recentTableBody').innerHTML = records.slice().reverse().map(r => {
+                const status = getStatus(r.expiry);
+                return `<tr>
+          <td>${r.wrnNum}</td>
+          <td>${ar ? r.productNameAr : r.productName}</td>
+          <td style="font-family:monospace">${r.sku}</td>
+          <td>${fmt(r.expiry)}</td>
+          <td><span class="badge ${getStatusClass(status)}" style="padding:2px 8px;border-radius:99px;font-size:.7rem">${getStatusLabel(status)}</span></td>
+          <td><button onclick="quickView('${r.wrnNum}')" style="font-size:.75rem;color:var(--red);cursor:pointer">${ar ? 'عرض' : 'View'}</button></td>
+        </tr>`;
+            }).join('');
+        }
+
+        function quickView(wrn) {
+            const records = JSON.parse(localStorage.getItem('nutd_warranties') || '[]');
+            const found = records.find(r => r.wrnNum === wrn);
+            if (found) { renderResult(found); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+        }
+
+        // Init
+        if (localStorage.getItem('lang') === 'ar') setLang('ar');
+        loadRecent();
+        window.addEventListener('scroll', () => {
+            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+        });
+    </script>
+<script src="js/shared.js"></script>
+</body>
+
+</html>

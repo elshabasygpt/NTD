@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KDD – Exclusive Agency | NUTD</title>
+    <meta name="description"
+        content="NUTD is the exclusive distributor of KDD premium Chinese automotive parts — certified quality for all major vehicle makes." />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        :root {
+            --brand: #e8a000;
+            --brand-light: rgba(232, 160, 0, .12);
+        }
+
+        /* KDD gold */
+        .brand-hero {
+            margin-top: var(--nav-h);
+            background:
+                linear-gradient(135deg, rgba(10, 10, 14, .97) 0%, rgba(232, 160, 0, .1) 100%),
+                repeating-linear-gradient(60deg, rgba(232, 160, 0, .03) 0, rgba(232, 160, 0, .03) 1px, transparent 0, transparent 50%);
+            background-size: cover, 20px 20px;
+            padding: 80px 0 60px;
+            border-bottom: 1px solid rgba(255, 255, 255, .06);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-hero::after {
+            content: '';
+            position: absolute;
+            top: -60px;
+            right: -80px;
+            width: 420px;
+            height: 420px;
+            background: radial-gradient(circle, rgba(232, 160, 0, .12) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .brand-hero-inner {
+            position: relative;
+            z-index: 1;
+        }
+
+        .kdd-badge {
+            background: linear-gradient(135deg, #e8a000 0%, #b07800 100%);
+            color: #0a0a0a;
+        }
+
+        .brand-badge-lg {
+            width: 72px;
+            height: 72px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            font-weight: 900;
+            flex-shrink: 0;
+        }
+
+        .brand-logo-display {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+
+        .brand-origin {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 6px;
+            font-size: .8rem;
+            color: var(--gray-500);
+        }
+
+        .exclusive-ribbon {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(232, 35, 26, .12);
+            border: 1px solid rgba(232, 35, 26, .25);
+            border-radius: var(--r-full);
+            padding: 6px 16px;
+            font-size: .78rem;
+            font-weight: 700;
+            color: var(--red);
+            letter-spacing: .04em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 32px;
+            margin-top: 32px;
+            flex-wrap: wrap;
+        }
+
+        .hero-stat .val {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--white);
+        }
+
+        .hero-stat .lbl {
+            font-size: .78rem;
+            color: var(--gray-500);
+            margin-top: 2px;
+        }
+
+        .strength-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .strength-card {
+            background: var(--dark-2);
+            border: 1px solid rgba(255, 255, 255, .07);
+            border-radius: var(--r-lg);
+            padding: 28px 22px;
+            transition: all var(--t-normal);
+        }
+
+        .strength-card:hover {
+            border-color: rgba(232, 160, 0, .3);
+            transform: translateY(-3px);
+        }
+
+        .strength-card .ico {
+            font-size: 2rem;
+            margin-bottom: 14px;
+        }
+
+        .strength-card h5 {
+            color: var(--white);
+            margin-bottom: 8px;
+        }
+
+        .strength-card p {
+            font-size: .83rem;
+            color: var(--gray-500);
+            line-height: 1.6;
+        }
+
+        .makes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+        }
+
+        .make-card {
+            background: var(--dark-2);
+            border: 1px solid rgba(255, 255, 255, .07);
+            border-radius: var(--r-md);
+            padding: 18px 14px;
+            text-align: center;
+            font-size: .84rem;
+            color: var(--gray-300);
+            transition: all .2s;
+        }
+
+        .make-card:hover {
+            border-color: rgba(232, 160, 0, .3);
+            color: var(--white);
+        }
+
+        .make-card .flag {
+            font-size: 1.5rem;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .product-cat {
+            display: block;
+        }
+
+        .cat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 14px;
+        }
+
+        .cat-item {
+            background: var(--dark-2);
+            border: 1px solid rgba(255, 255, 255, .07);
+            border-radius: var(--r-lg);
+            padding: 22px 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: all .2s;
+        }
+
+        .cat-item:hover {
+            border-color: rgba(232, 160, 0, .3);
+        }
+
+        .cat-item .ico {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .cat-item .text .name {
+            font-size: .88rem;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .cat-item .text .sub {
+            font-size: .75rem;
+            color: var(--gray-600);
+            margin-top: 2px;
+        }
+
+        .gold-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(232, 160, 0, .1);
+            border-radius: var(--r-full);
+            padding: 3px 10px;
+            font-size: .72rem;
+            color: var(--brand);
+        }
+
+        @media(max-width:640px) {
+            .hero-stats {
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="container">
+            <a href="../index.html" class="nav-logo">
+                <div class="brand-logo-box">NUTD</div>
+                <div class="nav-logo-text"><span class="name-en">NUTD</span><span class="name-ar">نماء المتحدة</span>
+                </div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="../index.html" class="nav-link" data-en="Home" data-ar="الرئيسية">Home</a></li>
+                <li><a href="../catalog.html" class="nav-link" data-en="Products" data-ar="المنتجات">Products</a></li>
+                <li><a href="#" class="nav-link active" data-en="Brands" data-ar="العلامات">Brands</a></li>
+                <li><a href="../about.html" class="nav-link" data-en="About" data-ar="عن الشركة">About</a></li>
+            </ul>
+            <div class="nav-actions">
+                <div class="lang-toggle">
+                    <button onclick="setLang('en')" class="active" id="btn-en">EN</button>
+                    <button onclick="setLang('ar')" id="btn-ar">AR</button>
+                </div>
+                <a href="../dealer/login.html" class="btn btn-primary btn-sm" data-en="Dealer Portal"
+                    data-ar="بوابة التاجر">Dealer Portal</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <div class="brand-hero">
+        <div class="container brand-hero-inner">
+            <div class="d-flex gap-12 mb-16 flex-wrap">
+                <a href="../index.html" style="font-size:.8rem;color:var(--gray-600)">Home</a>
+                <span style="color:var(--gray-700)">›</span>
+                <a href="index.html" style="font-size:.8rem;color:var(--gray-600)" data-en="Brands"
+                    data-ar="العلامات">Brands</a>
+                <span style="color:var(--gray-700)">›</span>
+                <span style="font-size:.8rem;color:var(--white)">KDD</span>
+            </div>
+
+            <div class="exclusive-ribbon">
+                <i class="fa fa-certificate"></i>
+                <span data-en="Exclusive Regional Distributor" data-ar="الموزع الإقليمي الحصري">Exclusive Regional
+                    Distributor</span>
+            </div>
+
+            <div class="brand-logo-display">
+                <div class="brand-badge-lg kdd-badge">KDD</div>
+                <div>
+                    <h1 class="text-white" style="margin:0;font-size:2.4rem">KDD</h1>
+                    <div class="brand-origin">
+                        <span style="font-size:1.2rem">🇨🇳</span>
+                        <span data-en="Certified Chinese Auto Parts — Multi-Brand Vehicle Coverage"
+                            data-ar="قطع غيار صينية معتمدة — تغطية متعددة العلامات التجارية">Certified Chinese Auto
+                            Parts — Multi-Brand Vehicle Coverage</span>
+                    </div>
+                </div>
+            </div>
+
+            <p style="max-width:620px;font-size:1rem;color:var(--gray-300);line-height:1.7"
+                data-en="KDD is a trusted Chinese automotive parts manufacturer providing certified, reliable spare parts for a wide range of vehicle makes and models. NUTD holds the exclusive distribution rights for KDD in the region — ensuring workshop owners and dealers get genuine KDD parts at competitive wholesale prices."
+                data-ar="KDD هي شركة تصنيع قطع غيار سيارات صينية موثوقة تقدم قطعاً غيار معتمدة وموثوقة لمجموعة واسعة من أنواع وطرازات المركبات. تمتلك نماء المتحدة حقوق التوزيع الحصرية لـ KDD في المنطقة — مما يضمن حصول أصحاب الورش والتجار على قطع KDD الأصلية بأسعار جملة تنافسية.">
+                KDD is a trusted Chinese automotive parts manufacturer providing certified, reliable spare parts for a
+                wide range of vehicle makes and models. NUTD holds the exclusive distribution rights for KDD in the
+                region — ensuring workshop owners and dealers get genuine KDD parts at competitive wholesale prices.
+            </p>
+
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="val">5,000<span style="font-size:1.1rem">+</span></div>
+                    <div class="lbl" data-en="Part Numbers in Catalog" data-ar="رقم الجزء في الكتالوج">Part Numbers in
+                        Catalog</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="val" data-en="Multi-Brand" data-ar="متعدد العلامات">Multi-Brand</div>
+                    <div class="lbl" data-en="Vehicle Coverage" data-ar="تغطية المركبات">Vehicle Coverage</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="val">ISO</div>
+                    <div class="lbl" data-en="Quality Certified" data-ar="شهادة الجودة">Quality Certified</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="val">🏭</div>
+                    <div class="lbl" data-en="Factory Direct" data-ar="مباشر من المصنع">Factory Direct</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRODUCT CATEGORIES -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label" data-en="Product Range" data-ar="نطاق المنتجات">Product Range</div>
+                <h2 data-en="Comprehensive Parts Coverage" data-ar="تغطية شاملة لقطع الغيار">Comprehensive Parts
+                    Coverage</h2>
+                <p data-en="KDD covers all major systems of a vehicle — from engine internals to body panels, electrical systems to suspension components."
+                    data-ar="KDD يغطي جميع أنظمة المركبة الرئيسية — من المحرك الداخلي إلى ألواح الهيكل، والأنظمة الكهربائية إلى مكونات التعليق.">
+                    KDD covers all major systems of a vehicle — from engine internals to body panels, electrical systems
+                    to suspension components.</p>
+            </div>
+            <div class="cat-grid">
+                <div class="cat-item">
+                    <span class="ico">⚙️</span>
+                    <div class="text">
+                        <div class="name" data-en="Engine Parts" data-ar="قطع المحرك">Engine Parts</div>
+                        <div class="sub" data-en="Pistons, gaskets, timing" data-ar="مكابس، حشوات، توقيت">Pistons,
+                            gaskets, timing</div>
+                    </div>
+                </div>
+                <div class="cat-item">
+                    <span class="ico">🌀</span>
+                    <div class="text">
+                        <div class="name" data-en="Oil Filters" data-ar="فلاتر الزيت">Oil Filters</div>
+                        <div class="sub" data-en="All makes & models" data-ar="جميع الأنواع والطرازات">All makes &amp;
+                            models</div>
+                    </div>
+                </div>
+                <div class="cat-item">
+                    <span class="ico">💨</span>
+                    <div class="text">
+                        <div class="name" data-en="Air Filters" data-ar="فلاتر الهواء">Air Filters</div>
+                        <div class="sub" data-en="Cabin & engine air" data-ar="هواء الكابينة والمحرك">Cabin &amp; engine
+                            air</div>
+                    </div>
+                </div>
+                <div class="cat-item">
+                    <span class="ico">🛑</span>
+                    <div class="text">
+                        <div class="name" data-en="Brake System" data-ar="نظام الفرامل">Brake System</div>
+                        <div class="sub" data-en="Pads, discs, calipers" data-ar="تيل، أقراص، أسطوانات">Pads, discs,
+                            calipers</div>
+                    </div>
+                </div>
+                <div class="cat-item">
+                    <span class="ico">🦿</span>
+                    <div class="text">
+                        <div class="name" data-en="Suspension" data-ar="نظام التعليق">Suspension</div>
+                        <div class="sub" data-en="Shock absorbers, arms" data-ar="ماصات، أذرع">Shock absorbers, arms
+                        </div>
+                    </div>
+                </div>
+                <div class="cat-item">
+                    <span class="ico">🔌</span>
+                    <div class="text">
+                        <div class="name" data-en="Electrical" data-ar="كهرباء">Electrical</div>
+                        <div class="sub" data-en="Sensors, relays, switches" data-ar="مستشعرات، مرحلات، مفاتيح">Sensors,
+                            relays, switches</div>
+                    </div>
+                </div>
+                <div class="cat-item">
+                    <span class="ico">🌡️</span>
+                    <div class="text">
+                        <div class="name" data-en="Cooling System" data-ar="نظام التبريد">Cooling System</div>
+                        <div class="sub" data-en="Water pumps, radiators" data-ar="مضخات مياه، رادياتير">Water pumps,
+                            radiators</div>
+                    </div>
+                </div>
+                <div class="cat-item">
+                    <span class="ico">🚗</span>
+                    <div class="text">
+                        <div class="name" data-en="Body Parts" data-ar="قطع الهيكل">Body Parts</div>
+                        <div class="sub" data-en="Bumpers, fenders, mirrors" data-ar="صدامات، أجنحة، مرايا">Bumpers,
+                            fenders, mirrors</div>
+                    </div>
+                </div>
+                <div class="cat-item">
+                    <span class="ico">🔦</span>
+                    <div class="text">
+                        <div class="name" data-en="Lighting" data-ar="الإضاءة">Lighting</div>
+                        <div class="sub" data-en="Head & tail light units" data-ar="وحدات الأضواء الأمامية والخلفية">
+                            Head &amp; tail light units</div>
+                    </div>
+                </div>
+                <div class="cat-item">
+                    <span class="ico">🔩</span>
+                    <div class="text">
+                        <div class="name" data-en="Steering" data-ar="التوجيه">Steering</div>
+                        <div class="sub" data-en="Racks, tie rods, ends" data-ar="حوامل، دراعات، أطراف">Racks, tie rods,
+                            ends</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- VEHICLE COVERAGE -->
+    <section class="section section-alt">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label" data-en="Vehicle Compatibility" data-ar="توافق المركبات">Vehicle
+                    Compatibility</div>
+                <h2 data-en="Compatible With All Major Brands" data-ar="متوافق مع جميع العلامات الكبرى">Compatible With
+                    All Major Brands</h2>
+                <p data-en="KDD parts are engineered to fit European, Asian, Korean, and American vehicle brands — making it the most versatile range in our portfolio."
+                    data-ar="قطع KDD مصممة لتناسب العلامات التجارية الأوروبية والآسيوية والكورية والأمريكية — مما يجعلها أكثر تشكيلة متعددة الاستخدامات في محفظتنا.">
+                    KDD parts are engineered to fit European, Asian, Korean, and American vehicle brands — making it the
+                    most versatile range in our portfolio.</p>
+            </div>
+            <div class="makes-grid">
+                <div class="make-card"><span class="flag">🇩🇪</span>Volkswagen</div>
+                <div class="make-card"><span class="flag">🇩🇪</span>Mercedes-Benz</div>
+                <div class="make-card"><span class="flag">🇩🇪</span>BMW</div>
+                <div class="make-card"><span class="flag">🇩🇪</span>Audi</div>
+                <div class="make-card"><span class="flag">🇩🇪</span>Opel</div>
+                <div class="make-card"><span class="flag">🇯🇵</span>Toyota</div>
+                <div class="make-card"><span class="flag">🇯🇵</span>Nissan</div>
+                <div class="make-card"><span class="flag">🇯🇵</span>Honda</div>
+                <div class="make-card"><span class="flag">🇰🇷</span>Hyundai</div>
+                <div class="make-card"><span class="flag">🇰🇷</span>Kia</div>
+                <div class="make-card"><span class="flag">🇺🇸</span>Ford</div>
+                <div class="make-card"><span class="flag">🇫🇷</span>Renault</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STRENGTHS -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label" data-en="Why KDD" data-ar="لماذا KDD">Why KDD</div>
+                <h2 data-en="Quality You Can Count On" data-ar="جودة يمكنك الاعتماد عليها">Quality You Can Count On</h2>
+            </div>
+            <div class="strength-grid">
+                <div class="strength-card">
+                    <div class="ico">🏭</div>
+                    <h5 data-en="Factory Direct Production" data-ar="إنتاج مباشر من المصنع">Factory Direct Production
+                    </h5>
+                    <p data-en="Every KDD part is manufactured in ISO-certified factories with rigorous quality control at every stage of production."
+                        data-ar="كل قطعة KDD مصنعة في مصانع معتمدة بنظام الجودة ISO مع رقابة صارمة على الجودة في كل مرحلة من مراحل الإنتاج.">
+                        Every KDD part is manufactured in ISO-certified factories with rigorous quality control at every
+                        stage of production.</p>
+                </div>
+                <div class="strength-card">
+                    <div class="ico">💰</div>
+                    <h5 data-en="Competitive Wholesale Pricing" data-ar="أسعار جملة تنافسية">Competitive Wholesale
+                        Pricing</h5>
+                    <p data-en="As exclusive distributors, NUTD passes factory-direct pricing advantages to all registered dealers — maximizing your margin."
+                        data-ar="بصفتنا موزعين حصريين، تُمرر نماء المتحدة مزايا الأسعار المباشرة من المصنع لجميع التجار المسجلين — لتعظيم هامش ربحك.">
+                        As exclusive distributors, NUTD passes factory-direct pricing advantages to all registered
+                        dealers — maximizing your margin.</p>
+                </div>
+                <div class="strength-card">
+                    <div class="ico">🌍</div>
+                    <h5 data-en="Wide Vehicle Coverage" data-ar="تغطية واسعة للمركبات">Wide Vehicle Coverage</h5>
+                    <p data-en="From European luxury to Japanese economy cars — KDD's catalog spans 12+ vehicle brands with thousands of compatible SKUs."
+                        data-ar="من السيارات الفاخرة الأوروبية إلى السيارات الاقتصادية اليابانية — يمتد كتالوج KDD عبر أكثر من 12 علامة تجارية للسيارات مع آلاف الأصناف المتوافقة.">
+                        From European luxury to Japanese economy cars — KDD's catalog spans 12+ vehicle brands with
+                        thousands of compatible SKUs.</p>
+                </div>
+                <div class="strength-card">
+                    <div class="ico">📦</div>
+                    <h5 data-en="Reliable Local Stock" data-ar="مخزون محلي موثوق">Reliable Local Stock</h5>
+                    <p data-en="NUTD maintains a local warehouse stocked with the most in-demand KDD parts for fast fulfilment across the dealer network."
+                        data-ar="تحتفظ نماء المتحدة بمستودع محلي مخزّن بأكثر قطع KDD طلباً للتوزيع السريع عبر شبكة التجار.">
+                        NUTD maintains a local warehouse stocked with the most in-demand KDD parts for fast fulfilment
+                        across the dealer network.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- EXCLUSIVE CTA -->
+    <section class="section section-alt">
+        <div class="container">
+            <div class="locate-card"
+                style="background:linear-gradient(135deg,rgba(232,160,0,.1) 0%,rgba(10,10,14,.97) 100%);border:1px solid rgba(232,160,0,.2)">
+                <div class="locate-card-icon" style="background:rgba(232,160,0,.12);color:#e8a000">
+                    <i class="fa fa-certificate"></i>
+                </div>
+                <div class="locate-card-content">
+                    <div class="exclusive-ribbon" style="margin-bottom:12px">
+                        <i class="fa fa-shield-halved"></i>
+                        <span data-en="Official Exclusive Distribution Rights"
+                            data-ar="حقوق التوزيع الحصري الرسمي">Official Exclusive Distribution Rights</span>
+                    </div>
+                    <h3 data-en="NUTD is the Only Authorized KDD Distributor in the Region"
+                        data-ar="نماء المتحدة هي الموزع الوحيد المعتمد لـ KDD في المنطقة">NUTD is the Only Authorized
+                        KDD Distributor in the Region</h3>
+                    <p data-en="Purchasing KDD parts through unauthorized channels risks receiving counterfeit or substandard products. All genuine KDD parts come with NUTD's authenticity guarantee — only when purchased through our authorized dealer network."
+                        data-ar="شراء قطع KDD عبر قنوات غير مصرح بها يُعرّضك لخطر الحصول على منتجات مقلدة أو دون المستوى. جميع قطع KDD الأصلية تأتي مع ضمان الأصالة من نماء المتحدة — فقط عند الشراء من خلال شبكة التجار المعتمدين لدينا.">
+                        Purchasing KDD parts through unauthorized channels risks receiving counterfeit or substandard
+                        products. All genuine KDD parts come with NUTD's authenticity guarantee — only when purchased
+                        through our authorized dealer network.</p>
+                    <div class="d-flex gap-12 flex-wrap">
+                        <a href="../catalog.html?brand=kdd" class="btn btn-primary btn-lg">
+                            <i class="fa fa-boxes-stacked"></i>
+                            <span data-en="Browse KDD Products" data-ar="تصفح منتجات KDD">Browse KDD Products</span>
+                        </a>
+                        <a href="../dealer/login.html" class="btn btn-outline btn-lg" data-en="Order as Dealer"
+                            data-ar="اطلب كتاجر">Order as Dealer</a>
+                    </div>
+                    <p style="font-size:.78rem;color:var(--gray-700);margin-top:16px">
+                        <i class="fa fa-earth-asia"></i>
+                        <a href="https://www.autokdd.com/" target="_blank" rel="noopener"
+                            style="color:var(--gray-600)">www.autokdd.com</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- OTHER BRANDS -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label" data-en="Our Other Agencies" data-ar="وكالاتنا الأخرى">Our Other Agencies
+                </div>
+                <h2 data-en="Also Distributed Exclusively by NUTD" data-ar="موزعة أيضاً بشكل حصري من نماء المتحدة">Also
+                    Distributed Exclusively by NUTD</h2>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:540px">
+                <a href="borsehung.html" class="make-card"
+                    style="background:var(--dark-2);border:1px solid rgba(255,255,255,.07);border-radius:var(--r-lg);padding:24px;text-decoration:none;text-align:left">
+                    <span class="flag" style="display:block;margin-bottom:10px">🇩🇪</span>
+                    <div style="font-weight:700;color:var(--white);margin-bottom:4px">Borsehung</div>
+                    <div style="font-size:.78rem;color:var(--gray-500)" data-en="German Premium Parts"
+                        data-ar="قطع ألمانية متميزة">German Premium Parts</div>
+                </a>
+                <a href="vika.html" class="make-card"
+                    style="background:var(--dark-2);border:1px solid rgba(255,255,255,.07);border-radius:var(--r-lg);padding:24px;text-decoration:none;text-align:left">
+                    <span class="flag" style="display:block;margin-bottom:10px">🇨🇳</span>
+                    <div style="font-weight:700;color:var(--white);margin-bottom:4px">VIKA / Tantivy</div>
+                    <div style="font-size:.78rem;color:var(--gray-500)" data-en="Superior to OE Quality"
+                        data-ar="متفوق على المصنع الأصلي">Superior to OE Quality</div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <span data-en="© 2025 Nama United Trading & Distribution — Official KDD Distributor"
+                    data-ar="© 2025 نماء المتحدة للتجارة والتوزيع — الموزع الرسمي لـ KDD">© 2025 Nama United Trading
+                    &amp; Distribution — Official KDD Distributor</span>
+                <div class="d-flex gap-16">
+                    <a href="../index.html" data-en="Home" data-ar="الرئيسية">Home</a>
+                    <a href="../catalog.html" data-en="Catalog" data-ar="الكتالوج">Catalog</a>
+                    <a href="../dealer/login.html" data-en="Dealer Portal" data-ar="بوابة التاجر">Dealer Portal</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let currentLang = localStorage.getItem('lang') || 'en';
+        function setLang(lang) {
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+            document.documentElement.lang = lang;
+            document.body.classList.toggle('lang-ar', lang === 'ar');
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+            document.getElementById('btn-ar').classList.toggle('active', lang === 'ar');
+            document.querySelectorAll('[data-en]').forEach(el => {
+                const t = el.getAttribute('data-' + lang);
+                if (t) el.innerHTML = t;
+            });
+        }
+        window.addEventListener('scroll', () => document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50));
+        setLang(currentLang);
+    </script>
+</body>
+
+</html>

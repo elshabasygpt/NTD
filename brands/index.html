@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Our Brand Agencies – NUTD</title>
+    <meta name="description"
+        content="NUTD holds exclusive distribution rights for Borsehung (Germany), VIKA, and KDD (China) — bringing certified international automotive parts to the region." />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        .brands-hero {
+            margin-top: var(--nav-h);
+            background:
+                linear-gradient(to bottom, rgba(10, 10, 14, .98) 0%, rgba(30, 5, 5, .96) 100%),
+                repeating-linear-gradient(-45deg, rgba(232, 35, 26, .025) 0, rgba(232, 35, 26, .025) 1px, transparent 0, transparent 40px);
+            padding: 72px 0 56px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, .06);
+        }
+
+        .brands-hero h1 {
+            font-size: 2.8rem;
+        }
+
+        .brand-hub-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .brand-hub-card {
+            background: var(--dark-2);
+            border: 1px solid rgba(255, 255, 255, .08);
+            border-radius: var(--r-xl);
+            overflow: hidden;
+            transition: all var(--t-normal);
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-hub-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 24px 60px rgba(0, 0, 0, .4);
+        }
+
+        .brand-hub-card:hover .brand-hub-bar {
+            opacity: 1;
+        }
+
+        .brand-hub-bar {
+            height: 4px;
+            opacity: .6;
+            transition: opacity .3s;
+        }
+
+        .bar-borsehung {
+            background: linear-gradient(90deg, #1a3a6b, #4a8cd4);
+        }
+
+        .bar-vika {
+            background: linear-gradient(90deg, #c9373c, #e8716a);
+        }
+
+        .bar-kdd {
+            background: linear-gradient(90deg, #e8a000, #ffd056);
+        }
+
+        .brand-hub-card-body {
+            padding: 36px 32px;
+            flex: 1;
+        }
+
+        .hub-logo {
+            width: 68px;
+            height: 68px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .9rem;
+            font-weight: 900;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .hub-logo-borsehung {
+            background: linear-gradient(135deg, #1a3a6b, #0f2347);
+        }
+
+        .hub-logo-vika {
+            background: linear-gradient(135deg, #c9373c, #8b1c1f);
+        }
+
+        .hub-logo-kdd {
+            background: linear-gradient(135deg, #e8a000, #b07800);
+            color: #0a0a0a;
+        }
+
+        .hub-origin {
+            font-size: .78rem;
+            color: var(--gray-600);
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .brand-hub-card-body h3 {
+            color: var(--white);
+            margin: 16px 0 12px;
+            font-size: 1.2rem;
+        }
+
+        .brand-hub-card-body p {
+            font-size: .85rem;
+            color: var(--gray-500);
+            line-height: 1.6;
+        }
+
+        .hub-tags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .hub-tag {
+            background: rgba(255, 255, 255, .05);
+            border: 1px solid rgba(255, 255, 255, .08);
+            border-radius: var(--r-full);
+            padding: 4px 10px;
+            font-size: .72rem;
+            color: var(--gray-400);
+        }
+
+        .brand-hub-card-footer {
+            padding: 20px 32px;
+            border-top: 1px solid rgba(255, 255, 255, .06);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .exclusive-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(232, 35, 26, .1);
+            border: 1px solid rgba(232, 35, 26, .2);
+            border-radius: var(--r-full);
+            padding: 4px 12px;
+            font-size: .72rem;
+            font-weight: 700;
+            color: var(--red);
+        }
+
+        .view-brand-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: .82rem;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .view-brand-btn .icon {
+            font-size: .75rem;
+            color: var(--gray-600);
+            transition: transform .2s, color .2s;
+        }
+
+        .brand-hub-card:hover .view-brand-btn .icon {
+            color: var(--white);
+            transform: translateX(4px);
+        }
+
+        body.lang-ar .brand-hub-card:hover .view-brand-btn .icon {
+            transform: translateX(-4px);
+        }
+
+        .comparison-section {
+            margin-top: 16px;
+        }
+
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .compare-table th,
+        .compare-table td {
+            padding: 14px 18px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, .05);
+            font-size: .88rem;
+        }
+
+        body.lang-ar .compare-table th,
+        body.lang-ar .compare-table td {
+            text-align: right;
+        }
+
+        .compare-table th {
+            color: var(--gray-500);
+            font-weight: 500;
+            background: var(--dark-3);
+        }
+
+        .compare-table td {
+            color: var(--gray-300);
+        }
+
+        .compare-table td:first-child {
+            color: var(--white);
+            font-weight: 600;
+        }
+
+        .compare-table tr:last-child td {
+            border: none;
+        }
+
+        .check {
+            color: var(--success);
+        }
+
+        .dash {
+            color: var(--gray-700);
+        }
+
+        @media(max-width:900px) {
+            .brand-hub-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media(max-width:600px) {
+            .brands-hero h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="container">
+            <a href="../index.html" class="nav-logo">
+                <div class="brand-logo-box">NUTD</div>
+                <div class="nav-logo-text"><span class="name-en">NUTD</span><span class="name-ar">نماء المتحدة</span>
+                </div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="../index.html" class="nav-link" data-en="Home" data-ar="الرئيسية">Home</a></li>
+                <li><a href="../catalog.html" class="nav-link" data-en="Products" data-ar="المنتجات">Products</a></li>
+                <li><a href="index.html" class="nav-link active" data-en="Brands" data-ar="العلامات">Brands</a></li>
+                <li><a href="../about.html" class="nav-link" data-en="About" data-ar="عن الشركة">About</a></li>
+            </ul>
+            <div class="nav-actions">
+                <div class="lang-toggle">
+                    <button onclick="setLang('en')" class="active" id="btn-en">EN</button>
+                    <button onclick="setLang('ar')" id="btn-ar">AR</button>
+                </div>
+                <a href="../dealer/login.html" class="btn btn-primary btn-sm" data-en="Dealer Portal"
+                    data-ar="بوابة التاجر">Dealer Portal</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <div class="brands-hero">
+        <div class="container">
+            <div class="section-label" style="justify-content:center" data-en="Exclusive Agencies"
+                data-ar="الوكالات الحصرية">Exclusive Agencies</div>
+            <h1 class="text-white" data-en="Our <span class='text-red'>Brand</span> Portfolio"
+                data-ar="محفظة <span class='text-red'>علاماتنا</span> التجارية">Our <span class="text-red">Brand</span>
+                Portfolio</h1>
+            <p style="max-width:560px;margin:16px auto 0;font-size:1rem;color:var(--gray-400)"
+                data-en="NUTD holds exclusive distribution rights for three world-class international brands — German precision and Chinese innovation, all under one roof."
+                data-ar="تمتلك نماء المتحدة حقوق التوزيع الحصرية لثلاث علامات تجارية دولية عالمية الطراز — الدقة الألمانية والابتكار الصيني، كل ذلك تحت سقف واحد.">
+                NUTD holds exclusive distribution rights for three world-class international brands — German precision
+                and Chinese innovation, all under one roof.
+            </p>
+        </div>
+    </div>
+
+    <!-- BRAND CARDS -->
+    <section class="section">
+        <div class="container">
+            <div class="brand-hub-grid">
+
+                <!-- BORSEHUNG -->
+                <a href="borsehung.html" class="brand-hub-card">
+                    <div class="brand-hub-bar bar-borsehung"></div>
+                    <div class="brand-hub-card-body">
+                        <div class="hub-logo hub-logo-borsehung">BSG</div>
+                        <div class="hub-origin"><span>🇩🇪</span><span data-en="Germany"
+                                data-ar="ألمانيا">Germany</span></div>
+                        <h3>Borsehung</h3>
+                        <p data-en="Professional European auto parts supplier — OE-grade parts for Volkswagen, Mercedes-Benz, and BMW. A global extension of Original Equipment manufacturing with TecDoc certification."
+                            data-ar="مورد أوروبي احترافي لقطع غيار السيارات — قطع بمستوى المصنع الأصلي لفولكسفاغن وميرسيدس بنز وبي إم دبليو. امتداد عالمي لتصنيع المعدات الأصلية مع شهادة TecDoc.">
+                            Professional European auto parts supplier — OE-grade parts for Volkswagen, Mercedes-Benz,
+                            and BMW. A global extension of Original Equipment manufacturing with TecDoc certification.
+                        </p>
+                        <div class="hub-tags">
+                            <span class="hub-tag">Volkswagen</span>
+                            <span class="hub-tag">Mercedes-Benz</span>
+                            <span class="hub-tag">BMW</span>
+                            <span class="hub-tag">TecDoc</span>
+                            <span class="hub-tag" data-en="OE Grade" data-ar="مستوى OE">OE Grade</span>
+                        </div>
+                    </div>
+                    <div class="brand-hub-card-footer">
+                        <div class="exclusive-pill"><i class="fa fa-certificate"></i><span data-en="Exclusive Agency"
+                                data-ar="وكالة حصرية">Exclusive Agency</span></div>
+                        <div class="view-brand-btn"><span data-en="View Brand" data-ar="عرض العلامة">View Brand</span><i
+                                class="fa fa-arrow-right icon"></i></div>
+                    </div>
+                </a>
+
+                <!-- VIKA -->
+                <a href="vika.html" class="brand-hub-card">
+                    <div class="brand-hub-bar bar-vika"></div>
+                    <div class="brand-hub-card-body">
+                        <div class="hub-logo hub-logo-vika">VKA</div>
+                        <div class="hub-origin"><span>🇨🇳</span><span data-en="China — Tantivy"
+                                data-ar="الصين — Tantivy">China — Tantivy</span></div>
+                        <h3>VIKA</h3>
+                        <p data-en="Premium Chinese parts brand with a 'Superior to OE' philosophy. VIKA offers 4-year warranties and 150,000 km coverage — exceeding original factory standards on durability and reliability."
+                            data-ar="علامة تجارية صينية متميزة لقطع الغيار مع فلسفة 'متفوق على المصنع الأصلي'. تقدم VIKA ضمانات لمدة 4 سنوات وتغطية 150,000 كم — تتجاوز معايير المصانع الأصلية في المتانة والموثوقية.">
+                            Premium Chinese parts brand with a 'Superior to OE' philosophy. VIKA offers 4-year
+                            warranties and 150,000 km coverage — exceeding original factory standards on durability and
+                            reliability.</p>
+                        <div class="hub-tags">
+                            <span class="hub-tag">Superior to OE</span>
+                            <span class="hub-tag" data-en="4-Year Warranty" data-ar="ضمان 4 سنوات">4-Year
+                                Warranty</span>
+                            <span class="hub-tag">150,000 km</span>
+                            <span class="hub-tag" data-en="Body Parts" data-ar="قطع الهيكل">Body Parts</span>
+                            <span class="hub-tag" data-en="Electrical" data-ar="كهرباء">Electrical</span>
+                        </div>
+                    </div>
+                    <div class="brand-hub-card-footer">
+                        <div class="exclusive-pill"><i class="fa fa-certificate"></i><span data-en="Exclusive Agency"
+                                data-ar="وكالة حصرية">Exclusive Agency</span></div>
+                        <div class="view-brand-btn"><span data-en="View Brand" data-ar="عرض العلامة">View Brand</span><i
+                                class="fa fa-arrow-right icon"></i></div>
+                    </div>
+                </a>
+
+                <!-- KDD -->
+                <a href="kdd.html" class="brand-hub-card">
+                    <div class="brand-hub-bar bar-kdd"></div>
+                    <div class="brand-hub-card-body">
+                        <div class="hub-logo hub-logo-kdd">KDD</div>
+                        <div class="hub-origin"><span>🇨🇳</span><span data-en="China" data-ar="الصين">China</span>
+                        </div>
+                        <h3>KDD</h3>
+                        <p data-en="Certified Chinese auto parts manufacturer with the widest vehicle compatibility in our portfolio — covering European, Japanese, Korean, and American brands with thousands of SKUs at competitive wholesale prices."
+                            data-ar="شركة تصنيع صينية معتمدة لقطع غيار السيارات مع أوسع توافق للمركبات في محفظتنا — تغطي العلامات الأوروبية واليابانية والكورية والأمريكية مع آلاف الأصناف بأسعار جملة تنافسية.">
+                            Certified Chinese auto parts manufacturer with the widest vehicle compatibility in our
+                            portfolio — covering European, Japanese, Korean, and American brands with thousands of SKUs
+                            at competitive wholesale prices.</p>
+                        <div class="hub-tags">
+                            <span class="hub-tag">Toyota</span>
+                            <span class="hub-tag">Nissan</span>
+                            <span class="hub-tag">Hyundai</span>
+                            <span class="hub-tag">BMW</span>
+                            <span class="hub-tag">+8 <span data-en="more" data-ar="أخرى">more</span></span>
+                        </div>
+                    </div>
+                    <div class="brand-hub-card-footer">
+                        <div class="exclusive-pill"><i class="fa fa-certificate"></i><span data-en="Exclusive Agency"
+                                data-ar="وكالة حصرية">Exclusive Agency</span></div>
+                        <div class="view-brand-btn"><span data-en="View Brand" data-ar="عرض العلامة">View Brand</span><i
+                                class="fa fa-arrow-right icon"></i></div>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- COMPARISON TABLE -->
+    <section class="section section-alt">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label" data-en="At a Glance" data-ar="نظرة سريعة">At a Glance</div>
+                <h2 data-en="Brand Comparison" data-ar="مقارنة بين العلامات">Brand Comparison</h2>
+            </div>
+            <div class="table-wrap">
+                <table class="compare-table">
+                    <thead>
+                        <tr>
+                            <th data-en="Feature" data-ar="الميزة">Feature</th>
+                            <th>Borsehung 🇩🇪</th>
+                            <th>VIKA 🇨🇳</th>
+                            <th>KDD 🇨🇳</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td data-en="Origin" data-ar="المنشأ">Origin</td>
+                            <td data-en="Germany" data-ar="ألمانيا">Germany</td>
+                            <td data-en="China (Tantivy)" data-ar="الصين (Tantivy)">China (Tantivy)</td>
+                            <td data-en="China" data-ar="الصين">China</td>
+                        </tr>
+                        <tr>
+                            <td data-en="Vehicle Coverage" data-ar="تغطية المركبات">Vehicle Coverage</td>
+                            <td data-en="VW, MB, BMW" data-ar="VW, MB, BMW">VW, MB, BMW</td>
+                            <td data-en="VW, Audi Group" data-ar="مجموعة VW وAudi">VW, Audi Group</td>
+                            <td data-en="12+ Brands" data-ar="+12 علامة">12+ Brands</td>
+                        </tr>
+                        <tr>
+                            <td data-en="Quality Tier" data-ar="مستوى الجودة">Quality Tier</td>
+                            <td data-en="OE Grade" data-ar="مستوى المصنع الأصلي">OE Grade</td>
+                            <td data-en="Superior to OE" data-ar="متفوق على المصنع الأصلي">Superior to OE</td>
+                            <td data-en="ISO Certified" data-ar="معتمد ISO">ISO Certified</td>
+                        </tr>
+                        <tr>
+                            <td data-en="Warranty" data-ar="الضمان">Warranty</td>
+                            <td data-en="Standard OE Warranty" data-ar="ضمان المصنع الأصلي القياسي">Standard OE Warranty
+                            </td>
+                            <td data-en="Up to 4 Years / 150k km" data-ar="حتى 4 سنوات / 150 ألف كم">Up to 4 Years /
+                                150k km</td>
+                            <td data-en="Manufacturer Warranty" data-ar="ضمان المصنع">Manufacturer Warranty</td>
+                        </tr>
+                        <tr>
+                            <td data-en="Catalog Data" data-ar="بيانات الكتالوج">Catalog Data</td>
+                            <td><span class="check">✓</span> TecDoc</td>
+                            <td><span class="check">✓</span> <span data-en="Online" data-ar="أونلاين">Online</span></td>
+                            <td><span class="check">✓</span> <span data-en="Online" data-ar="أونلاين">Online</span></td>
+                        </tr>
+                        <tr>
+                            <td data-en="Best For" data-ar="الأنسب لـ">Best For</td>
+                            <td data-en="German car specialists" data-ar="متخصصو السيارات الألمانية">German car
+                                specialists</td>
+                            <td data-en="Quality-focused workshops" data-ar="ورش تركز على الجودة">Quality-focused
+                                workshops</td>
+                            <td data-en="Multi-brand dealers" data-ar="تجار متعددو العلامات">Multi-brand dealers</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section">
+        <div class="container">
+            <div class="locate-card">
+                <div class="locate-card-icon"><i class="fa fa-user-tie"></i></div>
+                <div class="locate-card-content">
+                    <div class="section-label" data-en="Become a Dealer" data-ar="كن تاجراً">Become a Dealer</div>
+                    <h3 data-en="Access All 3 Brands Under One Dealer Account"
+                        data-ar="الوصول إلى 3 علامات تجارية تحت حساب تاجر واحد">Access All 3 Brands Under One Dealer
+                        Account</h3>
+                    <p data-en="Register as a NUTD dealer and get wholesale pricing across our full Borsehung, VIKA, and KDD catalog — all managed from a single dashboard."
+                        data-ar="سجّل كتاجر نماء المتحدة واحصل على أسعار الجملة عبر كتالوج بورسيهونج وVIKA وKDD الكامل — كل ذلك مُدار من لوحة تحكم واحدة.">
+                        Register as a NUTD dealer and get wholesale pricing across our full Borsehung, VIKA, and KDD
+                        catalog — all managed from a single dashboard.</p>
+                    <div class="d-flex gap-12 flex-wrap">
+                        <a href="../dealer/register.html" class="btn btn-primary btn-lg"
+                            data-en="Apply for a Dealer Account" data-ar="تقدم لحساب تاجر">Apply for a Dealer
+                            Account</a>
+                        <a href="../catalog.html" class="btn btn-outline btn-lg" data-en="Browse Full Catalog"
+                            data-ar="تصفح الكتالوج الكامل">Browse Full Catalog</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <span
+                    data-en="© 2025 Nama United Trading & Distribution. Exclusive distributor for Borsehung · VIKA · KDD"
+                    data-ar="© 2025 نماء المتحدة للتجارة والتوزيع. الموزع الحصري لبورسيهونج · VIKA · KDD">© 2025 Nama
+                    United Trading &amp; Distribution. Exclusive distributor for Borsehung · VIKA · KDD</span>
+                <div class="d-flex gap-16">
+                    <a href="../index.html" data-en="Home" data-ar="الرئيسية">Home</a>
+                    <a href="../catalog.html" data-en="Catalog" data-ar="الكتالوج">Catalog</a>
+                    <a href="../dealer/login.html" data-en="Dealer Portal" data-ar="بوابة التاجر">Dealer Portal</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let currentLang = localStorage.getItem('lang') || 'en';
+        function setLang(lang) {
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+            document.documentElement.lang = lang;
+            document.body.classList.toggle('lang-ar', lang === 'ar');
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+            document.getElementById('btn-ar').classList.toggle('active', lang === 'ar');
+            document.querySelectorAll('[data-en]').forEach(el => {
+                const t = el.getAttribute('data-' + lang);
+                if (t) el.innerHTML = t;
+            });
+        }
+        window.addEventListener('scroll', () => document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50));
+        setLang(currentLang);
+    </script>
+</body>
+
+</html>

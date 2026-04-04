@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Approve Orders – Admin Portal</title>
+    <link rel="icon" type="image/svg+xml" href="../img/favicon.svg" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        .sidebar { background: #0c0c0c; border-right: 1px solid rgba(232, 35, 26, 0.3); }
+        .sidebar-link.active, .sidebar-link:hover { background: rgba(232, 35, 26, 0.1); border-left: 3px solid var(--red); color: var(--red); }
+        .sidebar-link.active .icon, .sidebar-link:hover .icon { color: var(--red); }
+    </style>
+</head>
+<body>
+
+    <div class="portal-layout">
+        <!-- =========== SIDEBAR =========== -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <img src="../img/logo.svg" alt="NUTD" style="height:32px" />
+                <span style="color:var(--red); font-weight:800; padding:0 8px; font-size:1.1rem;">ADMIN</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="sidebar-section-label" data-en="Management" data-ar="الإدارة">Management</div>
+                <a href="dashboard.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-gauge"></i></span>
+                    <span data-en="Overview" data-ar="نظرة عامة">Overview</span>
+                </a>
+                <a href="orders.html" class="sidebar-link active">
+                    <span class="icon"><i class="fa fa-list-check"></i></span>
+                    <span data-en="Approve Orders" data-ar="اعتماد الطلبات">Approve Orders</span>
+                    <span class="badge" id="adminPendingBadge" data-en="New" data-ar="جديد" style="background:var(--warning);">New</span>
+                </a>
+                <a href="products.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-boxes-stacked"></i></span>
+                    <span data-en="Manage Products" data-ar="إدارة المنتجات">Manage Products</span>
+                </a>
+                <a href="articles.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-newspaper"></i></span>
+                    <span data-en="Manage News & Media" data-ar="إدارة الأخبار والميديا">Manage News & Media</span>
+                </a>
+                
+                <div class="sidebar-section-label" data-en="System" data-ar="النظام">System</div>
+                <a href="settings.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-gear"></i></span>
+                    <span data-en="Site Settings" data-ar="إعدادات الموقع">Site Settings</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- =========== MAIN CONTENT =========== -->
+        <main class="portal-main">
+            <!-- TOP BAR -->
+            <div class="portal-topbar">
+                <div>
+                    <span class="topbar-title" data-en="Approve Orders" data-ar="اعتماد الطلبات">Approve Orders</span>
+                </div>
+                <div class="topbar-actions">
+                    <div class="lang-toggle">
+                        <button onclick="setLang('en')" class="active" id="btn-en">EN</button>
+                        <button onclick="setLang('ar')" id="btn-ar">AR</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PORTAL CONTENT -->
+            <div class="portal-content">
+                <div style="display: flex; gap: 16px; margin-bottom: 20px;">
+                    <div class="search-box glass-panel" style="flex:1; display:flex; align-items:center; padding: 8px 16px; border-radius: var(--r-md);">
+                        <i class="fa fa-search text-muted"></i>
+                        <input type="text" id="searchInput" placeholder="Search Invoice #..." style="background:transparent; border:none; outline:none; color:white; margin-left:10px; width:100%;" onkeyup="filterOrders()">
+                    </div>
+                    <select id="statusFilter" class="form-control" style="width:200px;" onchange="filterOrders()">
+                        <option value="Pending">Pending / معلق</option>
+                        <option value="Approved">Approved / معتمد</option>
+                        <option value="Completed">Completed / مكتمل</option>
+                        <option value="Rejected">Rejected / مرفوض</option>
+                        <option value="">All / الكل</option>
+                    </select>
+                </div>
+
+                <div class="table-wrap glass-panel">
+                    <table class="orders-table">
+                        <thead>
+                            <tr>
+                                <th data-en="Invoice #" data-ar="رقم الفاتورة">Invoice #</th>
+                                <th data-en="Date" data-ar="التاريخ">Date</th>
+                                <th data-en="Items" data-ar="الأصناف">Items</th>
+                                <th data-en="Total" data-ar="الإجمالي">Total</th>
+                                <th data-en="Status" data-ar="الحالة">Status</th>
+                                <th style="width: 120px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTbody">
+                            <tr><td colspan="6" style="text-align:center;">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Review Modal -->
+    <div class="modal-overlay" id="reviewModal">
+        <div class="modal" style="max-width: 800px; width:95%;">
+            <div class="modal-header">
+                <h3 id="modalTitle" data-en="Review Order" data-ar="مراجعة الطلب">Review Order</h3>
+                <button class="close-btn" onclick="closeModal()"><i class="fa fa-times"></i></button>
+            </div>
+            <div class="modal-body" style="padding: 24px;">
+                <input type="hidden" id="reviewOrderId" value="">
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; background: var(--dark-3); border-radius: var(--r-md); padding: 16px; margin-bottom: 20px;">
+                    <div><span class="text-muted">Invoice #:</span> <span id="rInvoice" class="text-white fw-700"></span></div>
+                    <div><span class="text-muted">Date:</span> <span id="rDate" class="text-white"></span></div>
+                    <div><span class="text-muted">Reference:</span> <span id="rRef" class="text-white"></span></div>
+                    <div><span class="text-muted">Status:</span> <span id="rStatus" class="fw-700"></span></div>
+                </div>
+
+                <div class="table-wrap glass-panel" style="max-height: 300px; overflow-y:auto; margin-bottom:20px;">
+                    <table class="orders-table" style="margin:0;">
+                        <thead>
+                            <tr>
+                                <th>SKU</th>
+                                <th>Item</th>
+                                <th>Price</th>
+                                <th>Qty</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rItemsTbody"></tbody>
+                    </table>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: rgba(34, 197, 94, 0.1); border-radius: var(--r-md); border: 1px solid rgba(34, 197, 94, 0.2);">
+                    <span style="color: var(--success); font-weight: 600;" data-en="Total Amount" data-ar="الإجمالي">Total Amount</span>
+                    <span id="rTotal" style="color: var(--success); font-size: 1.2rem; font-weight: 800; font-family: monospace;">EGP 0</span>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; gap:12px;" id="reviewFooterActions">
+                <button class="btn btn-outline" style="flex:1; border-color:var(--danger); color:var(--danger);" onclick="changeStatus('Rejected')" data-en="Reject" data-ar="رفض">Reject</button>
+                <button class="btn btn-primary" style="flex:2;" onclick="changeStatus('Approved')" data-en="Approve Order" data-ar="اعتماد الطلب">Approve Order</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentLang = localStorage.getItem('lang') || 'en';
+        let allOrders = [];
+
+        function setLang(lang) {
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+            document.documentElement.lang = lang;
+            document.body.classList.toggle('lang-ar', lang === 'ar');
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+            document.getElementById('btn-ar').classList.toggle('active', lang === 'ar');
+            document.querySelectorAll('[data-en]').forEach(el => {
+                const t = el.getAttribute('data-' + lang);
+                if (t) el.innerHTML = t;
+            });
+            filterOrders(); // re-render text
+        }
+
+        async function fetchOrders() {
+            try {
+                const res = await fetch('http://localhost:5000/api/orders');
+                const json = await res.json();
+                if(json.success) {
+                    allOrders = json.data;
+                    filterOrders();
+                    
+                    const pCount = allOrders.filter(o => o.status === 'Pending').length;
+                    document.getElementById('adminPendingBadge').textContent = pCount;
+                }
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+        function filterOrders() {
+            const term = document.getElementById('searchInput').value.toLowerCase();
+            const status = document.getElementById('statusFilter').value;
+            
+            const data = allOrders.filter(o => {
+                const matchTerm = (o.invoiceNumber||'').toLowerCase().includes(term) || (o.reference||'').toLowerCase().includes(term);
+                const matchStatus = status ? o.status === status : true;
+                return matchTerm && matchStatus;
+            });
+
+            const tbody = document.getElementById('ordersTbody');
+            if(data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center">No orders found.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = data.map(o => {
+                const dateObj = new Date(o.date);
+                const dateStr = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                
+                let badgeClass = 'badge-pending';
+                let transAr = o.status;
+                let transEn = o.status;
+                if(o.status === 'Approved') { badgeClass = 'badge-approved'; transAr = 'معتمد'; }
+                else if(o.status === 'Completed') { badgeClass = 'badge-approved'; transAr = 'مكتمل'; }
+                else if(o.status === 'Rejected') { badgeClass = 'badge-rejected'; transAr = 'مرفوض'; transEn = 'Rejected'; }
+                else if(o.status === 'Pending') { transAr = 'معلق'; transEn = 'Pending'; }
+
+                return `
+                <tr>
+                    <td class="text-white fw-700">${o.invoiceNumber}</td>
+                    <td>${dateStr}</td>
+                    <td>${o.itemCount}</td>
+                    <td class="text-white fw-700">EGP ${o.totalAmount.toLocaleString()}</td>
+                    <td><span class="badge ${badgeClass}" data-en="${transEn}" data-ar="${transAr}">${currentLang === 'ar' ? transAr : transEn}</span></td>
+                    <td>
+                        <button class="btn btn-ghost btn-sm" onclick="reviewOrder('${o._id}')" data-en="Review" data-ar="مراجعة">${currentLang==='ar'?'مراجعة':'Review'}</button>
+                    </td>
+                </tr>
+                `;
+            }).join('');
+        }
+
+        function reviewOrder(id) {
+            const o = allOrders.find(x => x._id === id);
+            if(!o) return;
+            
+            document.getElementById('reviewOrderId').value = o._id;
+            document.getElementById('rInvoice').textContent = o.invoiceNumber;
+            document.getElementById('rDate').textContent = new Date(o.date).toLocaleDateString();
+            document.getElementById('rRef').textContent = o.reference || '--';
+            document.getElementById('rTotal').textContent = 'EGP ' + o.totalAmount.toLocaleString();
+            
+            const sBadgeStyle = o.status === 'Pending' ? 'color:var(--warning)' : (o.status === 'Rejected' ? 'color:var(--danger)' : 'color:var(--success)');
+            document.getElementById('rStatus').textContent = o.status;
+            document.getElementById('rStatus').style = sBadgeStyle;
+            
+            const tbody = document.getElementById('rItemsTbody');
+            if(!o.items || o.items.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">No items provided</td></tr>`;
+            } else {
+                tbody.innerHTML = o.items.map(item => `
+                <tr>
+                    <td><code>${item.sku}</code></td>
+                    <td>${currentLang === 'ar' ? (item.nameAr || item.nameEn) : (item.nameEn || item.nameAr)}</td>
+                    <td>EGP ${item.price.toLocaleString()}</td>
+                    <td>${item.qty}</td>
+                    <td class="text-white fw-700">EGP ${(item.price * item.qty).toLocaleString()}</td>
+                </tr>
+                `).join('');
+            }
+            
+            const footer = document.getElementById('reviewFooterActions');
+            if(o.status === 'Pending') {
+                footer.style.display = 'flex';
+            } else {
+                footer.style.display = 'none'; // Only allow action on pending
+            }
+
+            document.getElementById('reviewModal').classList.add('open');
+        }
+
+        function closeModal() {
+            document.getElementById('reviewModal').classList.remove('open');
+        }
+
+        async function changeStatus(newStatus) {
+            const id = document.getElementById('reviewOrderId').value;
+            if(!id) return;
+            
+            if(!confirm(currentLang === 'ar' ? `هل أنت متأكد من تغيير الحالة إلى ${newStatus}؟` : `Are you sure you want to mark this order as ${newStatus}?`)) return;
+
+            try {
+                const res = await fetch('http://localhost:5000/api/orders/' + id + '/status', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: newStatus })
+                });
+                const json = await res.json();
+                if(json.success) {
+                    closeModal();
+                    await fetchOrders();
+                } else {
+                    alert('Error: ' + json.error);
+                }
+            } catch(e) {
+                alert('Connection error');
+            }
+        }
+
+        window.addEventListener('languageChanged', (e) => {
+            fetchOrders();
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setLang(currentLang);
+            fetchOrders();
+        });
+    </script>
+<script src="../js/shared.js"></script>
+</body>
+</html>

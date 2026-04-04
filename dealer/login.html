@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dealer Login – NUTD Portal</title>
+    <link rel="icon" type="image/svg+xml" href="../img/favicon.svg" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        body {
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .auth-side {
+            display: flex;
+            width: 100%;
+            max-width: 1200px;
+            min-height: 100vh;
+            margin: 0 auto;
+            background: #0a0a0a;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+        }
+
+        @media(min-width: 1201px) {
+            .auth-side {
+                min-height: 800px;
+                height: 85vh;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 20px;
+                overflow: hidden;
+            }
+        }
+
+        .auth-visual {
+            flex: 1;
+            background:
+                linear-gradient(135deg, rgba(10, 10, 10, .92) 0%, rgba(30, 5, 5, .9) 100%),
+                repeating-linear-gradient(45deg, rgba(232, 35, 26, .03) 0, rgba(232, 35, 26, .03) 1px, transparent 0, transparent 50%);
+            background-size: cover, 20px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-visual::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(232, 35, 26, .12) 0%, transparent 70%);
+        }
+
+        .auth-visual-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .auth-visual h2 {
+            color: var(--white);
+            font-size: 2rem;
+            margin-bottom: 16px;
+        }
+
+        .auth-visual p {
+            color: var(--gray-300);
+            max-width: 380px;
+            line-height: 1.7;
+        }
+
+        .auth-feature-list {
+            margin-top: 36px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .auth-feature {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--gray-300);
+            font-size: .88rem;
+        }
+
+        .auth-feature .icon {
+            width: 32px;
+            height: 32px;
+            background: rgba(232, 35, 26, .12);
+            border-radius: var(--r-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--red);
+            flex-shrink: 0;
+        }
+
+        .auth-right {
+            width: 480px;
+            background: var(--dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 32px;
+            border-left: 1px solid rgba(255, 255, 255, .07);
+        }
+
+        body.lang-ar .auth-right {
+            border-left: none;
+            border-right: 1px solid rgba(255, 255, 255, .07);
+        }
+
+        .auth-right-inner {
+            width: 100%;
+            max-width: 380px;
+        }
+
+        @media(max-width:900px) {
+            .auth-visual {
+                display: none;
+            }
+
+            .auth-right {
+                width: 100%;
+                border: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="auth-side">
+        <!-- Visual side -->
+        <div class="auth-visual">
+            <div class="auth-visual-content">
+                <a href="../index.html" class="nav-logo mb-32" style="display:flex;align-items:center;gap:12px">
+                    <div class="brand-logo-box" style="width:44px;height:44px;border-radius:8px;font-size:.85rem">NUTD
+                    </div>
+                    <div class="nav-logo-text">
+                        <span class="name-en">NUTD Dealer Portal</span>
+                        <span class="name-ar" style="font-family:'Cairo',sans-serif">بوابة التاجر</span>
+                    </div>
+                </a>
+                <h2 data-en="The #1 Automotive Parts Dealer Portal in the Region"
+                    data-ar="بوابة التجار الأولى لقطع غيار السيارات في المنطقة">The #1 Automotive Parts Dealer Portal in
+                    the Region</h2>
+                <p data-en="Access wholesale pricing, real-time inventory, and create invoices instantly — all in one place."
+                    data-ar="الوصول إلى أسعار الجملة والمخزون الفوري وإنشاء الفواتير على الفور — كل ذلك في مكان واحد.">
+                    Access wholesale pricing, real-time inventory, and create invoices instantly — all in one place.</p>
+                <div class="auth-feature-list">
+                    <div class="auth-feature">
+                        <div class="icon"><i class="fa fa-tag"></i></div> <span
+                            data-en="Exclusive wholesale pricing for registered dealers"
+                            data-ar="أسعار جملة حصرية للتجار المسجلين">Exclusive wholesale pricing for registered
+                            dealers</span>
+                    </div>
+                    <div class="auth-feature">
+                        <div class="icon"><i class="fa fa-file-invoice"></i></div> <span
+                            data-en="Create and track invoices online" data-ar="إنشاء الفواتير وتتبعها أونلاين">Create
+                            and track invoices online</span>
+                    </div>
+                    <div class="auth-feature">
+                        <div class="icon"><i class="fa fa-boxes-stacked"></i></div> <span
+                            data-en="Browse 5,000+ certified parts" data-ar="تصفح أكثر من 5000 قطعة معتمدة">Browse
+                            5,000+ certified parts</span>
+                    </div>
+                    <div class="auth-feature">
+                        <div class="icon"><i class="fa fa-headset"></i></div> <span data-en="Priority B2B support"
+                            data-ar="دعم B2B ذو أولوية">Priority B2B support</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login form -->
+        <div class="auth-right">
+            <div class="auth-right-inner">
+                <!-- Lang toggle -->
+                <div class="d-flex justify-between align-center mb-32">
+                    <a href="../index.html" class="btn btn-ghost btn-sm"><i class="fa fa-arrow-left"></i> <span
+                            data-en="Back to site" data-ar="العودة للموقع">Back to site</span></a>
+                    <div class="lang-toggle">
+                        <button onclick="setLang('en')" class="active" id="btn-en">EN</button>
+                        <button onclick="setLang('ar')" id="btn-ar">AR</button>
+                    </div>
+                </div>
+
+                <h2 data-en="Dealer Login" data-ar="دخول التجار" style="color:var(--white);margin-bottom:8px">Dealer
+                    Login</h2>
+                <p data-en="Sign in to access your dealer dashboard" data-ar="سجل دخول للوصول إلى لوحة التاجر"
+                    style="color:var(--gray-500);font-size:.88rem;margin-bottom:32px">Sign in to access your dealer
+                    dashboard</p>
+
+                <form onsubmit="doLogin(event)">
+                    <div class="form-group">
+                        <label class="form-label" data-en="Email Address" data-ar="البريد الإلكتروني">Email
+                            Address</label>
+                        <input type="email" class="form-control" id="loginEmail" placeholder="dealer@company.com"
+                            required data-placeholder-en="dealer@company.com"
+                            data-placeholder-ar="dealer@company.com" />
+                    </div>
+                    <div class="form-group">
+                        <div class="d-flex justify-between align-center mb-8">
+                            <label class="form-label" style="margin:0" data-en="Password"
+                                data-ar="كلمة المرور">Password</label>
+                            <a href="#" style="font-size:.78rem;color:var(--red)" data-en="Forgot password?"
+                                data-ar="نسيت كلمة المرور؟">Forgot password?</a>
+                        </div>
+                        <input type="password" class="form-control" id="loginPass" placeholder="••••••••" required
+                            data-placeholder-en="••••••••" data-placeholder-ar="••••••••" />
+                    </div>
+
+                    <div class="d-flex align-center gap-8 mb-24">
+                        <input type="checkbox" id="remember" style="accent-color:var(--red)" />
+                        <label for="remember" style="font-size:.85rem;color:var(--gray-300);cursor:pointer"
+                            data-en="Remember me" data-ar="تذكرني">Remember me</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-full btn-lg">
+                        <i class="fa fa-right-to-bracket"></i>
+                        <span data-en="Sign In" data-ar="تسجيل الدخول">Sign In</span>
+                    </button>
+                </form>
+
+                <div class="auth-divider" style="margin:24px 0">
+                    <span data-en="New to NUTD?" data-ar="جديد في نماء المتحدة؟">New to NUTD?</span>
+                </div>
+
+                <a href="register.html" class="btn btn-outline btn-full">
+                    <i class="fa fa-user-plus"></i>
+                    <span data-en="Apply for a Dealer Account" data-ar="تقدم لحساب تاجر">Apply for a Dealer
+                        Account</span>
+                </a>
+
+                <p style="text-align:center;font-size:.75rem;color:var(--gray-700);margin-top:24px">
+                    <span data-en="Dealer accounts are subject to admin approval."
+                        data-ar="حسابات التجار تخضع لموافقة الإدارة.">Dealer accounts are subject to admin
+                        approval.</span>
+                </p>
+
+                <!-- Demo hint -->
+                <div
+                    style="background:rgba(232,35,26,.08);border:1px solid rgba(232,35,26,.2);border-radius:var(--r-md);padding:12px 16px;margin-top:20px;font-size:.78rem;color:var(--gray-300)">
+                    <i class="fa fa-key text-red"></i>
+                    <span data-en="Demo: use any email + password to enter the dashboard."
+                        data-ar="تجريبي: أدخل أي بريد + كلمة مرور للدخول على الداشبورد.">Demo: use any email + password
+                        to enter the dashboard.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentLang = localStorage.getItem('lang') || 'en';
+
+        function setLang(lang) {
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+            document.documentElement.lang = lang;
+            document.body.classList.toggle('lang-ar', lang === 'ar');
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+            document.getElementById('btn-ar').classList.toggle('active', lang === 'ar');
+            document.querySelectorAll('[data-en]').forEach(el => {
+                const t = el.getAttribute('data-' + lang);
+                if (t) el.innerHTML = t;
+            });
+            document.querySelectorAll('[data-placeholder-en]').forEach(el => {
+                el.placeholder = el.getAttribute('data-placeholder-' + lang) || el.placeholder;
+            });
+        }
+
+        function doLogin(e) {
+            e.preventDefault();
+            window.location.href = 'dashboard.html';
+        }
+
+        setLang(currentLang);
+    </script>
+<script src="../js/shared.js"></script>
+</body>
+
+</html>

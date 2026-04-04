@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register – NUTD Dealer Portal</title>
+    <link rel="icon" type="image/svg+xml" href="../img/favicon.svg" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        body {
+            min-height: 100vh;
+            background: var(--black);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 32px 16px;
+        }
+
+        .reg-card {
+            width: 100%;
+            max-width: 640px;
+            background: var(--dark-2);
+            border: 1px solid rgba(255, 255, 255, .09);
+            border-radius: var(--r-xl);
+            padding: 48px 44px;
+        }
+
+        .steps {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            margin-bottom: 40px;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            flex: 1;
+        }
+
+        .step-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--dark-3);
+            border: 2px solid rgba(255, 255, 255, .12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .75rem;
+            font-weight: 700;
+            color: var(--gray-500);
+            flex-shrink: 0;
+            transition: all .3s;
+        }
+
+        .step-dot.active {
+            background: var(--red);
+            border-color: var(--red);
+            color: var(--white);
+        }
+
+        .step-dot.done {
+            background: var(--success);
+            border-color: var(--success);
+            color: var(--white);
+        }
+
+        .step-line {
+            flex: 1;
+            height: 2px;
+            background: rgba(255, 255, 255, .1);
+        }
+
+        .step-line.done {
+            background: var(--success);
+        }
+
+        .step-label {
+            font-size: .72rem;
+            color: var(--gray-500);
+            text-align: center;
+            margin-top: 6px;
+        }
+
+        .step-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .step-meta {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .pending-badge {
+            background: rgba(245, 158, 11, .1);
+            border: 1px solid rgba(245, 158, 11, .3);
+            border-radius: var(--r-lg);
+            padding: 24px;
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+            margin-top: 28px;
+        }
+
+        .pending-badge .icon {
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+
+        @media(max-width:560px) {
+            .reg-card {
+                padding: 32px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="reg-card">
+        <div class="d-flex justify-between align-center mb-32">
+            <a href="../index.html" class="nav-logo" style="gap:10px">
+                <div class="brand-logo-box" style="width:38px;height:38px;border-radius:7px;font-size:.8rem">NUTD</div>
+                <div class="nav-logo-text"><span class="name-en" style="font-size:.85rem">Dealer Portal</span><span
+                        class="name-ar">بوابة التاجر</span></div>
+            </a>
+            <div class="lang-toggle">
+                <button onclick="setLang('en')" class="active" id="btn-en">EN</button>
+                <button onclick="setLang('ar')" id="btn-ar">AR</button>
+            </div>
+        </div>
+
+        <!-- Steps indicator -->
+        <div class="steps mb-8">
+            <div class="step-wrap">
+                <div class="step-dot active" id="dot1">1</div>
+                <div class="step-label" data-en="Account" data-ar="الحساب">Account</div>
+            </div>
+            <div class="step-line" id="line1"></div>
+            <div class="step-wrap">
+                <div class="step-dot" id="dot2">2</div>
+                <div class="step-label" data-en="Business" data-ar="النشاط">Business</div>
+            </div>
+            <div class="step-line" id="line2"></div>
+            <div class="step-wrap">
+                <div class="step-dot" id="dot3">3</div>
+                <div class="step-label" data-en="Review" data-ar="المراجعة">Review</div>
+            </div>
+        </div>
+
+        <!-- STEP 1 -->
+        <div id="step1">
+            <h2 style="color:var(--white);margin-bottom:6px" data-en="Create Your Account" data-ar="أنشئ حسابك">Create
+                Your Account</h2>
+            <p style="color:var(--gray-500);font-size:.88rem;margin-bottom:28px"
+                data-en="Fill in your login credentials" data-ar="أدخل بيانات تسجيل الدخول">Fill in your login
+                credentials</p>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label" data-en="First Name" data-ar="الاسم الأول">First Name</label>
+                    <input type="text" class="form-control" placeholder="Ahmed" data-placeholder-en="Ahmed"
+                        data-placeholder-ar="أحمد" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label" data-en="Last Name" data-ar="اسم العائلة">Last Name</label>
+                    <input type="text" class="form-control" placeholder="Hassan" data-placeholder-en="Hassan"
+                        data-placeholder-ar="حسن" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label" data-en="Email Address" data-ar="البريد الإلكتروني">Email Address</label>
+                <input type="email" class="form-control" placeholder="you@company.com"
+                    data-placeholder-en="you@company.com" data-placeholder-ar="you@company.com" />
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label" data-en="Password" data-ar="كلمة المرور">Password</label>
+                    <input type="password" class="form-control" placeholder="Min. 8 characters"
+                        data-placeholder-en="Min. 8 characters" data-placeholder-ar="٨ أحرف على الأقل" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label" data-en="Confirm Password" data-ar="تأكيد كلمة المرور">Confirm
+                        Password</label>
+                    <input type="password" class="form-control" placeholder="Repeat password"
+                        data-placeholder-en="Repeat password" data-placeholder-ar="أعد كلمة المرور" />
+                </div>
+            </div>
+            <button class="btn btn-primary btn-full mt-8" onclick="goStep(2)" data-en="Continue →"
+                data-ar="متابعة ←">Continue →</button>
+            <p class="auth-footer" data-en="Already have an account? <a href='login.html'>Sign in</a>"
+                data-ar="لديك حساب بالفعل؟ <a href='login.html'>سجل دخول</a>">Already have an account? <a
+                    href="login.html">Sign in</a></p>
+        </div>
+
+        <!-- STEP 2 -->
+        <div id="step2" class="hidden">
+            <h2 style="color:var(--white);margin-bottom:6px" data-en="Business Information"
+                data-ar="معلومات النشاط التجاري">Business Information</h2>
+            <p style="color:var(--gray-500);font-size:.88rem;margin-bottom:28px"
+                data-en="Tell us about your automotive business" data-ar="أخبرنا عن نشاطك التجاري">Tell us about your
+                automotive business</p>
+
+            <div class="form-group">
+                <label class="form-label" data-en="Business / Shop Name" data-ar="اسم المحل / الشركة">Business / Shop
+                    Name</label>
+                <input type="text" class="form-control" placeholder="Al-Nour Auto Parts"
+                    data-placeholder-en="Al-Nour Auto Parts" data-placeholder-ar="النور لقطع السيارات" />
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label" data-en="Governorate" data-ar="المحافظة">Governorate</label>
+                    <select class="form-control">
+                        <option value="">Select...</option>
+                        <option>Cairo – القاهرة</option>
+                        <option>Giza – الجيزة</option>
+                        <option>Alexandria – الإسكندرية</option>
+                        <option>Luxor – الأقصر</option>
+                        <option>Aswan – أسوان</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" data-en="City / District" data-ar="المدينة / المنطقة">City /
+                        District</label>
+                    <input type="text" class="form-control" placeholder="Nasr City" data-placeholder-en="Nasr City"
+                        data-placeholder-ar="مدينة نصر" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label" data-en="Phone Number" data-ar="رقم الهاتف">Phone Number</label>
+                <input type="tel" class="form-control" placeholder="+20 10 XXXX XXXX"
+                    data-placeholder-en="+20 10 XXXX XXXX" data-placeholder-ar="+20 10 XXXX XXXX" />
+            </div>
+            <div class="form-group">
+                <label class="form-label" data-en="Business Type" data-ar="نوع النشاط">Business Type</label>
+                <select class="form-control">
+                    <option value="">Select type...</option>
+                    <option data-en="Parts Shop / Store" data-ar="محل قطع غيار">Parts Shop / Store</option>
+                    <option data-en="Repair Workshop" data-ar="ورشة صيانة">Repair Workshop</option>
+                    <option data-en="Fleet Operator" data-ar="شركة أسطول">Fleet Operator</option>
+                    <option data-en="Dealer / Distributor" data-ar="تاجر / موزع">Dealer / Distributor</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label" data-en="Tax Registration No. (optional)"
+                    data-ar="الرقم الضريبي (اختياري)">Tax Registration No. (optional)</label>
+                <input type="text" class="form-control" placeholder="123-456-789" data-placeholder-en="123-456-789"
+                    data-placeholder-ar="123-456-789" />
+            </div>
+
+            <div class="d-flex gap-12 mt-8">
+                <button class="btn btn-ghost flex-1" onclick="goStep(1)" data-en="← Back" data-ar="→ رجوع">←
+                    Back</button>
+                <button class="btn btn-primary flex-1" onclick="goStep(3)" data-en="Submit Application"
+                    data-ar="إرسال الطلب">Submit Application</button>
+            </div>
+        </div>
+
+        <!-- STEP 3 – Pending -->
+        <div id="step3" class="hidden" style="text-align:center">
+            <div style="font-size:4rem;margin-bottom:16px">⏳</div>
+            <h2 style="color:var(--white);margin-bottom:12px" data-en="Application Submitted!"
+                data-ar="تم إرسال الطلب!">Application Submitted!</h2>
+            <p style="color:var(--gray-300);max-width:380px;margin:0 auto 24px;font-size:.9rem"
+                data-en="Your dealer account application has been received. Our team will review it and get back to you within 1–2 business days."
+                data-ar="تم استلام طلب حساب التاجر الخاص بك. سيقوم فريقنا بمراجعته والعودة إليك خلال 1-2 يوم عمل.">
+                Your dealer account application has been received. Our team will review it and get back to you within
+                1–2 business days.
+            </p>
+            <div class="pending-badge">
+                <span class="icon">📧</span>
+                <div style="text-align:left">
+                    <div style="color:var(--warning);font-weight:700;margin-bottom:4px" data-en="Pending Admin Approval"
+                        data-ar="في انتظار موافقة الإدارة">Pending Admin Approval</div>
+                    <div style="font-size:.83rem;color:var(--gray-400)"
+                        data-en="You'll receive an email notification once your account is approved or if additional documents are needed."
+                        data-ar="ستتلقى إشعاراً بالبريد الإلكتروني بمجرد الموافقة على حسابك أو إذا كانت هناك وثائق إضافية مطلوبة.">
+                        You'll receive an email notification once your account is approved or if additional documents
+                        are needed.
+                    </div>
+                </div>
+            </div>
+            <a href="../index.html" class="btn btn-outline mt-24" data-en="← Back to Main Site"
+                data-ar="← العودة للموقع الرئيسي">← Back to Main Site</a>
+        </div>
+    </div>
+
+    <script>
+        let currentLang = localStorage.getItem('lang') || 'en';
+        let currentStep = 1;
+
+        function setLang(lang) {
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+            document.documentElement.lang = lang;
+            document.body.classList.toggle('lang-ar', lang === 'ar');
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+            document.getElementById('btn-ar').classList.toggle('active', lang === 'ar');
+            document.querySelectorAll('[data-en]').forEach(el => {
+                const t = el.getAttribute('data-' + lang);
+                if (t) el.innerHTML = t;
+            });
+            document.querySelectorAll('[data-placeholder-en]').forEach(el => {
+                el.placeholder = el.getAttribute('data-placeholder-' + lang) || el.placeholder;
+            });
+        }
+
+        function goStep(n) {
+            document.getElementById('step' + currentStep).classList.add('hidden');
+            currentStep = n;
+            document.getElementById('step' + n).classList.remove('hidden');
+
+            for (let i = 1; i <= 3; i++) {
+                const dot = document.getElementById('dot' + i);
+                if (i < n) { dot.classList.remove('active'); dot.classList.add('done'); dot.textContent = '✓'; }
+                else if (i === n) { dot.classList.add('active'); dot.classList.remove('done'); dot.textContent = i; }
+                else { dot.classList.remove('active', 'done'); dot.textContent = i; }
+            }
+            for (let i = 1; i <= 2; i++) {
+                const line = document.getElementById('line' + i);
+                if (line) line.classList.toggle('done', i < n);
+            }
+        }
+
+        setLang(currentLang);
+    </script>
+<script src="../js/shared.js"></script>
+</body>
+
+</html>

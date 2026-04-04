@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wholesale Products – NUTD Portal</title>
+    <link rel="icon" type="image/svg+xml" href="../img/favicon.svg" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        .product-search-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--dark-2);
+            border: 1px solid rgba(255, 255, 255, .1);
+            border-radius: var(--r-md);
+            padding: 12px 20px;
+            margin-bottom: 24px;
+        }
+
+        .product-search-bar input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--white);
+            font-size: .95rem;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .product-search-bar input::placeholder {
+            color: var(--gray-600);
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .filter-select {
+            background: var(--dark-3);
+            border: 1px solid rgba(255, 255, 255, .1);
+            color: var(--white);
+            padding: 8px 14px;
+            border-radius: var(--r-md);
+            font-size: .85rem;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .wholesale-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .wholesale-table th {
+            text-align: left;
+            padding: 16px;
+            font-size: .8rem;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            color: var(--gray-500);
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+        }
+
+        body.lang-ar .wholesale-table th {
+            text-align: right;
+        }
+
+        .wholesale-table td {
+            padding: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, .05);
+            font-size: .9rem;
+            color: var(--gray-300);
+            vertical-align: middle;
+        }
+
+        .wholesale-table td.price {
+            font-weight: 700;
+            color: var(--red);
+        }
+
+        .table-wrap.glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--r-xl);
+        }
+
+        @media(max-width:768px) {
+            .sidebar { display: none; }
+            .portal-main { margin-left: 0 !important; margin-right: 0 !important; }
+            .wholesale-table th, .wholesale-table td { padding: 10px; font-size: .8rem; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="portal-layout">
+
+        <!-- =========== SIDEBAR =========== -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <img src="../img/logo.svg" alt="NUTD" style="height:32px" />
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="sidebar-section-label" data-en="Main" data-ar="رئيسي">Main</div>
+                <a href="dashboard.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-gauge"></i></span>
+                    <span data-en="Dashboard" data-ar="الداشبورد">Dashboard</span>
+                </a>
+                <a href="products.html" class="sidebar-link active">
+                    <span class="icon"><i class="fa fa-boxes-stacked"></i></span>
+                    <span data-en="Products & Pricing" data-ar="المنتجات والأسعار">Products &amp; Pricing</span>
+                </a>
+                <a href="invoice.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-file-invoice"></i></span>
+                    <span data-en="Create Invoice" data-ar="إنشاء فاتورة">Create Invoice</span>
+                    <span class="badge" data-en="New" data-ar="جديد">New</span>
+                </a>
+
+                <div class="sidebar-section-label" data-en="Orders" data-ar="الطلبات">Orders</div>
+                <a href="orders.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-clock-rotate-left"></i></span>
+                    <span data-en="Order History" data-ar="سجل الطلبات">Order History</span>
+                </a>
+                <a href="orders.html?status=Pending" class="sidebar-link" id="navPending">
+                    <span class="icon"><i class="fa fa-list-check"></i></span>
+                    <span data-en="Pending Approvals" data-ar="في انتظار الموافقة">Pending Approvals</span>
+                    <span class="badge" id="sidebarPendingBadge">0</span>
+                </a>
+
+                <div class="sidebar-section-label" data-en="Account" data-ar="الحساب">Account</div>
+                <a href="#" class="sidebar-link" onclick="alert(currentLang === 'ar' ? 'قريباً!' : 'Coming soon!'); return false;">
+                    <span class="icon"><i class="fa fa-user-gear"></i></span>
+                    <span data-en="Profile" data-ar="الملف الشخصي">Profile</span>
+                </a>
+                <a href="#" class="sidebar-link" onclick="alert(currentLang === 'ar' ? 'قريباً!' : 'Coming soon!'); return false;">
+                    <span class="icon"><i class="fa fa-headset"></i></span>
+                    <span data-en="Support" data-ar="الدعم">Support</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="d-flex align-center gap-12 mb-16">
+                    <div class="topbar-avatar">AH</div>
+                    <div>
+                        <div style="font-size:.85rem;font-weight:600;color:var(--white)">Ahmed Hassan</div>
+                        <div style="font-size:.72rem;color:var(--gray-500)" data-en="Al-Nour Auto Parts"
+                            data-ar="النور لقطع السيارات">Al-Nour Auto Parts</div>
+                    </div>
+                </div>
+                <a href="login.html" class="btn btn-ghost btn-sm btn-full">
+                    <i class="fa fa-right-from-bracket"></i>
+                    <span data-en="Sign Out" data-ar="تسجيل الخروج">Sign Out</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- =========== MAIN CONTENT =========== -->
+        <main class="portal-main">
+
+            <!-- TOP BAR -->
+            <div class="portal-topbar glass-panel" style="border-radius:0;border-left:none;border-right:none;border-top:none">
+                <div>
+                    <span class="topbar-title" data-en="Products & Pricing" data-ar="المنتجات والأسعار">Products & Pricing</span>
+                </div>
+                <div class="topbar-actions">
+                    <div class="lang-toggle">
+                        <button onclick="setLang('en')" class="active" id="btn-en">EN</button>
+                        <button onclick="setLang('ar')" id="btn-ar">AR</button>
+                    </div>
+                    <button class="btn-icon btn-ghost notif-btn" style="position:relative">
+                        <i class="fa fa-bell" style="font-size:1rem;color:var(--gray-300)"></i>
+                        <span class="notif-dot"></span>
+                    </button>
+                    <div class="topbar-avatar">AH</div>
+                </div>
+            </div>
+
+            <!-- PORTAL CONTENT -->
+            <div class="portal-content" style="padding: 24px 32px">
+
+                <!-- Search & Filters -->
+                <div class="product-search-bar glass-panel">
+                    <i class="fa fa-magnifying-glass" style="color:var(--gray-500)"></i>
+                    <input type="text" id="searchProductsInput" placeholder="Search products by SKU, name, or vehicle compatibility..."
+                        data-placeholder-en="Search products by SKU, name, or vehicle compatibility..."
+                        data-placeholder-ar="البحث عن منتجات باستخدام الرقم، الاسم، أو المركبات المتوافقة..." oninput="renderFilteredProducts()" />
+                </div>
+
+                <div class="filter-group">
+                    <select class="filter-select" id="makeFilter" onchange="renderFilteredProducts()">
+                        <option value="" data-en="All Makes" data-ar="جميع الشركات">All Makes</option>
+                        <option value="Skoda">Skoda</option>
+                        <option value="Volkswagen">Volkswagen</option>
+                        <option value="Seat">Seat</option>
+                    </select>
+                    <select class="filter-select" id="modelFilter" onchange="renderFilteredProducts()">
+                        <option value="" data-en="All Models" data-ar="جميع الموديلات">All Models</option>
+                        <option value="Octavia">Octavia</option>
+                        <option value="Golf">Golf</option>
+                        <option value="Passat">Passat</option>
+                        <option value="Superb">Superb</option>
+                        <option value="Leon">Leon</option>
+                        <option value="Polo">Polo</option>
+                        <option value="Tiguan">Tiguan</option>
+                        <option value="Kodiaq">Kodiaq</option>
+                        <option value="Ibiza">Ibiza</option>
+                    </select>
+                    <select class="filter-select" id="brandFilter" onchange="renderFilteredProducts()">
+                        <option value="" data-en="All Brands" data-ar="جميع العلامات">All Brands</option>
+                        <option value="Borsching">Borsching (Germany)</option>
+                        <option value="KDD">KDD (China)</option>
+                        <option value="Vika">Vika (China)</option>
+                    </select>
+                    <select class="filter-select" id="categoryFilter" onchange="renderFilteredProducts()">
+                        <option value="" data-en="All Categories" data-ar="جميع الفئات">All Categories</option>
+                        <option value="Suspension" data-en="Suspension" data-ar="نظام التعليق">Suspension</option>
+                        <option value="Filters" data-en="Filters" data-ar="فلاتر">Filters</option>
+                        <option value="Braking" data-en="Braking" data-ar="نظام الفرامل">Braking</option>
+                        <option value="Body" data-en="Body Parts" data-ar="قطع الهيكل">Body Parts</option>
+                        <option value="Electrical" data-en="Electrical" data-ar="أجزاء كهربائية">Electrical</option>
+                    </select>
+                    <input type="text" id="yearFilter" class="filter-select" style="background:var(--dark-3);border:1px solid rgba(255,255,255,.1);border-radius:var(--r-md);color:var(--white);padding:10px;width:120px" placeholder="Year/Gen" data-placeholder-ar="السنة/الجيل" oninput="renderFilteredProducts()" />
+                    <button class="btn btn-primary" style="margin-left:auto" onclick="window.location.href='invoice.html'" data-en="Create Invoice" data-ar="إنشاء فاتورة">Create Invoice</button>
+                </div>
+                
+                <!-- Products Table -->
+                <div class="table-wrap glass-panel mt-20">
+                    <table class="wholesale-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;"></th>
+                                <th data-en="SKU" data-ar="الرقم التعريفي">SKU</th>
+                                <th data-en="Product Name" data-ar="اسم المنتج">Product Name</th>
+                                <th data-en="Brand" data-ar="العلامة">Brand</th>
+                                <th data-en="Category" data-ar="الفئة">Category</th>
+                                <th data-en="Stock" data-ar="المخزون">Stock</th>
+                                <th data-en="Wholesale Price" data-ar="سعر الجملة">Wholesale Price</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTbody">
+                            <tr>
+                                <td colspan="7" style="text-align:center;padding:32px"><i class="fa fa-spinner fa-spin text-muted" style="font-size:1.5rem"></i></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <div id="cartToast"
+        style="position:fixed;bottom:24px;right:24px;background:var(--success);color:white;padding:12px 20px;border-radius:var(--r-md);font-size:.85rem;font-weight:600;transform:translateY(80px);transition:transform .3s;z-index:9999;box-shadow:var(--shadow-md)">
+        ✓ <span id="cartMsg">Product added to order</span>
+    </div>
+
+    <!-- Product Details Modal -->
+    <div class="modal-overlay" id="productModalOverlay" onclick="if(event.target===this)closeProductModal()">
+        <div class="modal" id="productModal">
+            <div class="modal-header">
+                <h3 id="modalProductName">Product Name</h3>
+                <button class="modal-close" onclick="closeProductModal()"><i class="fa fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div style="display:flex; gap: 24px; flex-wrap: wrap;">
+                    <div style="flex:1; min-width: 200px;">
+                        <img id="modalProductImg" src="" alt="Product Image" style="width:100%; border-radius: var(--r-md); border: 1px solid rgba(255,255,255,.1);" />
+                    </div>
+                    <div style="flex:2; min-width: 300px;">
+                        <div style="color:var(--gray-300); font-size: .9rem; margin-bottom: 20px;" id="modalProductDesc">
+                            Product Description
+                        </div>
+                        <div style="margin-bottom: 20px;">
+                            <span class="badge badge-approved" id="modalProductBrand" style="margin-right:8px;">Brand</span>
+                            <span class="badge badge-pending" id="modalProductSku">SKU</span>
+                        </div>
+                        <h4 style="font-size:.9rem; color:var(--white); margin-bottom:12px; border-bottom: 1px solid rgba(255,255,255,.05); padding-bottom:8px" data-en="Compatible Vehicles" data-ar="المركبات المتوافقة">Compatible Vehicles</h4>
+                        <div id="modalVehiclesList" style="display: flex; flex-direction: column; gap: 8px;">
+                            <!-- vehicles -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentLang = localStorage.getItem('lang') || 'en';
+
+        function setLang(lang) {
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+            document.documentElement.lang = lang;
+            document.body.classList.toggle('lang-ar', lang === 'ar');
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            
+            const btnEn = document.getElementById('btn-en');
+            const btnAr = document.getElementById('btn-ar');
+            if (btnEn) btnEn.classList.toggle('active', lang === 'en');
+            if (btnAr) btnAr.classList.toggle('active', lang === 'ar');
+            
+            document.querySelectorAll('[data-en]').forEach(el => {
+                const t = el.getAttribute('data-' + lang);
+                if (t) el.innerHTML = t;
+            });
+            document.querySelectorAll('[data-placeholder-en]').forEach(el => {
+                el.placeholder = el.getAttribute('data-placeholder-' + lang) || el.placeholder;
+            });
+        }
+
+        function addToCart(sku) {
+            let cart = JSON.parse(localStorage.getItem('dealerInvoiceCart') || '[]');
+            let existing = cart.find(x => x.sku === sku);
+            if(existing) {
+                existing.qty++;
+            } else {
+                cart.push({ sku: sku, qty: 1 });
+            }
+            localStorage.setItem('dealerInvoiceCart', JSON.stringify(cart));
+
+            const toast = document.getElementById('cartToast');
+            document.getElementById('cartMsg').textContent = currentLang === 'ar' ? `تم إضافة القطعة ${sku} إلى فاتورتك الجدبدة` : `${sku} added to your new invoice`;
+            toast.style.transform = 'translateY(0)';
+            setTimeout(() => toast.style.transform = 'translateY(80px)', 2500);
+        }
+
+        let allProducts = [];
+
+        function openProductModal(sku) {
+            const p = allProducts.find(x => x.sku === sku);
+            if (!p) return;
+            
+            const name = currentLang === 'ar' ? (p.nameAr || p.nameEn) : (p.nameEn || p.nameAr);
+            const desc = currentLang === 'ar' ? (p.descriptionAr || p.descriptionEn) : (p.descriptionEn || p.descriptionAr);
+            
+            document.getElementById('modalProductName').textContent = name;
+            document.getElementById('modalProductDesc').textContent = desc || '';
+            document.getElementById('modalProductImg').src = p.imageUrl || 'https://via.placeholder.com/400x300?text=No+Image';
+            document.getElementById('modalProductBrand').textContent = p.brand;
+            document.getElementById('modalProductSku').textContent = p.sku;
+            
+            const vehiclesHtml = (p.vehicles && p.vehicles.length) ? p.vehicles.map(v => {
+                return `<div style="background:var(--dark-3); padding: 8px 12px; border-radius: var(--r-sm); font-size:.8rem; color:var(--gray-300)">
+                            <strong>${v.make}</strong> ${v.model} <span style="color:var(--gray-500);float:${currentLang==='ar'?'left':'right'}">${v.year}</span>
+                        </div>`;
+            }).join('') : '<div style="color:var(--gray-500)">Universal</div>';
+            
+            document.getElementById('modalVehiclesList').innerHTML = vehiclesHtml;
+            document.getElementById('productModalOverlay').classList.add('open');
+        }
+        
+        function closeProductModal() {
+            document.getElementById('productModalOverlay').classList.remove('open');
+        }
+
+        async function fetchProducts() {
+            try {
+                const res = await fetch('http://localhost:5000/api/products');
+                const json = await res.json();
+                if (json.success) {
+                    allProducts = json.data;
+                    renderFilteredProducts();
+                }
+            } catch (err) {
+                console.error("Database connection error", err);
+                document.getElementById('productsTbody').innerHTML = `<tr><td colspan="7" style="text-align:center">Database connection error. Ensure the server is running.</td></tr>`;
+            }
+        }
+
+        function renderFilteredProducts() {
+            const tbody = document.getElementById('productsTbody');
+            const term = (document.getElementById('searchProductsInput').value || '').toLowerCase();
+            const brand = document.getElementById('brandFilter').value.toLowerCase();
+            const category = document.getElementById('categoryFilter').value.toLowerCase();
+            const make = document.getElementById('makeFilter').value.toLowerCase();
+            const model = document.getElementById('modelFilter').value.toLowerCase();
+            const year = document.getElementById('yearFilter').value.toLowerCase();
+
+            let filtered = allProducts.filter(p => {
+                const searchMatch = !term || (p.nameEn || '').toLowerCase().includes(term) || (p.nameAr || '').includes(term) || (p.sku || '').toLowerCase().includes(term);
+                const brandMatch = !brand || (p.brand || '').toLowerCase().includes(brand);
+                const categoryMatch = !category || (p.category || '').toLowerCase().includes(category);
+                
+                let vehiclesMatch = true;
+                if (make || model || year) {
+                     if (!p.vehicles || p.vehicles.length === 0) vehiclesMatch = false;
+                     else {
+                         vehiclesMatch = p.vehicles.some(v => {
+                             const mMake = !make || (v.make||'').toLowerCase().includes(make);
+                             const mModel = !model || (v.model||'').toLowerCase().includes(model);
+                             const mYear = !year || (v.year||'').toLowerCase().includes(year);
+                             return mMake && mModel && mYear;
+                         });
+                    }
+                }
+
+                return searchMatch && brandMatch && categoryMatch && vehiclesMatch;
+            });
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align:center">No products found.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(p => {
+                const stockText = p.stock > 10 ? `In Stock (+${p.stock})` : (p.stock > 0 ? `Low Stock (${p.stock})` : 'Out of Stock');
+                const stockTextAr = p.stock > 10 ? `متوفر (+${p.stock})` : (p.stock > 0 ? `مخزون منخفض (${p.stock})` : 'نفذ المخزون');
+                const stockIcon = p.stock > 10 ? '<i class="fa fa-circle-check"></i>' : (p.stock > 0 ? '<i class="fa fa-triangle-exclamation"></i>' : '<i class="fa fa-circle-xmark"></i>');
+                const stockStyle = p.stock > 10 ? 'var(--success)' : (p.stock > 0 ? 'var(--warning)' : 'var(--danger)');
+
+                const compat = p.vehicles && p.vehicles.length ? p.vehicles.map(v => `${v.make} ${v.model}`).join(', ') : 'Universal';
+                const compatAr = p.vehicles && p.vehicles.length ? p.vehicles.map(v => `${v.make} ${v.model}`).join('، ') : 'عالمي';
+
+                const nameEn = p.nameEn || 'N/A';
+                const nameAr = p.nameAr || nameEn;
+
+                const categoryEn = p.category || 'Other';
+                const categoryAr = p.category || 'أخرى'; // Simplified translation mapping
+
+                const buttonHtml = p.stock > 0 ?
+                    `<button class="btn btn-outline btn-sm" onclick="addToCart('${p.sku}')" data-en="+ Add" data-ar="+ إضافة">${currentLang === 'ar' ? '+ إضافة' : '+ Add'}</button>` :
+                    `<button class="btn btn-ghost btn-sm" disabled data-en="Unavailable" data-ar="غير متوفر">${currentLang === 'ar' ? 'غير متوفر' : 'Unavailable'}</button>`;
+
+                const imgThumb = p.imageUrl ? `<img src="${p.imageUrl}" style="width:40px;height:40px;object-fit:cover;border-radius:4px;cursor:pointer" onclick="openProductModal('${p.sku}')" />` : `<div style="width:40px;height:40px;background:#333;border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer" onclick="openProductModal('${p.sku}')"><i class="fa fa-image text-muted"></i></div>`;
+
+                return `
+                <tr>
+                    <td>${imgThumb}</td>
+                    <td class="text-white" style="font-family:monospace;cursor:pointer;text-decoration:underline" onclick="openProductModal('${p.sku}')">${p.sku}</td>
+                    <td><span class="text-white" data-en="${nameEn}" data-ar="${nameAr}">${currentLang === 'ar' ? nameAr : nameEn}</span><br><span style="font-size:0.75rem" data-en="${compat}" data-ar="${compatAr}">${currentLang === 'ar' ? compatAr : compat}</span></td>
+                    <td>${p.brand.charAt(0).toUpperCase() + p.brand.slice(1)}</td>
+                    <td data-en="${categoryEn}" data-ar="${categoryAr}">${currentLang === 'ar' ? categoryAr : categoryEn}</td>
+                    <td style="color:${stockStyle}">${stockIcon} <span data-en="${stockText}" data-ar="${stockTextAr}">${currentLang === 'ar' ? stockTextAr : stockText}</span></td>
+                    <td class="price">EGP ${p.wholesalePrice ? p.wholesalePrice.toLocaleString() : 'N/A'}</td>
+                    <td>${buttonHtml}</td>
+                </tr>
+                `;
+            }).join('');
+        }
+
+        window.addEventListener('languageChanged', (e) => {
+            fetchProducts();
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setLang(currentLang);
+            fetchProducts();
+        });
+    </script>
+<script src="../js/shared.js"></script>
+</body>
+
+</html>

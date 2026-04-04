@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NUTD – Nama United for Trading & Distribution | قطع غيار سيارات</title>
+  <meta name="description" content="Exclusive importer and distributor of premium automotive spare parts. Official agency for Borsching (Germany), KDD & Vika (China)." />
+  <link rel="icon" type="image/svg+xml" href="img/favicon.svg" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    /* ---- Page-specific enhancements ---- */
+    .hero { 
+      background: var(--charcoal); 
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 0;
+    }
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      z-index: 0;
+      opacity: 0.5;
+    }
+    .orb-1 {
+      top: -10%; left: -10%;
+      width: 500px; height: 500px;
+      background: rgba(232, 35, 26, 0.4);
+      animation: float 10s ease-in-out infinite;
+    }
+    .orb-2 {
+      bottom: -10%; right: -5%;
+      width: 400px; height: 400px;
+      background: rgba(200, 168, 75, 0.2);
+      animation: float 12s ease-in-out infinite reverse;
+    }
+    .hero-grid-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-image: 
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      z-index: 1;
+      opacity: 0.5;
+    }
+    .partners-strip {
+      background: var(--dark);
+      border-top: 1px solid rgba(255,255,255,.06);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      padding: 28px 0;
+      overflow: hidden;
+    }
+    .partners-inner {
+      display: flex;
+      align-items: center;
+      gap: 64px;
+      animation: marquee 25s linear infinite;
+      width: max-content;
+    }
+    .partner-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      opacity: .5;
+      font-weight: 800;
+      font-size: 1rem;
+      letter-spacing: .08em;
+      color: var(--white);
+      text-transform: uppercase;
+      white-space: nowrap;
+      transition: opacity var(--t-normal);
+    }
+    .partner-logo:hover { opacity: 1; }
+    .partner-logo span { color: var(--gray-400); font-size: .7rem; font-weight: 400; }
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .why-card {
+      padding: 36px 28px;
+      transition: all var(--t-normal);
+    }
+    .why-card:hover {
+      box-shadow: 0 16px 40px rgba(232, 35, 26, 0.25), inset 0 1px 0 rgba(255,255,255,0.08);
+      border-color: rgba(232, 35, 26, 0.3);
+    }
+    .why-card::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 4px; height: 100%;
+      background: var(--gradient-red);
+      opacity: 0;
+      transition: opacity var(--t-normal);
+    }
+    .why-card:hover::after { opacity: 1; }
+    body.lang-ar .why-card::after { left: auto; right: 0; }
+    .why-card .icon-wrap {
+      width: 52px; height: 52px;
+      background: rgba(232,35,26,.12);
+      border-radius: var(--r-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      color: var(--red);
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+    .why-card h4 { color: var(--white); margin-bottom: 12px; font-weight: 700; }
+    .why-card p { font-size: .88rem; line-height: 1.7; color: var(--gray-300); }
+    .cta-section {
+      background:
+        linear-gradient(135deg, rgba(10,10,10,.97) 0%, rgba(30,5,5,.95) 100%),
+        url('') center/cover;
+      padding: 100px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      top: -150px; right: -150px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(232,35,26,.12) 0%, transparent 70%);
+    }
+    body.lang-ar .cta-section::before { right: auto; left: -150px; }
+    .cta-section .container { position: relative; z-index: 1; text-align: center; }
+    .cta-section h2 { color: var(--white); margin-bottom: 16px; }
+    .cta-section p { max-width: 520px; margin: 0 auto 36px; font-size: 1rem; }
+    .cta-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .dealer-locate-section { padding: 80px 0; background: var(--dark); }
+    .locate-card {
+      background: var(--dark-2);
+      border: 1px solid rgba(232,35,26,.2);
+      border-radius: var(--r-xl);
+      padding: 56px;
+      display: flex;
+      align-items: center;
+      gap: 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .locate-card::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(232,35,26,.08) 0%, transparent 70%);
+    }
+    body.lang-ar .locate-card::before { right: auto; left: -80px; }
+    .locate-card-icon {
+      width: 100px; height: 100px;
+      background: rgba(232,35,26,.12);
+      border-radius: var(--r-xl);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      color: var(--red);
+      flex-shrink: 0;
+    }
+    .locate-card-content { flex: 1; }
+    .locate-card-content h3 { color: var(--white); margin-bottom: 12px; font-size: 1.6rem; }
+    .locate-card-content p { font-size: .95rem; max-width: 500px; margin-bottom: 28px; }
+    @media (max-width: 768px) {
+      .why-grid { grid-template-columns: 1fr; }
+      .locate-card { flex-direction: column; text-align: center; padding: 36px 28px; }
+      .locate-card-content p { margin: 0 auto 28px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ============================== NAVBAR ============================== -->
+<nav class="navbar" id="navbar">
+  <div class="container">
+    <a href="index.html" class="nav-logo">
+      <img src="img/logo.svg" alt="NUTD Logo" style="height:36px" />
+      <div class="nav-logo-text">
+        <span class="name-en">NUTD</span>
+        <span class="name-ar">نماء المتحدة</span>
+      </div>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="index.html" class="nav-link active" data-en="Home" data-ar="الرئيسية">Home</a></li>
+      <li><a href="catalog.html" class="nav-link" data-en="Products" data-ar="المنتجات">Products</a></li>
+      <li><a href="brands.html" class="nav-link" data-en="Brands" data-ar="العلامات">Brands</a></li>
+      <li><a href="about.html" class="nav-link" data-en="About" data-ar="عن الشركة">About</a></li>
+      <li><a href="media.html" class="nav-link" data-en="Media Center" data-ar="المركز الإعلامي">Media Center</a></li>
+      <li><a href="contact.html" class="nav-link" data-en="Contact" data-ar="تواصل">Contact</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <div class="lang-toggle">
+        <button onclick="setLang('en')" class="active" id="btn-en">EN</button>
+        <button onclick="setLang('ar')" id="btn-ar">AR</button>
+      </div>
+      <a href="dealer/login.html" class="btn btn-primary btn-sm" id="dealer-portal-btn" data-en="Dealer Portal" data-ar="بوابة التاجر">Dealer Portal</a>
+    </div>
+
+    <button class="nav-hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile menu handled by js/shared.js -->
+
+<!-- ============================== TRUST BAR ============================== -->
+<div style="margin-top:var(--nav-h)">
+  <div class="trust-bar">
+    <div class="trust-bar-inner" id="trustBar">
+      <div class="trust-item"><i class="fa fa-shield-halved"></i> <span data-en="Exclusive German Agency – Borsching" data-ar="وكيل حصري ألماني – بورشينج">Exclusive German Agency – Borsching</span></div>
+      <div class="trust-item"><i class="fa fa-certificate"></i> <span data-en="Official Agency – KDD China" data-ar="وكالة رسمية – KDD الصين">Official Agency – KDD China</span></div>
+      <div class="trust-item"><i class="fa fa-certificate"></i> <span data-en="Official Agency – Vika China" data-ar="وكالة رسمية – Vika الصين">Official Agency – Vika China</span></div>
+      <div class="trust-item"><i class="fa fa-globe"></i> <span data-en="International Quality Standards" data-ar="معايير جودة دولية">International Quality Standards</span></div>
+      <div class="trust-item"><i class="fa fa-truck-fast"></i> <span data-en="Nationwide Dealer Network" data-ar="شبكة تجار على مستوى الجمهورية">Nationwide Dealer Network</span></div>
+      <div class="trust-item"><i class="fa fa-headset"></i> <span data-en="B2B Dealer Support" data-ar="دعم متخصص للتجار">B2B Dealer Support</span></div>
+      <!-- duplicate for seamless loop -->
+      <div class="trust-item"><i class="fa fa-shield-halved"></i> <span data-en="Exclusive German Agency – Borsching" data-ar="وكيل حصري ألماني – بورشينج">Exclusive German Agency – Borsching</span></div>
+      <div class="trust-item"><i class="fa fa-certificate"></i> <span data-en="Official Agency – KDD China" data-ar="وكالة رسمية – KDD الصين">Official Agency – KDD China</span></div>
+      <div class="trust-item"><i class="fa fa-certificate"></i> <span data-en="Official Agency – Vika China" data-ar="وكالة رسمية – Vika الصين">Official Agency – Vika China</span></div>
+      <div class="trust-item"><i class="fa fa-globe"></i> <span data-en="International Quality Standards" data-ar="معايير جودة دولية">International Quality Standards</span></div>
+      <div class="trust-item"><i class="fa fa-truck-fast"></i> <span data-en="Nationwide Dealer Network" data-ar="شبكة تجار على مستوى الجمهورية">Nationwide Dealer Network</span></div>
+      <div class="trust-item"><i class="fa fa-headset"></i> <span data-en="B2B Dealer Support" data-ar="دعم متخصص للتجار">B2B Dealer Support</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== HERO ============================== -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+  <div class="hero-grid-overlay"></div>
+  <div class="hero-accent"></div>
+
+  <div class="container" style="position:relative; z-index:5;">
+    <div class="hero-content fade-in-up">
+      <div class="hero-badge pulse-hover">
+        <span class="dot" style="box-shadow: 0 0 8px var(--red)"></span>
+        <span data-en="Exclusive Importer & Distributor" data-ar="وكيل حصري ومستورد">Exclusive Importer & Distributor</span>
+      </div>
+      <h1 id="hero_title_dynamic_en" data-cms="hero_title" data-en="Premium <span class='text-red' style='text-shadow: 0 0 20px rgba(232,35,26,0.5)'>Automotive</span> Parts You Can Trust" data-ar="قطع غيار <span class='text-red' style='text-shadow: 0 0 20px rgba(232,35,26,0.5)'>سيارات</span> عالمية بجودة لا تُضاهى">
+        Premium <span class="text-red" style="text-shadow: 0 0 20px rgba(232,35,26,0.5)">Automotive</span> Parts You Can Trust
+      </h1>
+      <p id="hero_sub_dynamic_en" data-cms="hero_sub" data-en="Nama United Trading & Distribution — the exclusive agency for Borsching (Germany), KDD, and Vika (China). Serving dealers and workshops nationwide with certified quality parts."
+         data-ar="نماء المتحدة للتجارة والتوزيع — الوكيل الحصري لبورشينج الألمانية وKDD وVika الصينية. نخدم التجار وورش الصيانة في كل مكان بقطع غيار معتمدة ذات جودة عالية.">
+        Nama United Trading &amp; Distribution — the exclusive agency for Borsching (Germany), KDD, and Vika (China). Serving dealers and workshops nationwide with certified quality parts.
+      </p>
+      <div class="hero-ctas">
+        <a href="catalog.html" class="btn btn-primary btn-lg pulse-hover" data-en="Browse Catalog" data-ar="تصفح الكتالوج">
+          <i class="fa fa-grid-2"></i> Browse Catalog
+        </a>
+        <a href="about.html" class="btn btn-outline btn-lg" data-en="Our Story" data-ar="قصتنا">
+          <i class="fa fa-arrow-right"></i> Our Story
+        </a>
+      </div>
+    </div>
+  </div>
+
+    <!-- Stats Floating -->
+    <div class="hero-stats reveal">
+      <div class="hero-stat">
+        <div class="number">3<span>+</span></div>
+        <div class="label" data-en="Exclusive Brands" data-ar="وكالات حصرية">Exclusive Brands</div>
+      </div>
+      <div class="hero-stat">
+        <div class="number">5000<span>+</span></div>
+        <div class="label" data-en="Part Numbers" data-ar="رقم قطعة">Part Numbers</div>
+      </div>
+      <div class="hero-stat">
+        <div class="number">200<span>+</span></div>
+        <div class="label" data-en="Dealers Network" data-ar="شبكة تجار">Dealers Network</div>
+      </div>
+      <div class="hero-stat">
+        <div class="number">15<span>+</span></div>
+        <div class="label" data-en="Years Experience" data-ar="سنة خبرة">Years Experience</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== PARTNERS STRIP ============================== -->
+<div class="partners-strip">
+  <div class="partners-inner">
+    <div class="partner-logo"><i class="fa fa-circle text-red" style="font-size:.6rem"></i> BORSCHING <span>GERMANY</span></div>
+    <div class="partner-logo"><i class="fa fa-circle text-red" style="font-size:.6rem"></i> KDD <span>CHINA</span></div>
+    <div class="partner-logo"><i class="fa fa-circle text-red" style="font-size:.6rem"></i> VIKA <span>CHINA</span></div>
+    <div class="partner-logo"><i class="fa fa-circle text-red" style="font-size:.6rem"></i> ISO 9001 <span>CERTIFIED</span></div>
+    <div class="partner-logo"><i class="fa fa-circle text-red" style="font-size:.6rem"></i> TÜV <span>APPROVED</span></div>
+    <div class="partner-logo"><i class="fa fa-circle text-red" style="font-size:.6rem"></i> BORSCHING <span>GERMANY</span></div>
+    <div class="partner-logo"><i class="fa fa-circle text-red" style="font-size:.6rem"></i> KDD <span>CHINA</span></div>
+    <div class="partner-logo"><i class="fa fa-circle text-red" style="font-size:.6rem"></i> VIKA <span>CHINA</span></div>
+    <div class="partner-logo"><i class="fa fa-circle text-red" style="font-size:.6rem"></i> ISO 9001 <span>CERTIFIED</span></div>
+    <div class="partner-logo"><i class="fa fa-circle text-red" style="font-size:.6rem"></i> TÜV <span>APPROVED</span></div>
+  </div>
+</div>
+
+<!-- ============================== BRANDS ============================== -->
+<section class="section reveal">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label" data-cms="home_brands_label" data-en="Our Exclusive Agencies" data-ar="وكالاتنا الحصرية">Our Exclusive Agencies</div>
+      <h2 data-cms="home_brands_title" data-en="International Brand Partners" data-ar="شركاؤنا من العلامات الدولية">International Brand Partners</h2>
+      <p data-cms="home_brands_desc" data-en="We hold exclusive distribution rights for three premium international automotive brands, bringing certified quality directly to the market."
+         data-ar="نمتلك حقوق التوزيع الحصري لثلاث علامات تجارية دولية متميزة، نجلب الجودة المعتمدة مباشرة إلى السوق.">
+        We hold exclusive distribution rights for three premium international automotive brands, bringing certified quality directly to the market.
+      </p>
+    </div>
+
+    <div class="brands-logos">
+      <div class="brand-item">
+        <div class="brand-logo-box" style="font-size:1.3rem; letter-spacing:-.02em">BSG</div>
+        <div class="brand-name">Borsching</div>
+        <div class="brand-origin german"><i class="fa fa-flag"></i> German</div>
+        <p class="brand-desc" data-en="Premium German engineering. Suspension, steering and braking systems of the highest standard."
+           data-ar="هندسة ألمانية متميزة. أنظمة التعليق والتوجيه والكبح بأعلى المعايير.">
+          Premium German engineering. Suspension, steering and braking systems of the highest standard.
+        </p>
+        <a href="catalog.html?brand=borsching" class="btn btn-outline btn-sm" data-en="View Products" data-ar="عرض المنتجات">View Products</a>
+      </div>
+      <div class="brand-item">
+        <div class="brand-logo-box">KDD</div>
+        <div class="brand-name">KDD</div>
+        <div class="brand-origin chinese"><i class="fa fa-flag"></i> Chinese</div>
+        <p class="brand-desc" data-en="Certified Chinese manufacturer. Engine components, filters and chassis parts at competitive pricing."
+           data-ar="مصنع صيني معتمد. قطع المحرك والفلاتر ومكونات الهيكل بأسعار تنافسية.">
+          Certified Chinese manufacturer. Engine components, filters and chassis parts at competitive pricing.
+        </p>
+        <a href="catalog.html?brand=kdd" class="btn btn-outline btn-sm" data-en="View Products" data-ar="عرض المنتجات">View Products</a>
+      </div>
+      <div class="brand-item">
+        <div class="brand-logo-box">VKA</div>
+        <div class="brand-name">Vika</div>
+        <div class="brand-origin chinese"><i class="fa fa-flag"></i> Chinese</div>
+        <p class="brand-desc" data-en="Specialist in body parts, electrical components and cooling systems. Wide vehicle compatibility."
+           data-ar="متخصص في قطع الهيكل والمكونات الكهربائية وأنظمة التبريد. توافق واسع مع السيارات.">
+          Specialist in body parts, electrical components and cooling systems. Wide vehicle compatibility.
+        </p>
+        <a href="catalog.html?brand=vika" class="btn btn-outline btn-sm" data-en="View Products" data-ar="عرض المنتجات">View Products</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== WHY US ============================== -->
+<section class="section section-alt reveal">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label" data-cms="home_why_sec_label" data-en="Why Choose NUTD" data-ar="لماذا نماء المتحدة">Why Choose NUTD</div>
+      <h2 data-cms="home_why_sec_title" data-en="Built on Trust & Expertise" data-ar="مبنية على الثقة والخبرة">Built on Trust &amp; Expertise</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-card glass-panel">
+        <div class="icon-wrap pulse-hover"><i data-cms="home_why_1_icon" class="fa fa-certificate"></i></div>
+        <h4 data-cms="home_why_1_title" data-en="Certified Exclusivity" data-ar="حصرية معتمدة">Certified Exclusivity</h4>
+        <p data-cms="home_why_1_desc" data-en="We are the sole authorized importer for Borsching, KDD and Vika in the region. Every product ships with full manufacturer certification."
+           data-ar="نحن المستورد الوحيد المعتمد لبورشينج وKDD وVika في المنطقة. كل منتج يُشحن بشهادة المُصنِّع الكاملة.">
+          We are the sole authorized importer for Borsching, KDD and Vika in the region. Every product ships with full manufacturer certification.
+        </p>
+      </div>
+      <div class="why-card glass-panel">
+        <div class="icon-wrap pulse-hover"><i data-cms="home_why_2_icon" class="fa fa-layer-group"></i></div>
+        <h4 data-cms="home_why_2_title" data-en="5,000+ SKUs in Stock" data-ar="أكثر من 5000 منتج في المخزون">5,000+ SKUs in Stock</h4>
+        <p data-cms="home_why_2_desc" data-en="A comprehensive catalog covering all major vehicle brands with fast replenishment from international warehouses."
+           data-ar="كتالوج شامل يغطي جميع ماركات السيارات الرئيسية مع تجديد سريع من المستودعات الدولية.">
+          A comprehensive catalog covering all major vehicle brands with fast replenishment from international warehouses.
+        </p>
+      </div>
+      <div class="why-card glass-panel">
+        <div class="icon-wrap pulse-hover"><i data-cms="home_why_3_icon" class="fa fa-network-wired"></i></div>
+        <h4 data-cms="home_why_3_title" data-en="Nationwide Dealer Network" data-ar="شبكة تجار على مستوى الجمهورية">Nationwide Dealer Network</h4>
+        <p data-cms="home_why_3_desc" data-en="Over 200 authorized dealers across all governorates ensure customers are always close to certified parts."
+           data-ar="أكثر من 200 تاجر معتمد في جميع المحافظات يضمنون أن العملاء دائمًا قريبون من القطع المعتمدة.">
+          Over 200 authorized dealers across all governorates ensure customers are always close to certified parts.
+        </p>
+      </div>
+      <div class="why-card glass-panel">
+        <div class="icon-wrap pulse-hover"><i data-cms="home_why_4_icon" class="fa fa-shield-halved"></i></div>
+        <h4 data-cms="home_why_4_title" data-en="Quality Guarantee" data-ar="ضمان الجودة">Quality Guarantee</h4>
+        <p data-cms="home_why_4_desc" data-en="Every part meets international QC standards. Our products are tested to OEM specifications before reaching the market."
+           data-ar="كل قطعة تلتزم بمعايير ضبط الجودة الدولية. منتجاتنا تُختبر وفق مواصفات المُصنِّع الأصلي قبل وصولها للسوق.">
+          Every part meets international QC standards. Our products are tested to OEM specifications before reaching the market.
+        </p>
+      </div>
+      <div class="why-card glass-panel">
+        <div class="icon-wrap pulse-hover"><i data-cms="home_why_5_icon" class="fa fa-handshake"></i></div>
+        <h4 data-cms="home_why_5_title" data-en="B2B Partnership First" data-ar="الشراكة التجارية أولاً">B2B Partnership First</h4>
+        <p data-cms="home_why_5_desc" data-en="Our dealer portal gives partners real-time access to wholesale pricing, inventory and instant invoicing."
+           data-ar="بوابة التاجر لدينا تمنح الشركاء وصولاً فورياً لأسعار الجملة والمخزون وإنشاء الفواتير فوراً.">
+          Our dealer portal gives partners real-time access to wholesale pricing, inventory and instant invoicing.
+        </p>
+      </div>
+      <div class="why-card glass-panel">
+        <div class="icon-wrap pulse-hover"><i data-cms="home_why_6_icon" class="fa fa-headset"></i></div>
+        <h4 data-cms="home_why_6_title" data-en="Dedicated Support" data-ar="دعم متخصص">Dedicated Support</h4>
+        <p data-cms="home_why_6_desc" data-en="Our technical team assists dealers and workshops with part identification, compatibility checks and order management."
+           data-ar="فريقنا التقني يساعد التجار وورش الصيانة في تحديد القطع والتحقق من التوافق وإدارة الطلبات.">
+          Our technical team assists dealers and workshops with part identification, compatibility checks and order management.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== FEATURED PRODUCTS ============================== -->
+<section class="section">
+  <div class="container">
+    <div class="d-flex align-center justify-between mb-32 flex-wrap gap-16">
+      <div>
+        <div class="section-label" data-en="Product Catalog" data-ar="كتالوج المنتجات">Product Catalog</div>
+        <h2 data-en="Featured Parts" data-ar="قطع غيار مميزة">Featured Parts</h2>
+      </div>
+      <a href="catalog.html" class="btn btn-outline" data-en="View All Products" data-ar="عرض جميع المنتجات">View All Products <i class="fa fa-arrow-left" style="transform:rotate(180deg)"></i></a>
+    </div>
+
+    <div class="product-grid" id="featuredProducts">
+      <!-- JS generated -->
+    </div>
+  </div>
+</section>
+
+<!-- ============================== DEALER LOCATOR ============================== -->
+<section class="dealer-locate-section">
+  <div class="container">
+    <div class="locate-card glass-panel">
+      <div class="locate-card-icon"><i class="fa fa-map-location-dot"></i></div>
+      <div class="locate-card-content">
+        <div class="section-label" data-cms="home_dealer_label" data-en="Dealer Network" data-ar="شبكة التجار">Dealer Network</div>
+        <h3 data-cms="home_dealer_title" data-en="Find Your Nearest Authorized Dealer" data-ar="اعثر على أقرب تاجر معتمد">Find Your Nearest Authorized Dealer</h3>
+        <p data-cms="home_dealer_desc" data-en="Can't find the part you need? Our nationwide network of 200+ authorized dealers has you covered. Click below, share your location, and we'll show you the closest dealers carrying that product."
+           data-ar="لا تجد القطعة التي تحتاجها؟ شبكتنا الوطنية من أكثر من 200 تاجر معتمد تغطي احتياجاتك. اضغط أدناه، شارك موقعك، وسنريك أقرب التجار الذين يحملون تلك القطعة.">
+          Can't find the part you need? Our nationwide network of 200+ authorized dealers has you covered. Click below, share your location, and we'll show you the closest dealers carrying that product.
+        </p>
+        <button class="btn btn-primary btn-lg" onclick="openDealerModal()">
+          <i class="fa fa-location-dot"></i> <span data-cms="home_dealer_btn_text" data-en="Find Nearest Dealer" data-ar="ابحث عن أقرب تاجر">Find Nearest Dealer</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== CTA ============================== -->
+<section class="cta-section">
+  <div class="container">
+    <div class="section-label" style="justify-content:center; margin-bottom:16px" data-cms="home_cta_label" data-en="Join Our Network" data-ar="انضم إلى شبكتنا">Join Our Network</div>
+    <h2 data-cms="home_cta_title" data-en="Are You a Parts Dealer or Workshop?" data-ar="هل أنت تاجر قطع غيار أو صاحب ورشة؟">Are You a Parts Dealer or Workshop?</h2>
+    <p data-cms="home_cta_desc" data-en="Apply for a dealer account and get access to wholesale pricing, full product catalog, and online invoicing — all in one professional portal."
+       data-ar="تقدم بطلب حساب تاجر واحصل على الوصول إلى أسعار الجملة وكتالوج المنتجات الكامل والفواتير الأونلاين — كل ذلك في بوابة احترافية واحدة.">
+      Apply for a dealer account and get access to wholesale pricing, full product catalog, and online invoicing — all in one professional portal.
+    </p>
+    <div class="cta-btns">
+      <a href="dealer/register.html" class="btn btn-primary btn-lg">
+        <i class="fa fa-user-plus"></i> <span data-cms="home_cta_btn1_text" data-en="Apply as Dealer" data-ar="تقدم كتاجر">Apply as Dealer</span>
+      </a>
+      <a href="dealer/login.html" class="btn btn-outline btn-lg">
+        <i class="fa fa-right-to-bracket"></i> <span data-cms="home_cta_btn2_text" data-en="Dealer Login" data-ar="دخول التجار">Dealer Login</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== NEWSLETTER ============================== -->
+<section class="newsletter-section reveal">
+  <div class="container">
+    <div class="newsletter-inner">
+      <div class="newsletter-text">
+        <h3 data-cms="home_news_title" data-en="Join Our Newsletter" data-ar="اشترك في نشرتنا الإخبارية">Join Our Newsletter</h3>
+        <p data-cms="home_news_desc" data-en="Get updates on new brands, arrivals and dealer benefits." data-ar="احصل على تحديثات حول العلامات التجارية الجديدة والوصول ومزايا التجار.">Get updates on new brands, arrivals and dealer benefits.</p>
+      </div>
+      <form class="newsletter-form" onsubmit="event.preventDefault(); showToast('Subscribed successfully!', 'success');">
+        <input type="email" class="form-control" placeholder="Email address..." data-cms="home_news_placeholder" data-placeholder-en="Email address..." data-placeholder-ar="البريد الإلكتروني..." required>
+        <button type="submit" class="btn btn-primary" data-cms="home_news_btn_text" data-en="Subscribe" data-ar="اشتراك">Subscribe</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== FOOTER ============================== -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo" style="justify-content:flex-start">
+          <div class="brand-logo-box" style="width:42px;height:42px;border-radius:8px;font-size:.85rem">NUTD</div>
+          <div class="nav-logo-text">
+            <span class="name-en" style="font-size:.9rem">Nama United Trading</span>
+            <span class="name-ar">نماء المتحدة للتجارة والتوزيع</span>
+          </div>
+        </a>
+        <p data-en="Exclusive importer and distributor of certified automotive spare parts. Official agency for Borsching (Germany), KDD & Vika (China)."
+           data-ar="المستورد والموزع الحصري لقطع غيار السيارات المعتمدة. الوكيل الرسمي لبورشينج (ألمانيا) وKDD وVika (الصين).">
+          Exclusive importer and distributor of certified automotive spare parts. Official agency for Borsching (Germany), KDD &amp; Vika (China).
+        </p>
+        <div class="social-links mt-16">
+          <a href="#" class="social-link text-white"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="social-link text-white"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-link text-white"><i class="fab fa-whatsapp"></i></a>
+          <a href="#" class="social-link text-white"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h5 data-en="Quick Links" data-ar="روابط سريعة">Quick Links</h5>
+        <ul>
+          <li><a href="index.html"   data-en="Home"    data-ar="الرئيسية">Home</a></li>
+          <li><a href="catalog.html" data-en="Products" data-ar="المنتجات">Products</a></li>
+          <li><a href="brands.html"  data-en="Brands"   data-ar="العلامات">Brands</a></li>
+          <li><a href="about.html"   data-en="About Us" data-ar="عن الشركة">About Us</a></li>
+          <li><a href="contact.html" data-en="Contact"  data-ar="تواصل معنا">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5 data-en="Our Brands" data-ar="علاماتنا التجارية">Our Brands</h5>
+        <ul>
+          <li><a href="catalog.html?brand=borsching">Borsching <span class="text-muted" style="font-size:.75rem">• Germany</span></a></li>
+          <li><a href="catalog.html?brand=kdd">KDD <span class="text-muted" style="font-size:.75rem">• China</span></a></li>
+          <li><a href="catalog.html?brand=vika">Vika <span class="text-muted" style="font-size:.75rem">• China</span></a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5 data-en="Contact Us" data-ar="تواصل معنا">Contact Us</h5>
+        <div class="footer-contact-item"><span class="icon"><i class="fa fa-location-dot"></i></span> <span data-en="Cairo, Egypt" data-ar="القاهرة، مصر">Cairo, Egypt</span></div>
+        <div class="footer-contact-item"><span class="icon"><i class="fa fa-phone"></i></span> <a href="#" id="dynamic_phone">+20 XX XXXX XXXX</a></div>
+        <div class="footer-contact-item"><span class="icon"><i class="fa fa-envelope"></i></span> <a href="#" id="dynamic_email">info@nutd.com</a></div>
+        <div class="footer-contact-item"><span class="icon"><i class="fab fa-whatsapp"></i></span> <a href="#" data-en="WhatsApp Us" data-ar="تواصل عبر واتساب">WhatsApp Us</a></div>
+        <a href="dealer/login.html" class="btn btn-primary btn-sm mt-16" style="width:fit-content" data-en="Dealer Portal" data-ar="بوابة التاجر">Dealer Portal</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span data-en="© 2025 Nama United Trading & Distribution. All rights reserved." data-ar="© 2025 نماء المتحدة للتجارة والتوزيع. جميع الحقوق محفوظة.">© 2025 Nama United Trading &amp; Distribution. All rights reserved.</span>
+      <div class="d-flex gap-12">
+        <a href="#" data-en="Privacy Policy" data-ar="سياسة الخصوصية">Privacy Policy</a>
+        <a href="#" data-en="Terms" data-ar="الشروط">Terms</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================== DEALER LOCATOR MODAL ============================== -->
+<div class="modal-overlay" id="dealerModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 data-en="Find Nearest Dealer" data-ar="اعثر على أقرب تاجر">Find Nearest Dealer</h3>
+      <button class="modal-close" onclick="closeDealerModal()"><i class="fa fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <p class="mb-16 text-muted" style="font-size:.88rem" data-en="Share your location or search by city to find authorized dealers near you."
+         data-ar="شارك موقعك أو ابحث بالمدينة لإيجاد التجار المعتمدين بالقرب منك.">
+        Share your location or search by city to find authorized dealers near you.
+      </p>
+
+      <div class="d-flex gap-8 mb-16">
+        <input type="text" class="form-control flex-1" placeholder="Search city or area..." id="dealerSearch"
+               data-placeholder-en="Search city or area..." data-placeholder-ar="ابحث عن مدينة أو منطقة...">
+        <button class="btn btn-primary" onclick="detectLocation()" data-en="Use My Location" data-ar="موقعي الحالي">
+          <i class="fa fa-location-arrow"></i>
+        </button>
+      </div>
+
+      <div class="map-placeholder" id="mapBox">
+        <span class="map-icon">🗺️</span>
+        <span data-en="Map will load here" data-ar="سيتم تحميل الخريطة هنا">Map will load here</span>
+        <button class="btn btn-ghost btn-sm" onclick="detectLocation()" data-en="Click to detect my location" data-ar="انقر للكشف عن موقعي">Click to detect my location</button>
+      </div>
+
+      <div class="dealer-list" id="dealerList">
+        <div class="dealer-card">
+          <div class="dealer-card-info">
+            <div class="dealer-name" data-en="Al-Nour Auto Parts" data-ar="النور لقطع السيارات">Al-Nour Auto Parts</div>
+            <div class="dealer-addr"><i class="fa fa-location-dot text-muted" style="font-size:.75rem"></i> <span data-en="Nasr City, Cairo" data-ar="مدينة نصر، القاهرة">Nasr City, Cairo</span></div>
+            <div class="dealer-phone"><i class="fa fa-phone" style="font-size:.75rem"></i> 010 XXXX XXXX</div>
+          </div>
+          <div>
+            <span class="dealer-dist">1.2 km</span>
+            <div class="mt-8"><a href="tel:+20XXXXXXXXXX" class="btn btn-primary btn-sm" data-en="Call" data-ar="اتصل">Call</a></div>
+          </div>
+        </div>
+        <div class="dealer-card">
+          <div class="dealer-card-info">
+            <div class="dealer-name" data-en="Speed Auto Supplies" data-ar="سبيد لمستلزمات السيارات">Speed Auto Supplies</div>
+            <div class="dealer-addr"><i class="fa fa-location-dot text-muted" style="font-size:.75rem"></i> <span data-en="Heliopolis, Cairo" data-ar="مصر الجديدة، القاهرة">Heliopolis, Cairo</span></div>
+            <div class="dealer-phone"><i class="fa fa-phone" style="font-size:.75rem"></i> 011 XXXX XXXX</div>
+          </div>
+          <div>
+            <span class="dealer-dist">3.8 km</span>
+            <div class="mt-8"><a href="tel:+20XXXXXXXXXX" class="btn btn-primary btn-sm" data-en="Call" data-ar="اتصل">Call</a></div>
+          </div>
+        </div>
+        <div class="dealer-card">
+          <div class="dealer-card-info">
+            <div class="dealer-name" data-en="Gulf Parts Center" data-ar="مركز الخليج للقطع">Gulf Parts Center</div>
+            <div class="dealer-addr"><i class="fa fa-location-dot text-muted" style="font-size:.75rem"></i> <span data-en="Downtown, Cairo" data-ar="وسط البلد، القاهرة">Downtown, Cairo</span></div>
+            <div class="dealer-phone"><i class="fa fa-phone" style="font-size:.75rem"></i> 012 XXXX XXXX</div>
+          </div>
+          <div>
+            <span class="dealer-dist">5.1 km</span>
+            <div class="mt-8"><a href="tel:+20XXXXXXXXXX" class="btn btn-primary btn-sm" data-en="Call" data-ar="اتصل">Call</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== SCRIPTS ============================== -->
+<script src="js/shared.js"></script>
+<script>
+
+  let products = [];
+
+  async function fetchFeaturedProducts() {
+    try {
+      const res = await fetch('http://localhost:5000/api/products');
+      const json = await res.json();
+      if(json.success) {
+        // Keep only top 6 hot/featured products
+        products = json.data.filter(p => p.isHot).slice(0, 6);
+        if(products.length < 6) {
+          products = json.data.slice(0, 6); // fallback to random 6 if not enough hot 
+        }
+        
+        products = products.map(p => ({
+            id: p.sku,
+            sku: p.sku,
+            name: p.nameEn,
+            nameAr: p.nameAr,
+            brand: p.brand.charAt(0).toUpperCase() + p.brand.slice(1),
+            compat: p.compatibility && p.compatibility.length ? p.compatibility.join(', ') : 'Universal',
+            compatAr: p.compatibility && p.compatibility.length ? p.compatibility.join('، ') : 'عالمي',
+            cat: p.category
+        }));
+        renderProducts();
+      }
+    } catch(err) {
+      console.error('Failed to load featured products', err);
+      // Fallback
+      products = [];
+      renderProducts();
+    }
+  }
+
+  const brandColors = { Borsching: '#4a9eff', KDD: '#ff6b6b', Vika: '#ffd166' };
+  const partIcons = { Suspension:'🔩', Filters:'⚙️', 'Body Parts':'🚗', Braking:'🔴', Electrical:'⚡' };
+
+  function renderProducts() {
+    const grid = document.getElementById('featuredProducts');
+    if (!grid) return;
+    grid.innerHTML = products.map(p => `
+      <div class="product-card glass-panel">
+        <div class="product-card-img">
+          <div style="font-size:4rem; color:var(--dark-4); user-select:none">${partIcons[p.cat]||'🔧'}</div>
+          <span class="product-brand-tag">${p.brand}</span>
+        </div>
+        <div class="product-card-body">
+          <div class="product-sku">${p.sku}</div>
+          <h4 class="product-name" data-en="${p.name}" data-ar="${p.nameAr}">${currentLang==='ar'?p.nameAr:p.name}</h4>
+          <p class="product-compat" data-en="${p.compat}" data-ar="${p.compatAr}">${currentLang==='ar'?p.compatAr:p.compat}</p>
+        </div>
+        <div class="product-card-footer">
+          <a href="product.html?id=${p.id}" class="btn btn-ghost btn-sm" data-en="Details" data-ar="التفاصيل">${currentLang==='ar'?'التفاصيل':'Details'}</a>
+          <button class="btn btn-primary btn-sm" onclick="openDealerModal()" data-en="Find Dealer" data-ar="ابحث عن تاجر">${currentLang==='ar'?'ابحث عن تاجر':'Find Dealer'}</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  /* ------- Dealer modal ------- */
+  function openDealerModal()  { document.getElementById('dealerModal').classList.add('open'); }
+  function closeDealerModal() { document.getElementById('dealerModal').classList.remove('open'); }
+
+  document.getElementById('dealerModal').addEventListener('click', e => {
+    if (e.target === e.currentTarget) closeDealerModal();
+  });
+
+  function detectLocation() {
+    const box = document.getElementById('mapBox');
+    box.innerHTML = '<span class="map-icon">📍</span><span>Locating you…</span>';
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(pos => {
+        box.innerHTML = `<span class="map-icon">✅</span><span>Location detected: ${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}</span><p style="font-size:.78rem;color:var(--gray-500);margin-top:4px">Showing nearest dealers below</p>`;
+      }, () => {
+        box.innerHTML = '<span class="map-icon">❌</span><span>Location access denied. Showing all dealers.</span>';
+      });
+    }
+  }
+
+  /* ------- Init ------- */
+  fetchFeaturedProducts();
+  window.addEventListener('languageChanged', (e) => {
+    if(products.length > 0) renderProducts();
+  });
+</script>
+</body>
+</html>

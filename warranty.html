@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Warranty Registration – NUTD Automotive</title>
+    <meta name="description"
+        content="Register your NUTD automotive spare part to activate your manufacturer warranty." />
+    <link rel="icon" type="image/svg+xml" href="img/favicon.svg" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        .warranty-page {
+            padding-top: var(--nav-h);
+            min-height: 100vh;
+        }
+
+        /* Hero */
+        .warranty-hero {
+            background: var(--dark);
+            border-bottom: 1px solid rgba(255, 255, 255, .07);
+            padding: 40px 0;
+        }
+
+        .warranty-hero h1 {
+            color: var(--white);
+            font-size: 2rem;
+            margin-bottom: 6px;
+        }
+
+        /* Stepper */
+        .stepper-wrap {
+            padding: 40px 0 0;
+        }
+
+        .stepper {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 0;
+            max-width: 640px;
+            margin: 0 auto 44px;
+            position: relative;
+        }
+
+        .stepper::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 20%;
+            right: 20%;
+            height: 2px;
+            background: rgba(255, 255, 255, .08);
+            z-index: 0;
+        }
+
+        .step-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-circle {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, .15);
+            background: var(--dark-2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .85rem;
+            font-weight: 700;
+            color: var(--gray-600);
+            transition: all .3s;
+            position: relative;
+        }
+
+        .step-item.active .step-circle {
+            background: var(--red);
+            border-color: var(--red);
+            color: #fff;
+            box-shadow: 0 0 0 4px rgba(232, 35, 26, .18);
+        }
+
+        .step-item.done .step-circle {
+            background: #22c55e;
+            border-color: #22c55e;
+            color: #fff;
+        }
+
+        .step-label {
+            font-size: .72rem;
+            font-weight: 600;
+            color: var(--gray-600);
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+        }
+
+        .step-item.active .step-label,
+        .step-item.done .step-label {
+            color: var(--white);
+        }
+
+        /* Form card */
+        .step-panel {
+            display: none;
+        }
+
+        .step-panel.active {
+            display: block;
+        }
+
+        .form-card {
+            background: var(--dark-2);
+            border: 1px solid rgba(255, 255, 255, .08);
+            border-radius: var(--r-xl);
+            padding: 32px;
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        .form-card h3 {
+            color: var(--white);
+            font-size: 1.15rem;
+            margin-bottom: 6px;
+        }
+
+        .form-card .sub {
+            color: var(--gray-500);
+            font-size: .85rem;
+            margin-bottom: 28px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-row.cols-1 {
+            grid-template-columns: 1fr;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .field label {
+            font-size: .78rem;
+            font-weight: 600;
+            color: var(--gray-400);
+            text-transform: uppercase;
+            letter-spacing: .04em;
+        }
+
+        .field label .req {
+            color: var(--red);
+            margin-left: 2px;
+        }
+
+        .field input,
+        .field select,
+        .field textarea {
+            background: var(--dark-3);
+            border: 1px solid rgba(255, 255, 255, .1);
+            border-radius: var(--r-md);
+            padding: 10px 14px;
+            color: var(--white);
+            font-size: .9rem;
+            font-family: var(--font-en);
+            outline: none;
+            transition: border-color .18s;
+        }
+
+        .field input:focus,
+        .field select:focus {
+            border-color: var(--red);
+        }
+
+        .field input.error,
+        .field select.error {
+            border-color: #ef4444;
+        }
+
+        .field .err-msg {
+            font-size: .72rem;
+            color: #ef4444;
+            display: none;
+        }
+
+        .field.has-error .err-msg {
+            display: block;
+        }
+
+        .field.has-error input,
+        .field.has-error select {
+            border-color: #ef4444;
+        }
+
+        .field select option {
+            background: var(--dark-3);
+        }
+
+        .field .hint {
+            font-size: .72rem;
+            color: var(--gray-600);
+        }
+
+        .sku-row {
+            position: relative;
+        }
+
+        .sku-found {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: .75rem;
+            color: #22c55e;
+            display: none;
+        }
+
+        body.lang-ar .sku-found {
+            right: auto;
+            left: 10px;
+        }
+
+        /* Navigation buttons */
+        .form-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 28px;
+        }
+
+        /* SKU info preview */
+        .sku-preview {
+            background: rgba(232, 35, 26, .07);
+            border: 1px solid rgba(232, 35, 26, .15);
+            border-radius: var(--r-lg);
+            padding: 12px 16px;
+            margin-top: 12px;
+            display: none;
+        }
+
+        .sku-preview.show {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .sku-preview-icon {
+            font-size: 2rem;
+        }
+
+        .sku-preview-info {
+            flex: 1;
+        }
+
+        .sku-preview-info .pname {
+            color: var(--white);
+            font-weight: 700;
+            font-size: .92rem;
+        }
+
+        .sku-preview-info .pbrand {
+            font-size: .75rem;
+            color: var(--gray-500);
+            margin-top: 2px;
+        }
+
+        .sku-preview-info .pwarranty {
+            font-size: .75rem;
+            color: var(--red);
+            margin-top: 4px;
+            font-weight: 600;
+        }
+
+        /* Confirmation card */
+        .confirm-badge {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .confirm-badge .icon {
+            font-size: 3.5rem;
+        }
+
+        .confirm-badge h2 {
+            color: var(--white);
+            font-size: 1.4rem;
+            margin: 12px 0 4px;
+        }
+
+        .confirm-badge .sub {
+            color: var(--gray-500);
+            font-size: .88rem;
+        }
+
+        .warranty-card {
+            background: var(--dark-3);
+            border: 1px solid rgba(255, 255, 255, .1);
+            border-radius: var(--r-lg);
+            padding: 20px 22px;
+            margin-bottom: 20px;
+        }
+
+        .warranty-card .wcard-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, .06);
+            font-size: .85rem;
+        }
+
+        .warranty-card .wcard-row:last-child {
+            border-bottom: none;
+        }
+
+        .warranty-card .wcard-row .wlabel {
+            color: var(--gray-500);
+        }
+
+        .warranty-card .wcard-row .wval {
+            color: var(--white);
+            font-weight: 600;
+        }
+
+        .warranty-number {
+            font-size: 1.1rem;
+            color: var(--red);
+            font-family: monospace;
+            font-weight: 800;
+        }
+
+        .exp-date {
+            color: #22c55e !important;
+        }
+
+        /* Print certificate */
+        .print-area {
+            display: none;
+        }
+
+        @media print {
+            body>*:not(.print-area) {
+                display: none !important;
+            }
+
+            .print-area {
+                display: block !important;
+            }
+
+            .cert-wrap {
+                font-family: 'Georgia', serif;
+                border: 3px double #c41;
+                padding: 40px;
+                max-width: 700px;
+                margin: 0 auto;
+            }
+
+            .cert-wrap .cert-logo {
+                font-size: 1.8rem;
+                font-weight: 900;
+                color: #c41;
+                margin-bottom: 4px;
+            }
+
+            .cert-wrap .cert-title {
+                font-size: 1.5rem;
+                font-weight: bold;
+                margin: 16px 0;
+            }
+
+            .cert-wrap table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+
+            .cert-wrap td {
+                padding: 8px 12px;
+                border: 1px solid #ddd;
+                font-size: .9rem;
+            }
+
+            .cert-wrap td:first-child {
+                background: #f5f0ee;
+                font-weight: bold;
+                width: 35%;
+            }
+
+            .cert-wrap .cert-footer {
+                margin-top: 30px;
+                font-size: .8rem;
+                color: #666;
+                border-top: 1px solid #ddd;
+                padding-top: 14px;
+            }
+
+            .cert-wrap .seal {
+                float: right;
+                width: 70px;
+                height: 70px;
+                border: 3px solid #c41;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: .65rem;
+                font-weight: bold;
+                color: #c41;
+                text-align: center;
+            }
+        }
+
+        /* Section divider in form */
+        .field-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, .06);
+            margin: 8px 0;
+        }
+
+        @media(max-width:600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .form-card {
+                padding: 20px;
+            }
+
+            .stepper::before {
+                left: 15%;
+                right: 15%;
+            }
+        }
+
+        body.lang-ar .form-card {
+            direction: rtl;
+        }
+
+        body.lang-ar .field label {
+            letter-spacing: 0;
+        }
+
+        body.lang-ar .sku-found {
+            right: auto;
+            left: 10px;
+        }
+
+        body.lang-ar .form-actions {
+            flex-direction: row-reverse;
+        }
+
+        body.lang-ar .warranty-card .wcard-row {
+            flex-direction: row-reverse;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <a href="index.html" class="nav-logo">
+                <img src="img/logo.svg" alt="NUTD" style="height:36px" />
+                <div class="nav-logo-text"><span class="name-en">NUTD</span><span class="name-ar">نماء المتحدة</span>
+                </div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-link" data-en="Home" data-ar="الرئيسية">Home</a></li>
+                <li><a href="catalog.html" class="nav-link" data-en="Products" data-ar="المنتجات">Products</a></li>
+                <li><a href="brands.html" class="nav-link" data-en="Brands" data-ar="العلامات">Brands</a></li>
+                <li><a href="warranty.html" class="nav-link active" data-en="Warranty" data-ar="الضمان">Warranty</a>
+                </li>
+                <li><a href="about.html" class="nav-link" data-en="About" data-ar="عن الشركة">About</a></li>
+            </ul>
+            <div class="nav-actions">
+                <div class="lang-toggle">
+                    <button onclick="setLang('en')" class="active" id="btn-en">EN</button>
+                    <button onclick="setLang('ar')" id="btn-ar">AR</button>
+                </div>
+                <a href="dealer/login.html" class="btn btn-primary btn-sm" data-en="Dealer Portal"
+                    data-ar="بوابة التاجر">Dealer Portal</a>
+            </div>
+            <button class="nav-hamburger" ><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="index.html" class="nav-link" data-en="Home" data-ar="الرئيسية">Home</a>
+        <a href="catalog.html" class="nav-link" data-en="Products" data-ar="المنتجات">Products</a>
+        <a href="warranty.html" class="nav-link" data-en="Warranty" data-ar="الضمان">Warranty</a>
+        <a href="dealer/login.html" class="btn btn-primary btn-sm mt-16" data-en="Dealer Portal"
+            data-ar="بوابة التاجر">Dealer Portal</a>
+    </div>
+
+    <div class="warranty-page">
+        <!-- HERO -->
+        <div class="warranty-hero">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a href="index.html" data-en="Home" data-ar="الرئيسية">Home</a>
+                    <span class="sep"><i class="fa fa-chevron-right" style="font-size:.6rem"></i></span>
+                    <span class="current" data-en="Warranty Registration" data-ar="تفعيل الضمان">Warranty
+                        Registration</span>
+                </div>
+                <h1 data-en="🛡️ Activate Your Warranty" data-ar="🛡️ فعّل ضمान منتجك">🛡️ Activate Your Warranty</h1>
+                <p class="text-muted"
+                    data-en="Register your purchased part to receive full manufacturer warranty coverage."
+                    data-ar="سجّل قطعتك المشتراة للحصول على ضمان الشركة المصنّعة الكامل.">Register your purchased part
+                    to receive full manufacturer warranty coverage.</p>
+
+                <!-- Trust bar -->
+                <div style="display:flex;gap:24px;margin-top:20px;flex-wrap:wrap">
+                    <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--gray-400)"><i
+                            class="fa fa-shield-halved" style="color:var(--red)"></i><span data-en="Official Protection"
+                            data-ar="حماية رسمية">Official Protection</span></div>
+                    <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--gray-400)"><i
+                            class="fa fa-clock-rotate-left" style="color:var(--red)"></i><span
+                            data-en="Up to 24-Month Cover" data-ar="تغطية حتى 24 شهراً">Up to 24-Month Cover</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--gray-400)"><i
+                            class="fa fa-file-certificate" style="color:var(--red)"></i><span
+                            data-en="Printable Certificate" data-ar="شهادة ضمان مطبوعة">Printable Certificate</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--gray-400)"><i
+                            class="fa fa-magnifying-glass" style="color:var(--red)"></i><span
+                            data-en="Track via Warranty ID" data-ar="تتبع برقم الضمان">Track via Warranty ID</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEPPER FORM -->
+        <div class="stepper-wrap">
+            <div class="container">
+
+                <!-- Stepper nav -->
+                <div class="stepper" id="stepper">
+                    <div class="step-item active" id="step-nav-1">
+                        <div class="step-circle" id="sc1">1</div>
+                        <div class="step-label" data-en="Product Info" data-ar="معلومات القطعة">Product Info</div>
+                    </div>
+                    <div class="step-item" id="step-nav-2">
+                        <div class="step-circle" id="sc2">2</div>
+                        <div class="step-label" data-en="Your Details" data-ar="بياناتك">Your Details</div>
+                    </div>
+                    <div class="step-item" id="step-nav-3">
+                        <div class="step-circle" id="sc3">3</div>
+                        <div class="step-label" data-en="Certificate" data-ar="الشهادة">Certificate</div>
+                    </div>
+                </div>
+
+                <!-- STEP 1: Product Info -->
+                <div class="step-panel active" id="panel-1">
+                    <div class="form-card">
+                        <h3 data-en="Product Information" data-ar="معلومات القطعة">Product Information</h3>
+                        <p class="sub" data-en="Enter the part number from your invoice or the part packaging."
+                            data-ar="أدخل رقم القطعة من الفاتورة أو على علبة المنتج.">Enter the part number from your
+                            invoice or the part packaging.</p>
+
+                        <div style="display:flex;flex-direction:column;gap:18px">
+                            <div class="field">
+                                <label data-en="SKU / Part Number" data-ar="رقم القطعة (SKU)">SKU / Part Number <span
+                                        class="req">*</span></label>
+                                <div class="sku-row">
+                                    <input type="text" id="sku" placeholder="e.g. BSG-4401"
+                                        data-placeholder-en="e.g. BSG-4401" data-placeholder-ar="مثال: BSG-4401"
+                                        oninput="lookupSKU()"
+                                        style="text-transform:uppercase;letter-spacing:.04em;font-family:monospace" />
+                                    <span class="sku-found" id="skuFound"><i class="fa fa-circle-check"></i> <span
+                                            data-en="Found" data-ar="تم العثور عليه">Found</span></span>
+                                </div>
+                                <span class="err-msg" data-en="Please enter a valid SKU"
+                                    data-ar="أدخل رقم SKU صحيح">Please enter a valid SKU</span>
+                                <!-- SKU preview -->
+                                <div class="sku-preview" id="skuPreview">
+                                    <div class="sku-preview-icon" id="skuIcon">🔩</div>
+                                    <div class="sku-preview-info">
+                                        <div class="pname" id="skuName">—</div>
+                                        <div class="pbrand" id="skuBrand">—</div>
+                                        <div class="pwarranty" id="skuWarranty"><i class="fa fa-shield-halved"></i> —
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="field">
+                                    <label data-en="Purchase Date" data-ar="تاريخ الشراء">Purchase Date <span
+                                            class="req">*</span></label>
+                                    <input type="date" id="purchaseDate" max="" />
+                                    <span class="err-msg" data-en="Please select purchase date"
+                                        data-ar="اختر تاريخ الشراء">Please select purchase date</span>
+                                </div>
+                                <div class="field">
+                                    <label data-en="Dealer / Seller" data-ar="الوكيل / البائع">Dealer / Seller <span
+                                            class="req">*</span></label>
+                                    <select id="dealerName">
+                                        <option value="" data-en="Select dealer..." data-ar="اختر الوكيل...">Select
+                                            dealer...</option>
+                                        <option value="Al-Rashid Motors">Al-Rashid Motors</option>
+                                        <option value="Gulf Parts Trading">Gulf Parts Trading</option>
+                                        <option value="Al-Jazeera Auto">Al-Jazeera Auto</option>
+                                        <option value="Speed Auto Parts">Speed Auto Parts</option>
+                                        <option value="Saudi Parts Center">Saudi Parts Center</option>
+                                        <option value="other" data-en="Other (type below)" data-ar="أخرى (اكتب أدناه)">
+                                            Other (type below)</option>
+                                    </select>
+                                    <span class="err-msg" data-en="Select or enter dealer name"
+                                        data-ar="اختر أو أدخل اسم الوكيل">Select or enter dealer name</span>
+                                </div>
+                            </div>
+
+                            <div class="field" id="dealerOtherField" style="display:none">
+                                <label data-en="Dealer Name (Other)" data-ar="اسم الوكيل">Dealer Name (Other)</label>
+                                <input type="text" id="dealerOther" data-placeholder-en="Enter dealer name..."
+                                    data-placeholder-ar="أدخل اسم الوكيل..." />
+                            </div>
+
+                            <div class="field">
+                                <label data-en="Invoice / Receipt Number" data-ar="رقم الفاتورة">Invoice / Receipt
+                                    Number</label>
+                                <input type="text" id="invoiceNum" data-placeholder-en="Optional — e.g. INV-2024-001"
+                                    data-placeholder-ar="اختياري — مثال: INV-2024-001" />
+                                <span class="hint" data-en="Optional but helps with faster claim processing."
+                                    data-ar="اختياري ولكن يساعد في تسريع معالجة المطالبات.">Optional but helps with
+                                    faster claim processing.</span>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <a href="catalog.html" class="btn btn-ghost" data-en="← Back to Catalog"
+                                data-ar="→ العودة للكتالوج">← Back to Catalog</a>
+                            <button class="btn btn-primary" onclick="goStep2()" data-en="Next: Your Details →"
+                                data-ar="→ التالي: بياناتك">Next: Your Details →</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 2: Customer Info -->
+                <div class="step-panel" id="panel-2">
+                    <div class="form-card">
+                        <h3 data-en="Your Information" data-ar="بياناتك الشخصية">Your Information</h3>
+                        <p class="sub"
+                            data-en="Your details will be linked to the warranty. Used for claim verification only."
+                            data-ar="سيتم ربط بياناتك بالضمان وتُستخدم للتحقق من المطالبات فقط.">Your details will be
+                            linked to the warranty. Used for claim verification only.</p>
+
+                        <div style="display:flex;flex-direction:column;gap:18px">
+                            <div class="form-row">
+                                <div class="field">
+                                    <label data-en="Full Name" data-ar="الاسم الكامل">Full Name <span
+                                            class="req">*</span></label>
+                                    <input type="text" id="custName" data-placeholder-en="Your full name"
+                                        data-placeholder-ar="الاسم الكامل" />
+                                    <span class="err-msg" data-en="Enter your full name"
+                                        data-ar="أدخل اسمك الكامل">Enter your full name</span>
+                                </div>
+                                <div class="field">
+                                    <label data-en="Mobile Number" data-ar="رقم الجوال">Mobile Number <span
+                                            class="req">*</span></label>
+                                    <input type="tel" id="custPhone" placeholder="+966 5X XXX XXXX" dir="ltr" />
+                                    <span class="err-msg" data-en="Enter a valid mobile number"
+                                        data-ar="أدخل رقم جوال صحيح">Enter a valid mobile number</span>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="field">
+                                    <label data-en="Email Address" data-ar="البريد الإلكتروني">Email Address</label>
+                                    <input type="email" id="custEmail" data-placeholder-en="your@email.com (optional)"
+                                        data-placeholder-ar="بريدك الإلكتروني (اختياري)" />
+                                </div>
+                                <div class="field">
+                                    <label data-en="City" data-ar="المدينة">City <span class="req">*</span></label>
+                                    <select id="custCity">
+                                        <option value="" data-en="Select city..." data-ar="اختر المدينة...">Select
+                                            city...</option>
+                                        <option value="Riyadh" data-en="Riyadh" data-ar="الرياض">Riyadh</option>
+                                        <option value="Jeddah" data-en="Jeddah" data-ar="جدة">Jeddah</option>
+                                        <option value="Dammam" data-en="Dammam" data-ar="الدمام">Dammam</option>
+                                        <option value="Mecca" data-en="Mecca" data-ar="مكة المكرمة">Mecca</option>
+                                        <option value="Medina" data-en="Medina" data-ar="المدينة المنورة">Medina
+                                        </option>
+                                        <option value="Khobar" data-en="Al Khobar" data-ar="الخبر">Al Khobar</option>
+                                        <option value="Abha" data-en="Abha" data-ar="أبها">Abha</option>
+                                        <option value="Tabuk" data-en="Tabuk" data-ar="تبوك">Tabuk</option>
+                                        <option value="Other" data-en="Other" data-ar="أخرى">Other</option>
+                                    </select>
+                                    <span class="err-msg" data-en="Select your city" data-ar="اختر مدينتك">Select your
+                                        city</span>
+                                </div>
+                            </div>
+
+                            <div class="field-divider"></div>
+                            <div class="field">
+                                <label data-en="Vehicle (Optional)" data-ar="السيارة (اختياري)">Vehicle
+                                    (Optional)</label>
+                                <input type="text" id="custVehicle" data-placeholder-en="e.g. Toyota Camry 2022"
+                                    data-placeholder-ar="مثال: تويوتا كامري 2022" />
+                                <span class="hint" data-en="Helps us verify part compatibility for your claim."
+                                    data-ar="يساعدنا في التحقق من توافق القطعة مع سيارتك.">Helps us verify part
+                                    compatibility for your claim.</span>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button class="btn btn-ghost" onclick="setStep(1)" data-en="← Back" data-ar="→ رجوع">←
+                                Back</button>
+                            <button class="btn btn-primary" onclick="goStep3()" data-en="Submit & Get Certificate →"
+                                data-ar="→ إرسال والحصول على الشهادة">Submit & Get Certificate →</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 3: Certificate -->
+                <div class="step-panel" id="panel-3">
+                    <div class="form-card">
+                        <div class="confirm-badge">
+                            <div class="icon">🛡️</div>
+                            <h2 data-en="Warranty Activated!" data-ar="تم تفعيل الضمان!">Warranty Activated!</h2>
+                            <p class="sub"
+                                data-en="Your part is now registered. Save your warranty number for future claims."
+                                data-ar="تم تسجيل قطعتك. احتفظ برقم الضمان للمطالبات المستقبلية.">Your part is now
+                                registered. Save your warranty number for future claims.</p>
+                        </div>
+
+                        <div class="warranty-card">
+                            <div class="wcard-row">
+                                <span class="wlabel" data-en="Warranty Number" data-ar="رقم الضمان">Warranty
+                                    Number</span>
+                                <span class="wval warranty-number" id="certWrnNum">WRN-—</span>
+                            </div>
+                            <div class="wcard-row">
+                                <span class="wlabel" data-en="Part Name" data-ar="اسم القطعة">Part Name</span>
+                                <span class="wval" id="certPartName">—</span>
+                            </div>
+                            <div class="wcard-row">
+                                <span class="wlabel" data-en="SKU" data-ar="رقم SKU">SKU</span>
+                                <span class="wval" id="certSku" style="font-family:monospace">—</span>
+                            </div>
+                            <div class="wcard-row">
+                                <span class="wlabel" data-en="Brand" data-ar="العلامة">Brand</span>
+                                <span class="wval" id="certBrand">—</span>
+                            </div>
+                            <div class="wcard-row">
+                                <span class="wlabel" data-en="Registered Name" data-ar="الاسم المسجل">Registered
+                                    Name</span>
+                                <span class="wval" id="certName">—</span>
+                            </div>
+                            <div class="wcard-row">
+                                <span class="wlabel" data-en="Purchase Date" data-ar="تاريخ الشراء">Purchase Date</span>
+                                <span class="wval" id="certPurchase">—</span>
+                            </div>
+                            <div class="wcard-row">
+                                <span class="wlabel" data-en="Warranty Duration" data-ar="مدة الضمان">Warranty
+                                    Duration</span>
+                                <span class="wval" id="certDuration">—</span>
+                            </div>
+                            <div class="wcard-row">
+                                <span class="wlabel" data-en="Expires On" data-ar="ينتهي في">Expires On</span>
+                                <span class="wval exp-date" id="certExpiry">—</span>
+                            </div>
+                            <div class="wcard-row">
+                                <span class="wlabel" data-en="Dealer" data-ar="الوكيل">Dealer</span>
+                                <span class="wval" id="certDealer">—</span>
+                            </div>
+                        </div>
+
+                        <div style="display:flex;gap:10px;flex-wrap:wrap">
+                            <button class="btn btn-primary" onclick="printCert()"><i class="fa fa-print"></i> <span
+                                    data-en="Print Certificate" data-ar="طباعة الشهادة">Print
+                                    Certificate</span></button>
+                            <a href="warranty-status.html" class="btn btn-ghost"><i class="fa fa-magnifying-glass"></i>
+                                <span data-en="Check Status" data-ar="تحقق من الحالة">Check Status</span></a>
+                            <button class="btn btn-ghost" onclick="resetForm()"><i class="fa fa-plus"></i> <span
+                                    data-en="Register Another" data-ar="تسجيل قطعة أخرى">Register
+                                    Another</span></button>
+                        </div>
+                    </div>
+                </div><!-- /panel-3 -->
+
+            </div><!-- /container -->
+        </div><!-- /stepper-wrap -->
+
+        <!-- HOW IT WORKS -->
+        <section style="padding:64px 0;border-top:1px solid rgba(255,255,255,.06);margin-top:60px">
+            <div class="container">
+                <h2 style="color:var(--white);text-align:center;font-size:1.5rem;margin-bottom:8px"
+                    data-en="How It Works" data-ar="كيف يعمل الضمان">How It Works</h2>
+                <p style="text-align:center;color:var(--gray-500);margin-bottom:40px;font-size:.88rem"
+                    data-en="Three simple steps to protect your investment" data-ar="ثلاث خطوات بسيطة لحماية استثمارك">
+                    Three simple steps to protect your investment</p>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:860px;margin:0 auto">
+                    <div style="text-align:center;padding:24px">
+                        <div style="font-size:2.4rem;margin-bottom:12px">🧾</div>
+                        <h4 style="color:var(--white);margin-bottom:6px" data-en="Register Your Part"
+                            data-ar="سجّل قطعتك">Register Your Part</h4>
+                        <p style="color:var(--gray-500);font-size:.83rem"
+                            data-en="Enter your SKU and purchase details in the form above."
+                            data-ar="أدخل رقم القطعة وتفاصيل الشراء في الاستمارة أعلاه.">Enter your SKU and purchase
+                            details in the form above.</p>
+                    </div>
+                    <div style="text-align:center;padding:24px">
+                        <div style="font-size:2.4rem;margin-bottom:12px">🛡️</div>
+                        <h4 style="color:var(--white);margin-bottom:6px" data-en="Get Your Certificate"
+                            data-ar="احصل على شهادتك">Get Your Certificate</h4>
+                        <p style="color:var(--gray-500);font-size:.83rem"
+                            data-en="Receive a printable warranty certificate with a unique ID."
+                            data-ar="احصل على شهادة ضمان قابلة للطباعة مع رقم فريد.">Receive a printable warranty
+                            certificate with a unique ID.</p>
+                    </div>
+                    <div style="text-align:center;padding:24px">
+                        <div style="font-size:2.4rem;margin-bottom:12px">📞</div>
+                        <h4 style="color:var(--white);margin-bottom:6px" data-en="Claim If Needed"
+                            data-ar="تقدّم بمطالبة عند الحاجة">Claim If Needed</h4>
+                        <p style="color:var(--gray-500);font-size:.83rem"
+                            data-en="Contact your dealer or NUTD with your warranty number."
+                            data-ar="تواصل مع وكيلك أو NUTD برقم ضمانك.">Contact your dealer or NUTD with your warranty
+                            number.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- PRINTABLE CERTIFICATE -->
+    <div class="print-area" id="printArea">
+        <div class="cert-wrap">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between">
+                <div>
+                    <div class="cert-logo">NUTD</div>
+                    <div style="font-size:.85rem;color:#666">نماء المتحدة للاستيراد والتوزيع</div>
+                </div>
+                <div class="seal">WARRANTY<br>OFFICIAL<br>SEAL</div>
+            </div>
+            <div class="cert-title">🛡️ Warranty Certificate / شهادة ضمان</div>
+            <p style="color:#666;font-size:.85rem">This certificate confirms that the below product has been officially
+                registered under NUTD's manufacturer warranty program.</p>
+            <table id="certTable">
+                <tr>
+                    <td>Warranty Number / رقم الضمان</td>
+                    <td id="p-wrn" style="font-weight:bold;color:#c41;font-family:monospace"></td>
+                </tr>
+                <tr>
+                    <td>Part Name / اسم القطعة</td>
+                    <td id="p-name"></td>
+                </tr>
+                <tr>
+                    <td>SKU / رقم القطعة</td>
+                    <td id="p-sku" style="font-family:monospace"></td>
+                </tr>
+                <tr>
+                    <td>Brand / العلامة</td>
+                    <td id="p-brand"></td>
+                </tr>
+                <tr>
+                    <td>Registered Owner / المالك المسجل</td>
+                    <td id="p-owner"></td>
+                </tr>
+                <tr>
+                    <td>Mobile / الجوال</td>
+                    <td id="p-phone"></td>
+                </tr>
+                <tr>
+                    <td>Purchase Date / تاريخ الشراء</td>
+                    <td id="p-purchase"></td>
+                </tr>
+                <tr>
+                    <td>Registration Date / تاريخ التسجيل</td>
+                    <td id="p-reg"></td>
+                </tr>
+                <tr>
+                    <td>Warranty Duration / مدة الضمان</td>
+                    <td id="p-duration"></td>
+                </tr>
+                <tr>
+                    <td>Expiry Date / تاريخ الانتهاء</td>
+                    <td id="p-expiry" style="color:green;font-weight:bold"></td>
+                </tr>
+                <tr>
+                    <td>Dealer / الوكيل</td>
+                    <td id="p-dealer"></td>
+                </tr>
+            </table>
+            <div class="cert-footer">
+                <p>NUTD Automotive Parts — Official Exclusive Distributor of Borsehung (DE), VIKA (CN), KDD (CN)</p>
+                <p>This certificate is valid only when presented with original purchase invoice. Warranty covers
+                    manufacturing defects under normal usage conditions.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ── Language ── */
+        let currentLang = localStorage.getItem('lang') || 'en';
+        function setLang(l) {
+            currentLang = l;
+            localStorage.setItem('lang', l);
+            document.documentElement.lang = l;
+            document.documentElement.dir = l === 'ar' ? 'rtl' : 'ltr';
+            document.body.classList.toggle('lang-ar', l === 'ar');
+            document.getElementById('btn-en').classList.toggle('active', l === 'en');
+            document.getElementById('btn-ar').classList.toggle('active', l === 'ar');
+            document.querySelectorAll('[data-en]').forEach(el => {
+                if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                    el.placeholder = l === 'ar' ? (el.dataset.ar || '') : (el.dataset.en || '');
+                } else if (el.tagName === 'OPTION') {
+                    el.textContent = l === 'ar' ? (el.dataset.ar || el.textContent) : (el.dataset.en || el.textContent);
+                } else {
+                    el.textContent = l === 'ar' ? (el.dataset.ar || el.textContent) : (el.dataset.en || el.textContent);
+                }
+            });
+            document.querySelectorAll('[data-placeholder-en]').forEach(el => {
+                el.placeholder = l === 'ar' ? el.dataset.placeholderAr : el.dataset.placeholderEn;
+            });
+            updateNavbar();
+        }
+
+        function updateNavbar() {
+            const navbar = document.getElementById('navbar');
+            if (navbar) { navbar.classList.toggle('scrolled', window.scrollY > 20); }
+        }
+
+        /* ── Product DB (shared with catalog) ── */
+        const allProducts = [
+            { id: 1, sku: 'BSG-4401', name: 'Front Shock Absorber', nameAr: 'ماص الصدمات الأمامي', brand: 'borsching', icon: '🔩' },
+            { id: 2, sku: 'KDD-7712', name: 'Oil Filter Premium', nameAr: 'فلتر زيت بريميوم', brand: 'kdd', icon: '⚙️' },
+            { id: 3, sku: 'VKA-2201', name: 'Front Bumper Assembly', nameAr: 'مجموعة الصدام الأمامي', brand: 'vika', icon: '🚗' },
+            { id: 4, sku: 'BSG-8830', name: 'Brake Disc Set', nameAr: 'طقم أقراص الفرامل', brand: 'borsching', icon: '🔴' },
+            { id: 5, sku: 'KDD-1155', name: 'Air Filter Set', nameAr: 'طقم فلتر الهواء', brand: 'kdd', icon: '💨' },
+            { id: 6, sku: 'VKA-3390', name: 'Headlight Assembly LED', nameAr: 'مجموعة المصباح الأمامي LED', brand: 'vika', icon: '⚡' },
+            { id: 7, sku: 'BSG-2210', name: 'Tie Rod End Assembly', nameAr: 'مجموعة طرف الجهاز', brand: 'borsching', icon: '🔩' },
+            { id: 8, sku: 'KDD-8801', name: 'Cabin Air Filter', nameAr: 'فلتر هواء الكابينة', brand: 'kdd', icon: '💨' },
+            { id: 9, sku: 'VKA-5511', name: 'Radiator Assembly', nameAr: 'مجمع الرادياتير', brand: 'vika', icon: '🌡️' },
+            { id: 10, sku: 'BSG-6640', name: 'Rear Shock Absorber', nameAr: 'ماص الصدمات الخلفي', brand: 'borsching', icon: '🔩' },
+            { id: 11, sku: 'KDD-4430', name: 'Engine Oil Filter Housing', nameAr: 'هيكل فلتر زيت المحرك', brand: 'kdd', icon: '⚙️' },
+            { id: 12, sku: 'VKA-7780', name: 'Door Mirror Assembly', nameAr: 'مجموعة مرآة الباب', brand: 'vika', icon: '🚗' },
+            { id: 13, sku: 'BSG-3310', name: 'Control Arm Front Left', nameAr: 'ذراع التحكم الأمامي الأيسر', brand: 'borsching', icon: '🔩' },
+            { id: 14, sku: 'KDD-5560', name: 'Throttle Body', nameAr: 'جسم الخانق', brand: 'kdd', icon: '⚙️' },
+            { id: 15, sku: 'VKA-9901', name: 'Fuel Pump Controller', nameAr: 'وحدة التحكم في مضخة الوقود', brand: 'vika', icon: '⛽' },
+            { id: 16, sku: 'KDD-3301', name: 'Water Pump Assembly', nameAr: 'مجموعة مضخة المياه', brand: 'kdd', icon: '💧' },
+            { id: 17, sku: 'BSG-7720', name: 'Brake Pad Set Front', nameAr: 'طقم تيل الفرامل الأمامي', brand: 'borsching', icon: '🔴' },
+            { id: 18, sku: 'VKA-4410', name: 'Window Regulator Front Left', nameAr: 'رافعة الزجاج الأمامية اليسرى', brand: 'vika', icon: '🪟' },
+        ];
+        const brandNames = { borsching: 'Borsching (DE)', kdd: 'KDD (CN)', vika: 'Vika (CN)' };
+        const warrantyMonths = { borsching: 24, kdd: 12, vika: 12 };
+
+        let foundProduct = null;
+
+        /* ── SKU lookup ── */
+        function lookupSKU() {
+            const v = document.getElementById('sku').value.trim().toUpperCase();
+            const found = allProducts.find(p => p.sku === v);
+            const preview = document.getElementById('skuPreview');
+            const badge = document.getElementById('skuFound');
+            foundProduct = found || null;
+            if (found) {
+                const months = warrantyMonths[found.brand];
+                const ar = currentLang === 'ar';
+                document.getElementById('skuName').textContent = ar ? found.nameAr : found.name;
+                document.getElementById('skuBrand').textContent = brandNames[found.brand];
+                document.getElementById('skuWarranty').innerHTML = `<i class="fa fa-shield-halved"></i> ${months} ${ar ? 'شهراً ضمان' : 'months warranty'}`;
+                document.getElementById('skuIcon').textContent = found.icon;
+                preview.classList.add('show');
+                badge.style.display = 'inline-flex';
+            } else {
+                preview.classList.remove('show');
+                badge.style.display = 'none';
+            }
+        }
+
+        /* ── Dealer "Other" toggle ── */
+        document.getElementById('dealerName').addEventListener('change', function () {
+            document.getElementById('dealerOtherField').style.display = this.value === 'other' ? 'block' : 'none';
+        });
+
+        /* ── Stepper navigation ── */
+        let currentStep = 1;
+
+        function setStep(n) {
+            [1, 2, 3].forEach(i => {
+                document.getElementById('panel-' + i).classList.toggle('active', i === n);
+                const nav = document.getElementById('step-nav-' + i);
+                const sc = document.getElementById('sc' + i);
+                nav.classList.remove('active', 'done');
+                if (i < n) { nav.classList.add('done'); sc.innerHTML = '<i class="fa fa-check"></i>'; }
+                else if (i === n) { nav.classList.add('active'); sc.textContent = i; }
+                else { sc.textContent = i; }
+            });
+            currentStep = n;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function required(id, errParent) {
+            const el = document.getElementById(id);
+            const val = el.value.trim();
+            const wrap = errParent || el.closest('.field');
+            if (!val) { wrap.classList.add('has-error'); return false; }
+            wrap.classList.remove('has-error');
+            return true;
+        }
+
+        function goStep2() {
+            const skuEl = document.getElementById('sku');
+            const skuWrap = skuEl.closest('.field');
+            let ok = true;
+            if (!skuEl.value.trim()) { skuWrap.classList.add('has-error'); ok = false; } else { skuWrap.classList.remove('has-error'); }
+            if (!required('purchaseDate')) ok = false;
+            const dealerSel = document.getElementById('dealerName');
+            const dealerWrap = dealerSel.closest('.field');
+            if (!dealerSel.value) { dealerWrap.classList.add('has-error'); ok = false; } else { dealerWrap.classList.remove('has-error'); }
+            if (ok) setStep(2);
+        }
+
+        function goStep3() {
+            let ok = true;
+            if (!required('custName')) ok = false;
+            const phone = document.getElementById('custPhone').value.trim();
+            const phoneWrap = document.getElementById('custPhone').closest('.field');
+            if (!phone || phone.length < 7) { phoneWrap.classList.add('has-error'); ok = false; } else { phoneWrap.classList.remove('has-error'); }
+            if (!required('custCity')) ok = false;
+            if (!ok) return;
+
+            // Generate warranty data
+            const wrnNum = 'WRN-' + new Date().toISOString().slice(0, 10).replace(/-/g, '') + '-' + Math.floor(1000 + Math.random() * 9000);
+            const purchaseDate = document.getElementById('purchaseDate').value;
+            const sku = document.getElementById('sku').value.trim().toUpperCase();
+            const product = foundProduct || { name: 'Unknown Part (' + sku + ')', nameAr: 'قطعة ' + sku, brand: 'unknown', icon: '📦' };
+            const months = warrantyMonths[product.brand] || 12;
+            const pDate = new Date(purchaseDate);
+            const expDate = new Date(pDate);
+            expDate.setMonth(expDate.getMonth() + months);
+            const fmt = d => d.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
+            const name = document.getElementById('custName').value.trim();
+            const dealer = document.getElementById('dealerName').value === 'other'
+                ? document.getElementById('dealerOther').value || 'Other'
+                : document.getElementById('dealerName').value;
+
+            // Fill confirm card
+            document.getElementById('certWrnNum').textContent = wrnNum;
+            document.getElementById('certPartName').textContent = currentLang === 'ar' ? product.nameAr : product.name;
+            document.getElementById('certSku').textContent = sku;
+            document.getElementById('certBrand').textContent = brandNames[product.brand] || product.brand;
+            document.getElementById('certName').textContent = name;
+            document.getElementById('certPurchase').textContent = fmt(pDate);
+            document.getElementById('certDuration').textContent = months + (currentLang === 'ar' ? ' شهراً' : ' months');
+            document.getElementById('certExpiry').textContent = fmt(expDate);
+            document.getElementById('certDealer').textContent = dealer;
+
+            // Fill print cert
+            document.getElementById('p-wrn').textContent = wrnNum;
+            document.getElementById('p-name').textContent = product.name + ' / ' + product.nameAr;
+            document.getElementById('p-sku').textContent = sku;
+            document.getElementById('p-brand').textContent = brandNames[product.brand] || product.brand;
+            document.getElementById('p-owner').textContent = name;
+            document.getElementById('p-phone').textContent = document.getElementById('custPhone').value;
+            document.getElementById('p-purchase').textContent = fmt(pDate);
+            document.getElementById('p-reg').textContent = fmt(new Date());
+            document.getElementById('p-duration').textContent = months + ' months / ' + months + ' شهراً';
+            document.getElementById('p-expiry').textContent = fmt(expDate);
+            document.getElementById('p-dealer').textContent = dealer;
+
+            // Save to localStorage
+            const records = JSON.parse(localStorage.getItem('nutd_warranties') || '[]');
+            records.push({ wrnNum, sku, productName: product.name, productNameAr: product.nameAr, brand: product.brand, name, phone: document.getElementById('custPhone').value, city: document.getElementById('custCity').value, purchaseDate, expiry: expDate.toISOString().slice(0, 10), dealer, registrationDate: new Date().toISOString().slice(0, 10) });
+            localStorage.setItem('nutd_warranties', JSON.stringify(records));
+
+            setStep(3);
+        }
+
+        function printCert() { window.print(); }
+
+        function resetForm() {
+            document.getElementById('sku').value = '';
+            document.getElementById('purchaseDate').value = '';
+            document.getElementById('dealerName').value = '';
+            document.getElementById('invoiceNum').value = '';
+            document.getElementById('custName').value = '';
+            document.getElementById('custPhone').value = '';
+            document.getElementById('custEmail').value = '';
+            document.getElementById('custCity').value = '';
+            document.getElementById('custVehicle').value = '';
+            document.getElementById('skuPreview').classList.remove('show');
+            document.getElementById('skuFound').style.display = 'none';
+            foundProduct = null;
+            setStep(1);
+        }
+
+        /* ── Mobile nav ── */
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('open');
+        }
+
+        /* Set max date = today */
+        document.getElementById('purchaseDate').max = new Date().toISOString().split('T')[0];
+
+        /* Init lang */
+        if (localStorage.getItem('lang') === 'ar') setLang('ar');
+
+        window.addEventListener('scroll', () => {
+            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+        });
+    </script>
+<script src="js/shared.js"></script>
+</body>
+
+</html>

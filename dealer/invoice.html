@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Invoice – NUTD Dealer Portal</title>
+    <link rel="icon" type="image/svg+xml" href="../img/favicon.svg" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        .inv-layout {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .inv-card {
+            background: var(--dark-2);
+            border: 1px solid rgba(255, 255, 255, .07);
+            border-radius: var(--r-lg);
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .inv-card-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, .07);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .inv-card-header h4 {
+            color: var(--white);
+            font-size: .9rem;
+        }
+
+        .inv-card-body {
+            padding: 24px;
+        }
+
+        .summary-card {
+            background: var(--dark-2);
+            border: 1px solid rgba(255, 255, 255, .07);
+            border-radius: var(--r-lg);
+            padding: 24px;
+            position: sticky;
+            top: 80px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, .05);
+            font-size: .88rem;
+            color: var(--gray-300);
+        }
+
+        .summary-row:last-of-type {
+            border: none;
+        }
+
+        .summary-row.total {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--white);
+            border-top: 1px solid rgba(255, 255, 255, .1);
+            padding-top: 16px;
+            margin-top: 8px;
+        }
+
+        .summary-row .val {
+            color: var(--white);
+            font-weight: 600;
+        }
+
+        .summary-row.total .val {
+            color: var(--red);
+            font-size: 1.2rem;
+        }
+
+        .remove-btn {
+            color: var(--danger);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: .85rem;
+            padding: 4px 8px;
+            border-radius: var(--r-sm);
+            transition: background .2s;
+        }
+
+        .remove-btn:hover {
+            background: rgba(239, 68, 68, .1);
+        }
+
+        .product-suggest {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--dark-3);
+            border: 1px solid rgba(255, 255, 255, .12);
+            border-radius: var(--r-md);
+            z-index: 100;
+            max-height: 220px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .product-suggest.open {
+            display: block;
+        }
+
+        .suggest-item {
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: background .15s;
+            font-size: .88rem;
+        }
+
+        .suggest-item:hover {
+            background: var(--dark-4);
+        }
+
+        .suggest-item .sku {
+            font-size: .72rem;
+            color: var(--gray-500);
+            font-family: monospace;
+        }
+
+        .suggest-item .price {
+            margin-left: auto;
+            color: var(--red);
+            font-weight: 700;
+        }
+
+        @media(max-width:900px) {
+            .inv-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-card {
+                position: static;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="portal-layout">
+
+        <!-- =========== SIDEBAR =========== -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <img src="../img/logo.svg" alt="NUTD" style="height:32px" />
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="sidebar-section-label" data-en="Main" data-ar="رئيسي">Main</div>
+                <a href="dashboard.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-gauge"></i></span>
+                    <span data-en="Dashboard" data-ar="الداشبورد">Dashboard</span>
+                </a>
+                <a href="products.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-boxes-stacked"></i></span>
+                    <span data-en="Products & Pricing" data-ar="المنتجات والأسعار">Products &amp; Pricing</span>
+                </a>
+                <a href="invoice.html" class="sidebar-link active">
+                    <span class="icon"><i class="fa fa-file-invoice"></i></span>
+                    <span data-en="Create Invoice" data-ar="إنشاء فاتورة">Create Invoice</span>
+                    <span class="badge" data-en="New" data-ar="جديد">New</span>
+                </a>
+
+                <div class="sidebar-section-label" data-en="Orders" data-ar="الطلبات">Orders</div>
+                <a href="orders.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-clock-rotate-left"></i></span>
+                    <span data-en="Order History" data-ar="سجل الطلبات">Order History</span>
+                </a>
+                <a href="orders.html?status=Pending" class="sidebar-link" id="navPending">
+                    <span class="icon"><i class="fa fa-list-check"></i></span>
+                    <span data-en="Pending Approvals" data-ar="في انتظار الموافقة">Pending Approvals</span>
+                    <span class="badge" id="sidebarPendingBadge">0</span>
+                </a>
+
+                <div class="sidebar-section-label" data-en="Account" data-ar="الحساب">Account</div>
+                <a href="#" class="sidebar-link" onclick="alert(currentLang === 'ar' ? 'قريباً!' : 'Coming soon!'); return false;">
+                    <span class="icon"><i class="fa fa-user-gear"></i></span>
+                    <span data-en="Profile" data-ar="الملف الشخصي">Profile</span>
+                </a>
+                <a href="#" class="sidebar-link" onclick="alert(currentLang === 'ar' ? 'قريباً!' : 'Coming soon!'); return false;">
+                    <span class="icon"><i class="fa fa-headset"></i></span>
+                    <span data-en="Support" data-ar="الدعم">Support</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="d-flex align-center gap-12 mb-16">
+                    <div class="topbar-avatar">AH</div>
+                    <div>
+                        <div style="font-size:.85rem;font-weight:600;color:var(--white)">Ahmed Hassan</div>
+                        <div style="font-size:.72rem;color:var(--gray-500)" data-en="Al-Nour Auto Parts"
+                            data-ar="النور لقطع السيارات">Al-Nour Auto Parts</div>
+                    </div>
+                </div>
+                <a href="login.html" class="btn btn-ghost btn-sm btn-full">
+                    <i class="fa fa-right-from-bracket"></i>
+                    <span data-en="Sign Out" data-ar="تسجيل الخروج">Sign Out</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="portal-main">
+            <div class="portal-topbar glass-panel" style="border-radius:0;border-left:none;border-right:none;border-top:none">
+                <div>
+                    <span class="topbar-title" data-en="Create New Invoice" data-ar="إنشاء فاتورة جديدة">Create New
+                        Invoice</span>
+                </div>
+                <div class="topbar-actions">
+                    <div class="lang-toggle">
+                        <button onclick="setLang('en')" class="active" id="btn-en">EN</button>
+                        <button onclick="setLang('ar')" id="btn-ar">AR</button>
+                    </div>
+                    <button class="btn-icon btn-ghost notif-btn" style="position:relative">
+                        <i class="fa fa-bell" style="font-size:1rem;color:var(--gray-300)"></i>
+                        <span class="notif-dot"></span>
+                    </button>
+                    <div class="topbar-avatar">AH</div>
+                </div>
+            </div>
+
+            <div class="portal-content">
+                <div class="inv-layout">
+
+                    <!-- LEFT – FORM -->
+                    <div>
+
+                        <!-- Notes & Reference -->
+                        <div class="inv-card glass-panel" style="border-radius: var(--r-lg); border: 1px solid rgba(255, 255, 255, .07);">
+                            <div class="inv-card-header">
+                                <h4 data-en="Invoice Details" data-ar="تفاصيل الفاتورة">Invoice Details</h4>
+                                <span style="font-size:.78rem;color:var(--gray-500)">INV-2025-019</span>
+                            </div>
+                            <div class="inv-card-body">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label" data-en="Invoice Date"
+                                            data-ar="تاريخ الفاتورة">Invoice Date</label>
+                                        <input type="date" class="form-control" value="2025-03-30" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" data-en="Reference / PO#"
+                                            data-ar="رقم المرجع">Reference / PO#</label>
+                                        <input type="text" class="form-control" placeholder="PO-2025-XXX" id="refInput"
+                                            data-placeholder-en="PO-2025-XXX" data-placeholder-ar="PO-2025-XXX" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" data-en="Shipping Address"
+                                        data-ar="عنوان التوصيل">Shipping Address</label>
+                                    <input type="text" class="form-control" placeholder="123 Main St, City" id="addressInput"
+                                        data-placeholder-en="123 Main St, City" data-placeholder-ar="الشارع، المدينة، البلد" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" data-en="Notes (optional)"
+                                        data-ar="ملاحظات (اختيارية)">Notes (optional)</label>
+                                    <textarea class="form-control" rows="2"
+                                        placeholder="Add any notes for admin review…"
+                                        data-placeholder-en="Add any notes for admin review…"
+                                        data-placeholder-ar="أضف أي ملاحظات لمراجعة الإدارة…"
+                                        style="resize:vertical"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Add Products -->
+                        <div class="inv-card glass-panel" style="border-radius: var(--r-lg); border: 1px solid rgba(255, 255, 255, .07);">
+                            <div class="inv-card-header">
+                                <h4 data-en="Add Products" data-ar="إضافة المنتجات">Add Products</h4>
+                            </div>
+                            <div class="inv-card-body">
+                                <div style="position:relative;margin-bottom:20px">
+                                    <div class="search-bar-wrap">
+                                        <input type="text" class="search-bar" id="productSearchInput"
+                                            placeholder="Search product or SKU…" oninput="searchProducts(this.value)"
+                                            data-placeholder-en="Search product or SKU…"
+                                            data-placeholder-ar="ابحث بالمنتج أو SKU…" />
+                                        <span class="search-btn" style="cursor:default"><i
+                                                class="fa fa-magnifying-glass"></i></span>
+                                    </div>
+                                    <div class="product-suggest" id="suggestionBox"></div>
+                                </div>
+
+                                <!-- Products Table -->
+                                <div style="overflow-x:auto">
+                                    <table class="invoice-table" id="invoiceTable">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 50px;"></th>
+                                                <th data-en="SKU" data-ar="الرقم">SKU</th>
+                                                <th data-en="Product" data-ar="المنتج">Product</th>
+                                                <th data-en="Unit Price" data-ar="سعر الوحدة">Unit Price</th>
+                                                <th data-en="Qty" data-ar="الكمية">Qty</th>
+                                                <th data-en="Subtotal" data-ar="المجموع الفرعي">Subtotal</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="invoiceRows">
+                                            <tr id="emptyRow">
+                                                <td colspan="6"
+                                                    style="text-align:center;color:var(--gray-700);padding:28px;font-size:.88rem">
+                                                    <i class="fa fa-box-open"
+                                                        style="font-size:1.5rem;display:block;margin-bottom:8px;opacity:.4"></i>
+                                                    <span data-en="No products added yet. Use the search above."
+                                                        data-ar="لا توجد منتجات مضافة بعد. استخدم البحث أعلاه.">No
+                                                        products added yet. Use the search above.</span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT – SUMMARY -->
+                    <div>
+                        <div class="summary-card glass-panel" style="border-radius: var(--r-lg);">
+                            <h4 class="text-white mb-16" style="font-size:.95rem" data-en="Order Summary"
+                                data-ar="ملخص الطلب">Order Summary</h4>
+
+                            <div class="summary-row"><span data-en="Subtotal"
+                                    data-ar="المجموع الفرعي">Subtotal</span><span class="val" id="sumSubtotal">EGP
+                                    0</span></div>
+                            <!-- Discount removed per config -->
+                            <div class="summary-row"><span data-en="Tax (14% VAT)" data-ar="ضريبة (14% VAT)">Tax (14%
+                                    VAT)</span><span class="val" id="sumTax">EGP 0</span></div>
+                            <div class="summary-row total"><span data-en="Total" data-ar="الإجمالي">Total</span><span
+                                    class="val" id="sumTotal">EGP 0</span></div>
+
+                            <div class="mt-24">
+                                <div class="form-group">
+                                    <label class="form-label" data-en="Payment Terms" data-ar="شروط الدفع">Payment
+                                        Terms</label>
+                                    <select class="form-control" style="font-size:.85rem">
+                                        <option data-en="Cash on Delivery" data-ar="الدفع عند الاستلام">Cash on Delivery
+                                        </option>
+                                        <option data-en="Net 15 Days" data-ar="صافي 15 يوم">Net 15 Days</option>
+                                        <option data-en="Net 30 Days" data-ar="صافي 30 يوم">Net 30 Days</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-primary btn-full btn-lg mt-8" onclick="submitInvoice()">
+                                <i class="fa fa-paper-plane"></i>
+                                <span data-en="Submit for Approval" data-ar="إرسال للموافقة">Submit for Approval</span>
+                            </button>
+                            <button class="btn btn-ghost btn-full mt-8" onclick="saveDraft()">
+                                <i class="fa fa-floppy-disk"></i>
+                                <span data-en="Save as Draft" data-ar="حفظ كمسودة">Save as Draft</span>
+                            </button>
+
+                            <p style="font-size:.72rem;color:var(--gray-700);text-align:center;margin-top:12px"
+                                data-en="Invoice will be sent to admin for approval. You'll be notified by email."
+                                data-ar="ستُرسل الفاتورة للإدارة للموافقة. ستتلقى إشعاراً بالبريد الإلكتروني.">Invoice
+                                will be sent to admin for approval. You'll be notified by email.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Success modal -->
+    <div class="modal-overlay" id="successModal">
+        <div class="modal" style="max-width:420px">
+            <div class="modal-body" style="text-align:center;padding:48px 32px">
+                <div style="font-size:3.5rem;margin-bottom:16px">✅</div>
+                <h3 class="text-white mb-12" data-en="Invoice Submitted!" data-ar="تم إرسال الفاتورة!">Invoice
+                    Submitted!</h3>
+                <p style="color:var(--gray-400);font-size:.88rem;margin-bottom:28px"
+                    data-en="Your invoice has been sent for admin approval. You can track the status in Order History."
+                    data-ar="تم إرسال فاتورتك للموافقة. يمكنك متابعة الحالة في سجل الطلبات.">Your invoice has been sent
+                    for admin approval. You can track the status in Order History.</p>
+                <a href="orders.html" class="btn btn-primary" data-en="View Order History"
+                    data-ar="عرض سجل الطلبات">View Order History</a>
+                <a href="invoice.html" class="btn btn-ghost mt-8 btn-full" onclick="window.location.reload()"
+                    data-en="Create Another" data-ar="إنشاء فاتورة أخرى">Create Another</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentLang = localStorage.getItem('lang') || 'en';
+        let items = [];
+
+        let catalog = [];
+
+        async function fetchCatalog() {
+            try {
+                const res = await fetch('http://localhost:5000/api/products');
+                const json = await res.json();
+                if(json.success) {
+                    catalog = json.data.map(p => ({
+                        sku: p.sku,
+                        nameEn: p.nameEn,
+                        nameAr: p.nameAr,
+                        brand: p.brand,
+                        category: p.category,
+                        imageUrl: p.imageUrl,
+                        stock: p.stock || 0,
+                        price: p.wholesalePrice || p.price || 0
+                    }));
+                }
+            } catch(e) {
+                console.error("Failed to load catalog", e);
+            }
+        }
+
+        function setLang(lang) {
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+            document.documentElement.lang = lang;
+            document.body.classList.toggle('lang-ar', lang === 'ar');
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+            document.getElementById('btn-ar').classList.toggle('active', lang === 'ar');
+            document.querySelectorAll('[data-en]').forEach(el => {
+                const t = el.getAttribute('data-' + lang);
+                if (t) el.innerHTML = t;
+            });
+            document.querySelectorAll('[data-placeholder-en]').forEach(el => {
+                el.placeholder = el.getAttribute('data-placeholder-' + lang) || el.placeholder;
+            });
+            renderInvoice();
+        }
+
+        function searchProducts(q) {
+            const box = document.getElementById('suggestionBox');
+            if (!q.trim()) { box.classList.remove('open'); return; }
+            const results = catalog.filter(p =>
+                p.nameEn.toLowerCase().includes(q.toLowerCase()) ||
+                p.nameAr.includes(q) ||
+                p.sku.toLowerCase().includes(q.toLowerCase())
+            );
+            if (!results.length) { box.classList.remove('open'); return; }
+            box.innerHTML = results.map(p => `
+      <div class="suggest-item ${p.stock <= 0 ? 'out-of-stock' : ''}" onclick="${p.stock > 0 ? `addProduct('${p.sku}')` : ''}" style="${p.stock <= 0 ? 'opacity:0.5;cursor:not-allowed' : ''}">
+        ${p.imageUrl ? `<img src="${p.imageUrl}" style="width:32px;height:32px;object-fit:cover;border-radius:4px" />` : `<div style="width:32px;height:32px;background:#333;border-radius:4px;display:flex;align-items:center;justify-content:center"><i class="fa fa-image text-muted"></i></div>`}
+        <div style="display:flex;flex-direction:column;min-width:0">
+           <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${currentLang === 'ar' ? p.nameAr : p.nameEn}</span>
+           <span class="sku">${p.sku} ${p.stock <= 0 ? (currentLang === 'ar' ? ' - نفذ المخزون' : ' - Out of Stock') : ''}</span>
+        </div>
+        <span class="price" style="margin-left:auto">EGP ${p.price.toLocaleString()}</span>
+      </div>
+    `).join('');
+            box.classList.add('open');
+        }
+
+        document.addEventListener('click', e => {
+            if (!e.target.closest('#productSearchInput')) {
+                document.getElementById('suggestionBox').classList.remove('open');
+            }
+        });
+
+        function saveCartLocally() {
+            const cart = items.map(i => ({sku: i.sku, qty: i.qty}));
+            localStorage.setItem('dealerInvoiceCart', JSON.stringify(cart));
+        }
+
+        function addProduct(sku) {
+            const p = catalog.find(x => x.sku === sku);
+            if (!p) return;
+            const existing = items.find(x => x.sku === sku);
+            if (existing) { existing.qty = Math.min(existing.qty + 1, p.stock); }
+            else { items.push({ ...p, qty: 1 }); }
+            document.getElementById('productSearchInput').value = '';
+            document.getElementById('suggestionBox').classList.remove('open');
+            saveCartLocally();
+            renderInvoice();
+            calcTotal();
+        }
+
+        function removeItem(sku) {
+            items = items.filter(x => x.sku !== sku);
+            saveCartLocally();
+            renderInvoice();
+            calcTotal();
+        }
+
+        function changeQty(sku, v) {
+            const item = items.find(x => x.sku === sku);
+            const nv = parseInt(v) || 1;
+            if (item) { item.qty = Math.min(item.stock, Math.max(1, nv)); saveCartLocally(); calcTotal(); renderInvoice(); }
+        }
+
+        function renderInvoice() {
+            const tbody = document.getElementById('invoiceRows');
+            if (!items.length) {
+                tbody.innerHTML = `<tr id="emptyRow"><td colspan="7" style="text-align:center;color:var(--gray-700);padding:28px;font-size:.88rem"><i class="fa fa-box-open" style="font-size:1.5rem;display:block;margin-bottom:8px;opacity:.4"></i><span data-en="No products added yet." data-ar="لا توجد منتجات مضافة.">No products added yet. Use the search above.</span></td></tr>`;
+                return;
+            }
+            tbody.innerHTML = items.map(p => `
+      <tr>
+        <td style="width:50px">${p.imageUrl ? `<img src="${p.imageUrl}" style="width:40px;height:40px;object-fit:cover;border-radius:4px" />` : `<div style="width:40px;height:40px;background:#333;border-radius:4px;display:flex;align-items:center;justify-content:center"><i class="fa fa-image text-muted"></i></div>`}</td>
+        <td><code style="font-size:.78rem">${p.sku}</code></td>
+        <td class="text-white">${currentLang === 'ar' ? p.nameAr : p.nameEn}</td>
+        <td>EGP ${p.price.toLocaleString()}</td>
+        <td>
+           <div style="display:flex;flex-direction:column;gap:4px">
+              <input type="number" value="${p.qty}" min="1" max="${p.stock}" style="width:60px;background:var(--dark-3);border:1px solid rgba(255,255,255,.1);border-radius:4px;color:white;padding:4px 8px;text-align:center;font-family:inherit" onchange="changeQty('${p.sku}', this.value)"/>
+              <span style="font-size:0.65rem;color:var(--gray-500)">Max: ${p.stock}</span>
+           </div>
+        </td>
+        <td class="text-white fw-700">EGP ${(p.price * p.qty).toLocaleString()}</td>
+        <td><button class="remove-btn" onclick="removeItem('${p.sku}')"><i class="fa fa-trash"></i></button></td>
+      </tr>
+    `).join('');
+        }
+
+        function calcTotal() {
+            const subtotal = items.reduce((s, p) => s + p.price * p.qty, 0);
+            const tax = subtotal * 0.14;
+            const total = subtotal + tax;
+            document.getElementById('sumSubtotal').textContent = 'EGP ' + subtotal.toLocaleString();
+            document.getElementById('sumTax').textContent = 'EGP ' + Math.round(tax).toLocaleString();
+            document.getElementById('sumTotal').textContent = 'EGP ' + Math.round(total).toLocaleString();
+        }
+
+        async function submitInvoice() {
+            if (!items.length) {
+                alert(currentLang === 'ar' ? 'الرجاء إضافة منتج واحد على الأقل.' : 'Please add at least one product.');
+                return;
+            }
+            
+            const btn = event.currentTarget;
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
+            btn.disabled = true;
+
+            const subtotal = items.reduce((s, p) => s + p.price * p.qty, 0);
+            const tax = subtotal * 0.14;
+            const totalAmount = Math.round(subtotal + tax);
+            const itemCount = items.reduce((s, p) => s + p.qty, 0);
+            const refVal = document.getElementById('refInput') ? document.getElementById('refInput').value : '';
+            const addressVal = document.getElementById('addressInput') ? document.getElementById('addressInput').value : '';
+
+            try {
+                // map items for backend
+                const backendItems = items.map(i => ({ sku: i.sku, nameEn: i.nameEn, nameAr: i.nameAr, price: i.price, qty: i.qty }));
+
+                const res = await fetch('http://localhost:5000/api/orders', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        totalAmount,
+                        itemCount,
+                        reference: refVal || 'Web-Invoice',
+                        shippingAddress: addressVal,
+                        items: backendItems
+                    })
+                });
+                const json = await res.json();
+                if(json.success) {
+                    localStorage.removeItem('dealerInvoiceCart');
+                    document.getElementById('successModal').classList.add('open');
+                } else {
+                    alert('Error: ' + json.error);
+                    btn.innerHTML = originalHtml;
+                    btn.disabled = false;
+                }
+            } catch(e) {
+                alert('Connection error. Is backend running?');
+                btn.innerHTML = originalHtml;
+                btn.disabled = false;
+            }
+        }
+
+        function saveDraft() {
+            alert(currentLang === 'ar' ? 'تم حفظ المسودة!' : 'Draft saved!');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setLang(currentLang);
+            fetchCatalog().then(() => {
+                let localCart = JSON.parse(localStorage.getItem('dealerInvoiceCart') || '[]');
+                items = [];
+                localCart.forEach(c => {
+                    const p = catalog.find(x => x.sku === c.sku);
+                    if (p) {
+                         items.push({ ...p, qty: Math.min(c.qty, Math.max(1, p.stock)) });
+                    }
+                });
+                renderInvoice();
+                calcTotal();
+
+                const params = new URLSearchParams(window.location.search);
+                const q = params.get('q');
+                if (q) {
+                    const searchInput = document.getElementById('productSearchInput');
+                    if (searchInput) {
+                        searchInput.value = q;
+                        searchProducts(q);
+                    }
+                }
+            });
+        });
+    </script>
+<script src="../js/shared.js"></script>
+</body>
+
+</html>

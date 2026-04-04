@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VIKA – Exclusive Agency | NUTD</title>
+    <meta name="description"
+        content="NUTD is the exclusive distributor of VIKA (Tantivy) premium Chinese auto parts — Superior to OE quality with 4-year warranty." />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        :root {
+            --brand: #c9373c;
+            --brand-light: rgba(201, 55, 60, .12);
+        }
+
+        .brand-hero {
+            margin-top: var(--nav-h);
+            background:
+                linear-gradient(135deg, rgba(10, 10, 14, .97) 0%, rgba(201, 55, 60, .12) 100%),
+                repeating-linear-gradient(45deg, rgba(201, 55, 60, .04) 0, rgba(201, 55, 60, .04) 1px, transparent 0, transparent 50%);
+            background-size: cover, 22px 22px;
+            padding: 80px 0 60px;
+            border-bottom: 1px solid rgba(255, 255, 255, .06);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-hero::after {
+            content: '';
+            position: absolute;
+            top: -80px;
+            left: -100px;
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(201, 55, 60, .14) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .brand-hero-inner {
+            position: relative;
+            z-index: 1;
+        }
+
+        .vika-badge {
+            background: linear-gradient(135deg, #c9373c 0%, #8b1c1f 100%);
+        }
+
+        .brand-badge-lg {
+            width: 72px;
+            height: 72px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            font-weight: 900;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .brand-logo-display {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+
+        .brand-origin {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 6px;
+            font-size: .8rem;
+            color: var(--gray-500);
+        }
+
+        .exclusive-ribbon {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(232, 35, 26, .12);
+            border: 1px solid rgba(232, 35, 26, .25);
+            border-radius: var(--r-full);
+            padding: 6px 16px;
+            font-size: .78rem;
+            font-weight: 700;
+            color: var(--red);
+            letter-spacing: .04em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 32px;
+            margin-top: 32px;
+            flex-wrap: wrap;
+        }
+
+        .hero-stat .val {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--white);
+        }
+
+        .hero-stat .lbl {
+            font-size: .78rem;
+            color: var(--gray-500);
+            margin-top: 2px;
+        }
+
+        .sto-banner {
+            background: linear-gradient(135deg, rgba(201, 55, 60, .18) 0%, rgba(10, 10, 14, .95) 100%);
+            border: 1px solid rgba(201, 55, 60, .25);
+            border-radius: var(--r-xl);
+            padding: 36px 40px;
+            display: flex;
+            gap: 32px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .sto-icon {
+            font-size: 3rem;
+            flex-shrink: 0;
+        }
+
+        .sto-text h3 {
+            color: var(--white);
+            margin-bottom: 10px;
+        }
+
+        .sto-text p {
+            color: var(--gray-400);
+            font-size: .9rem;
+            max-width: 540px;
+            line-height: 1.7;
+        }
+
+        .product-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .product-show-card {
+            background: var(--dark-2);
+            border: 1px solid rgba(255, 255, 255, .07);
+            border-radius: var(--r-lg);
+            padding: 28px 22px;
+            transition: all var(--t-normal);
+        }
+
+        .product-show-card:hover {
+            border-color: rgba(201, 55, 60, .3);
+            transform: translateY(-3px);
+        }
+
+        .product-show-card .ico {
+            font-size: 2rem;
+            margin-bottom: 14px;
+        }
+
+        .product-show-card h5 {
+            color: var(--white);
+            margin-bottom: 8px;
+        }
+
+        .product-show-card .spec-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(201, 55, 60, .1);
+            border-radius: var(--r-full);
+            padding: 3px 10px;
+            font-size: .72rem;
+            color: var(--brand);
+            margin-top: 8px;
+        }
+
+        .warranty-bar {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 32px;
+        }
+
+        .warranty-item {
+            flex: 1;
+            min-width: 160px;
+            background: var(--dark-2);
+            border: 1px solid rgba(255, 255, 255, .07);
+            border-radius: var(--r-lg);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .warranty-item .ico {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+
+        .warranty-item .val {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--white);
+        }
+
+        .warranty-item .lbl {
+            font-size: .78rem;
+            color: var(--gray-500);
+            margin-top: 4px;
+        }
+
+        .cert-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .cert-card {
+            background: var(--dark-2);
+            border: 1px solid rgba(255, 255, 255, .07);
+            border-radius: var(--r-lg);
+            padding: 24px 20px;
+            text-align: center;
+        }
+
+        .cert-card .icon {
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+
+        .cert-card h5 {
+            color: var(--white);
+            margin-bottom: 6px;
+            font-size: .9rem;
+        }
+
+        .cert-card p {
+            font-size: .8rem;
+            color: var(--gray-500);
+        }
+
+        @media(max-width:640px) {
+            .sto-banner {
+                padding: 24px;
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .hero-stats {
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="container">
+            <a href="../index.html" class="nav-logo">
+                <div class="brand-logo-box">NUTD</div>
+                <div class="nav-logo-text"><span class="name-en">NUTD</span><span class="name-ar">نماء المتحدة</span>
+                </div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="../index.html" class="nav-link" data-en="Home" data-ar="الرئيسية">Home</a></li>
+                <li><a href="../catalog.html" class="nav-link" data-en="Products" data-ar="المنتجات">Products</a></li>
+                <li><a href="#" class="nav-link active" data-en="Brands" data-ar="العلامات">Brands</a></li>
+                <li><a href="../about.html" class="nav-link" data-en="About" data-ar="عن الشركة">About</a></li>
+            </ul>
+            <div class="nav-actions">
+                <div class="lang-toggle">
+                    <button onclick="setLang('en')" class="active" id="btn-en">EN</button>
+                    <button onclick="setLang('ar')" id="btn-ar">AR</button>
+                </div>
+                <a href="../dealer/login.html" class="btn btn-primary btn-sm" data-en="Dealer Portal"
+                    data-ar="بوابة التاجر">Dealer Portal</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <div class="brand-hero">
+        <div class="container brand-hero-inner">
+            <div class="d-flex gap-12 mb-16 flex-wrap">
+                <a href="../index.html" style="font-size:.8rem;color:var(--gray-600)">Home</a>
+                <span style="color:var(--gray-700)">›</span>
+                <a href="#" style="font-size:.8rem;color:var(--gray-600)" data-en="Brands" data-ar="العلامات">Brands</a>
+                <span style="color:var(--gray-700)">›</span>
+                <span style="font-size:.8rem;color:var(--white)">VIKA</span>
+            </div>
+
+            <div class="exclusive-ribbon">
+                <i class="fa fa-certificate"></i>
+                <span data-en="Exclusive Regional Distributor" data-ar="الموزع الإقليمي الحصري">Exclusive Regional
+                    Distributor</span>
+            </div>
+
+            <div class="brand-logo-display">
+                <div class="brand-badge-lg vika-badge">VKA</div>
+                <div>
+                    <h1 class="text-white" style="margin:0;font-size:2.4rem">VIKA <span
+                            style="font-size:1.2rem;font-weight:400;color:var(--gray-500)">by Tantivy</span></h1>
+                    <div class="brand-origin">
+                        <span style="font-size:1.2rem">🇨🇳</span>
+                        <span data-en="Premium Chinese Auto Parts — Full Commitment to Professionalism"
+                            data-ar="قطع سيارات صينية متميزة — التزام كامل بالاحترافية">Premium Chinese Auto Parts —
+                            Full Commitment to Professionalism</span>
+                    </div>
+                </div>
+            </div>
+
+            <p style="max-width:620px;font-size:1rem;color:var(--gray-300);line-height:1.7"
+                data-en="VIKA (by Tantivy) is positioned as a premium Chinese automotive parts brand — designed to be Superior to OE with industry-leading warranties. NUTD is the exclusive distributor for VIKA across the region, guaranteeing every dealer receives 100% genuine, certified parts."
+                data-ar="VIKA (من تانتيفي) تتموضع كعلامة تجارية صينية متميزة لقطع غيار السيارات — مصممة لتكون متفوقة على المصنع الأصلي مع ضمانات رائدة في الصناعة. نماء المتحدة هي الموزع الحصري لـ VIKA في المنطقة، مما يضمن حصول كل تاجر على قطع أصلية ومعتمدة 100%.">
+                VIKA (by Tantivy) is positioned as a premium Chinese automotive parts brand — designed to be Superior to
+                OE with industry-leading warranties. NUTD is the exclusive distributor for VIKA across the region,
+                guaranteeing every dealer receives 100% genuine, certified parts.
+            </p>
+
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="val" data-en="4 Years" data-ar="4 سنوات">4 Years</div>
+                    <div class="lbl" data-en="Product Warranty" data-ar="ضمان المنتج">Product Warranty</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="val">STO</div>
+                    <div class="lbl" data-en="Superior to OE Quality" data-ar="متفوق على المصنع الأصلي">Superior to OE
+                        Quality</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="val">150k</div>
+                    <div class="lbl" data-en="km Warranty (select parts)" data-ar="كم ضمان (قطع مختارة)">km Warranty
+                        (select parts)</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="val">🏆</div>
+                    <div class="lbl" data-en="International Certifications" data-ar="شهادات دولية">International
+                        Certifications</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STO SECTION -->
+    <section class="section">
+        <div class="container">
+            <div class="sto-banner">
+                <div class="sto-icon">🏆</div>
+                <div class="sto-text">
+                    <h3 data-en="SUPERIOR TO OE — What It Means" data-ar="متفوق على المصنع الأصلي — ماذا يعني ذلك؟">
+                        SUPERIOR TO OE — What It Means</h3>
+                    <p data-en="VIKA's STO product line doesn't just match Original Equipment standards — it exceeds them. Using enhanced materials and engineering improvements, STO parts offer greater durability, reliability, and longevity. Backed by industry-leading warranty coverage of up to 4 years and 150,000 km."
+                        data-ar="خط منتجات VIKA من STO لا يتطابق فقط مع معايير المصنع الأصلي — بل يتجاوزها. باستخدام مواد محسّنة وتحسينات هندسية، توفر قطع STO متانة وموثوقية وعمراً أطول. مدعومة بتغطية ضمان رائدة في الصناعة تصل إلى 4 سنوات و150,000 كم.">
+                        VIKA's STO product line doesn't just match Original Equipment standards — it exceeds them. Using
+                        enhanced materials and engineering improvements, STO parts offer greater durability,
+                        reliability, and longevity. Backed by industry-leading warranty coverage of up to 4 years and
+                        150,000 km.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRODUCT SHOWCASE -->
+    <section class="section section-alt">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label" data-en="Featured Products" data-ar="المنتجات المميزة">Featured Products
+                </div>
+                <h2 data-en="VIKA Signature Product Lines" data-ar="خطوط منتجات VIKA المميزة">VIKA Signature Product
+                    Lines</h2>
+            </div>
+            <div class="product-showcase">
+                <div class="product-show-card">
+                    <div class="ico">🔧</div>
+                    <h5 data-en="Throttle Valve (04E/03F)" data-ar="صمام الخانق (04E/03F)">Throttle Valve (04E/03F)</h5>
+                    <p style="font-size:.83rem;color:var(--gray-500)"
+                        data-en="Precision-engineered for VW/Audi Group applications. Smooth throttle response guaranteed."
+                        data-ar="مهندس بدقة لتطبيقات مجموعة فولكسفاغن/أودي. استجابة خانق سلسة مضمونة.">
+                        Precision-engineered for VW/Audi Group applications. Smooth throttle response guaranteed.</p>
+                    <div class="spec-tag"><i class="fa fa-shield"></i> <span data-en="4 Year Warranty / 100,000 km"
+                            data-ar="ضمان 4 سنوات / 100,000 كم">4 Year Warranty / 100,000 km</span></div>
+                </div>
+                <div class="product-show-card">
+                    <div class="ico">⛽</div>
+                    <h5 data-en="Fuel Pump Controller" data-ar="وحدة التحكم في مضخة الوقود">Fuel Pump Controller</h5>
+                    <p style="font-size:.83rem;color:var(--gray-500)"
+                        data-en="Advanced fuel delivery control with superior durability and response accuracy."
+                        data-ar="تحكم متقدم في توصيل الوقود مع متانة فائقة ودقة في الاستجابة.">Advanced fuel delivery
+                        control with superior durability and response accuracy.</p>
+                    <div class="spec-tag"><i class="fa fa-shield"></i> <span data-en="4 Year Warranty / 150,000 km"
+                            data-ar="ضمان 4 سنوات / 150,000 كم">4 Year Warranty / 150,000 km</span></div>
+                </div>
+                <div class="product-show-card">
+                    <div class="ico">💧</div>
+                    <h5 data-en="Additional Water Pump" data-ar="مضخة مياه إضافية">Additional Water Pump</h5>
+                    <p style="font-size:.83rem;color:var(--gray-500)"
+                        data-en="Anti-high temperature burnout, strong sealing construction, zero water leakage."
+                        data-ar="مقاوم لارتفاع درجات الحرارة، بناء محكم الختم، بدون تسريب مياه.">Anti-high temperature
+                        burnout, strong sealing construction, zero water leakage.</p>
+                    <div class="spec-tag"><i class="fa fa-fire-flame-simple"></i> <span data-en="Heat Resistant Design"
+                            data-ar="تصميم مقاوم للحرارة">Heat Resistant Design</span></div>
+                </div>
+                <div class="product-show-card">
+                    <div class="ico">🪟</div>
+                    <h5 data-en="Window Regulator" data-ar="رافعة الزجاج">Window Regulator</h5>
+                    <p style="font-size:.83rem;color:var(--gray-500)"
+                        data-en="30,000-cycle quality assurance testing for maximum longevity and smooth operation."
+                        data-ar="اختبار ضمان جودة بـ 30,000 دورة لأقصى عمر افتراضي وتشغيل سلس.">30,000-cycle quality
+                        assurance testing for maximum longevity and smooth operation.</p>
+                    <div class="spec-tag"><i class="fa fa-rotate"></i> <span data-en="30,000 Cycle Tested"
+                            data-ar="اختبار 30,000 دورة">30,000 Cycle Tested</span></div>
+                </div>
+                <div class="product-show-card">
+                    <div class="ico">🌀</div>
+                    <h5 data-en="Filter Series" data-ar="سلسلة الفلاتر">Filter Series</h5>
+                    <p style="font-size:.83rem;color:var(--gray-500)"
+                        data-en="Multiple-stage filtration for extreme purification. Oil, air, cabin, and fuel filters."
+                        data-ar="ترشيح متعدد المراحل للتنقية القصوى. فلاتر الزيت والهواء والكابينة والوقود.">
+                        Multiple-stage filtration for extreme purification. Oil, air, cabin, and fuel filters.</p>
+                    <div class="spec-tag"><i class="fa fa-wind"></i> <span data-en="Multi-Stage Filtration"
+                            data-ar="ترشيح متعدد المراحل">Multi-Stage Filtration</span></div>
+                </div>
+                <div class="product-show-card"
+                    style="background:linear-gradient(135deg,rgba(201,55,60,.1),var(--dark-2));border-color:rgba(201,55,60,.2)">
+                    <div class="ico">📦</div>
+                    <h5 data-en="Full VIKA Catalog" data-ar="الكتالوج الكامل لـ VIKA">Full VIKA Catalog</h5>
+                    <p style="font-size:.83rem;color:var(--gray-500)"
+                        data-en="Body parts, electrical, cooling, suspension and more — browse all VIKA products in our catalog."
+                        data-ar="قطع الهيكل والكهرباء والتبريد والتعليق والمزيد — تصفح جميع منتجات VIKA في كتالوجنا.">
+                        Body parts, electrical, cooling, suspension and more — browse all VIKA products in our catalog.
+                    </p>
+                    <a href="../catalog.html?brand=vika" class="btn btn-primary btn-sm mt-12" data-en="Browse All"
+                        data-ar="تصفح الكل">Browse All</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WARRANTY -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label" data-en="Warranty Coverage" data-ar="تغطية الضمان">Warranty Coverage</div>
+                <h2 data-en="Industry-Leading Guarantees" data-ar="ضمانات رائدة في الصناعة">Industry-Leading Guarantees
+                </h2>
+            </div>
+            <div class="warranty-bar">
+                <div class="warranty-item">
+                    <div class="ico">📅</div>
+                    <div class="val" data-en="Up to 4 Years" data-ar="حتى 4 سنوات">Up to 4 Years</div>
+                    <div class="lbl" data-en="Product Warranty Period" data-ar="فترة ضمان المنتج">Product Warranty
+                        Period</div>
+                </div>
+                <div class="warranty-item">
+                    <div class="ico">🛣️</div>
+                    <div class="val">150,000 km</div>
+                    <div class="lbl" data-en="Mileage Coverage" data-ar="تغطية المسافة">Mileage Coverage</div>
+                </div>
+                <div class="warranty-item">
+                    <div class="ico">✅</div>
+                    <div class="val" data-en="Internationally Certified" data-ar="معتمد دولياً">Internationally
+                        Certified</div>
+                    <div class="lbl" data-en="All VIKA DPA products" data-ar="جميع منتجات VIKA DPA">All VIKA DPA
+                        products</div>
+                </div>
+                <div class="warranty-item">
+                    <div class="ico">🔍</div>
+                    <div class="val" data-en="Full Traceability" data-ar="تتبع كامل">Full Traceability</div>
+                    <div class="lbl" data-en="QR-coded batch tracking" data-ar="تتبع الدُفعة بـ QR">QR-coded batch
+                        tracking</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- EXCLUSIVE CTA -->
+    <section class="section section-alt">
+        <div class="container">
+            <div class="locate-card"
+                style="background:linear-gradient(135deg,rgba(201,55,60,.12) 0%,rgba(10,10,14,.95) 100%);border:1px solid rgba(201,55,60,.22)">
+                <div class="locate-card-icon" style="background:rgba(201,55,60,.15);color:#e05a5e">
+                    <i class="fa fa-certificate"></i>
+                </div>
+                <div class="locate-card-content">
+                    <div class="exclusive-ribbon" style="margin-bottom:12px">
+                        <i class="fa fa-shield-halved"></i>
+                        <span data-en="Official Exclusive Distribution Rights"
+                            data-ar="حقوق التوزيع الحصري الرسمي">Official Exclusive Distribution Rights</span>
+                    </div>
+                    <h3 data-en="NUTD is the Only Authorized VIKA Distributor in the Region"
+                        data-ar="نماء المتحدة هي الموزع الوحيد المعتمد لـ VIKA في المنطقة">NUTD is the Only Authorized
+                        VIKA Distributor in the Region</h3>
+                    <p data-en="All VIKA parts distributed through NUTD come with full international quality certifications. Counterfeit VIKA products are dangerous and void all warranty. Always purchase from an authorized NUTD dealer."
+                        data-ar="جميع قطع VIKA الموزعة من خلال نماء المتحدة تأتي مع شهادات جودة دولية كاملة. منتجات VIKA المقلدة خطيرة وتُبطل جميع الضمانات. اشترِ دائماً من تاجر نماء المتحدة المعتمد.">
+                        All VIKA parts distributed through NUTD come with full international quality certifications.
+                        Counterfeit VIKA products are dangerous and void all warranty. Always purchase from an
+                        authorized NUTD dealer.</p>
+                    <div class="d-flex gap-12 flex-wrap">
+                        <a href="../catalog.html?brand=vika" class="btn btn-primary btn-lg">
+                            <i class="fa fa-boxes-stacked"></i>
+                            <span data-en="Browse VIKA Products" data-ar="تصفح منتجات VIKA">Browse VIKA Products</span>
+                        </a>
+                        <a href="../dealer/login.html" class="btn btn-outline btn-lg" data-en="Order as Dealer"
+                            data-ar="اطلب كتاجر">Order as Dealer</a>
+                    </div>
+                    <p style="font-size:.78rem;color:var(--gray-700);margin-top:16px">
+                        <i class="fa fa-earth-asia"></i>
+                        <a href="https://www.tantivy.com/" target="_blank" rel="noopener"
+                            style="color:var(--gray-600)">www.tantivy.com</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- OTHER BRANDS -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label" data-en="Our Other Agencies" data-ar="وكالاتنا الأخرى">Our Other Agencies
+                </div>
+                <h2 data-en="Also Distributed Exclusively by NUTD" data-ar="موزعة أيضاً بشكل حصري من نماء المتحدة">Also
+                    Distributed Exclusively by NUTD</h2>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:540px">
+                <a href="borsehung.html" class="product-cat"
+                    style="background:var(--dark-2);border:1px solid rgba(255,255,255,.07);border-radius:var(--r-lg);padding:24px;text-decoration:none">
+                    <span class="icon" style="font-size:2rem;display:block;margin-bottom:10px">🇩🇪</span>
+                    <div style="font-weight:700;color:var(--white);margin-bottom:4px">Borsehung</div>
+                    <div style="font-size:.78rem;color:var(--gray-500)" data-en="German Premium Parts"
+                        data-ar="قطع ألمانية متميزة">German Premium Parts</div>
+                </a>
+                <a href="kdd.html" class="product-cat"
+                    style="background:var(--dark-2);border:1px solid rgba(255,255,255,.07);border-radius:var(--r-lg);padding:24px;text-decoration:none">
+                    <span class="icon" style="font-size:2rem;display:block;margin-bottom:10px">🇨🇳</span>
+                    <div style="font-weight:700;color:var(--white);margin-bottom:4px">KDD</div>
+                    <div style="font-size:.78rem;color:var(--gray-500)" data-en="Chinese Auto Parts"
+                        data-ar="قطع غيار صينية">Chinese Auto Parts</div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <span data-en="© 2025 Nama United Trading & Distribution — Official VIKA Distributor"
+                    data-ar="© 2025 نماء المتحدة للتجارة والتوزيع — الموزع الرسمي لـ VIKA">© 2025 Nama United Trading
+                    &amp; Distribution — Official VIKA Distributor</span>
+                <div class="d-flex gap-16">
+                    <a href="../index.html" data-en="Home" data-ar="الرئيسية">Home</a>
+                    <a href="../catalog.html" data-en="Catalog" data-ar="الكتالوج">Catalog</a>
+                    <a href="../dealer/login.html" data-en="Dealer Portal" data-ar="بوابة التاجر">Dealer Portal</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let currentLang = localStorage.getItem('lang') || 'en';
+        function setLang(lang) {
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+            document.documentElement.lang = lang;
+            document.body.classList.toggle('lang-ar', lang === 'ar');
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+            document.getElementById('btn-ar').classList.toggle('active', lang === 'ar');
+            document.querySelectorAll('[data-en]').forEach(el => {
+                const t = el.getAttribute('data-' + lang);
+                if (t) el.innerHTML = t;
+            });
+        }
+        window.addEventListener('scroll', () => document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50));
+        setLang(currentLang);
+    </script>
+</body>
+
+</html>

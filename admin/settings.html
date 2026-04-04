@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Enterprise CMS – Admin Portal</title>
+    <link rel="icon" type="image/svg+xml" href="../img/favicon.svg" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        .sidebar { background: #0c0c0c; border-right: 1px solid rgba(232, 35, 26, 0.3); }
+        .sidebar-link.active, .sidebar-link:hover { background: rgba(232, 35, 26, 0.1); border-left: 3px solid var(--red); color: var(--red); }
+        .sidebar-link.active .icon, .sidebar-link:hover .icon { color: var(--red); }
+        
+        /* CMS Visual Editor Layout */
+        .portal-main { display: flex; flex-direction: column; height: 100vh; overflow: hidden; padding: 0 !important; }
+        .portal-topbar { flex: 0 0 auto; margin-bottom: 0 !important; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .cms-builder-wrapper { display: flex; flex: 1; overflow: hidden; width: 100%; }
+        
+        .cms-builder-sidebar { flex: 0 0 450px; display: flex; flex-direction: column; background: var(--dark-2); border-right: 1px solid rgba(255,255,255,0.05); overflow: hidden; }
+        .cms-nav-horizontal { display: flex; gap: 8px; flex-wrap: wrap; padding: 12px; background: var(--dark-3); border-bottom: 1px solid rgba(255,255,255,0.05); flex-shrink: 0; }
+        .cms-menu-item { white-space: nowrap; padding: 8px 16px; color: var(--gray-400); font-size: 0.85rem; font-weight: 600; cursor: pointer; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); transition: 0.2s; display: flex; align-items: center; gap: 8px; }
+        .cms-menu-item:hover { background: rgba(255,255,255,0.04); color: white; }
+        .cms-menu-item.active { background: rgba(232,35,26,0.15); color: var(--red); border-color: rgba(232,35,26,0.3); }
+        
+        .cms-builder-content { flex: 1; overflow-y: auto; padding: 20px; }
+        
+        .cms-preview-pane { flex: 1; background: #0b0b0b; padding: 20px; display: flex; flex-direction: column; overflow: hidden; }
+        .cms-iframe-container { flex: 1; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 0 30px rgba(0,0,0,0.8); }
+        
+        /* Accordion & Language Tools */
+        .cms-lang-tabs { display: flex; margin-bottom: 20px; background: rgba(0,0,0,0.3); border-radius: 6px; padding: 4px; border: 1px solid rgba(255,255,255,0.05); }
+        .cms-lang-tab { flex: 1; text-align: center; padding: 8px; font-size: 0.85rem; font-weight: 600; color: var(--gray-400); cursor: pointer; border-radius: 4px; transition: 0.2s; }
+        .cms-lang-tab.active { background: var(--red); color: white; }
+        
+        .accordion-group { margin-bottom: 12px; background: rgba(0,0,0,0.2); border-radius: var(--r-md); border: 1px solid rgba(255,255,255,0.03); overflow: hidden; }
+        .accordion-header { padding: 14px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: var(--gray-200); font-weight: 600; font-size: 0.9rem; background: rgba(255,255,255,0.02); }
+        .accordion-header:hover { background: rgba(255,255,255,0.05); }
+        .accordion-content { padding: 0 16px; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; }
+        .accordion-group.open .accordion-content { padding: 16px; max-height: 3000px; }
+        .accordion-group.open .accordion-header { border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--red); }
+        
+        .cms-content-section { display: none; animation: fadeIn 0.3s ease; }
+        .cms-content-section.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        @media(max-width: 1000px) {
+            .cms-builder-wrapper { flex-direction: column; }
+            .cms-builder-sidebar { flex: 1; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05); }
+            .cms-preview-pane { display: none; /* Hide preview on mobile */ }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="portal-layout">
+        <!-- =========== SIDEBAR =========== -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <img src="../img/logo.svg" alt="NUTD" style="height:32px" />
+                <span style="color:var(--red); font-weight:800; padding:0 8px; font-size:1.1rem;">ADMIN</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="sidebar-section-label" data-en="Management" data-ar="الإدارة">Management</div>
+                <a href="dashboard.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-gauge"></i></span>
+                    <span data-en="Overview" data-ar="نظرة عامة">Overview</span>
+                </a>
+                <a href="orders.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-list-check"></i></span>
+                    <span data-en="Approve Orders" data-ar="اعتماد الطلبات">Approve Orders</span>
+                    <span class="badge" id="adminPendingBadge" data-en="New" data-ar="جديد" style="background:var(--warning);">New</span>
+                </a>
+                <a href="products.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-boxes-stacked"></i></span>
+                    <span data-en="Manage Products" data-ar="إدارة المنتجات">Manage Products</span>
+                </a>
+                <a href="articles.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-newspaper"></i></span>
+                    <span data-en="Manage News & Media" data-ar="إدارة الأخبار والميديا">Manage News & Media</span>
+                </a>
+                
+                <div class="sidebar-section-label" data-en="System" data-ar="النظام">System</div>
+                <a href="settings.html" class="sidebar-link active">
+                    <span class="icon"><i class="fa fa-globe"></i></span>
+                    <span data-en="CMS Editor" data-ar="محرر الموقع (CMS)">CMS Editor</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- =========== MAIN CONTENT =========== -->
+        <main class="portal-main">
+            <!-- TOP BAR -->
+            <div class="portal-topbar">
+                <div>
+                    <span class="topbar-title" data-en="Enterprise CMS" data-ar="نظام إدارة المحتوى">Enterprise CMS</span>
+                    <span style="font-size:0.8rem; color:var(--gray-500); margin-left:12px;" data-en="Edit any text on the website" data-ar="تعديل أي نص في الموقع بالكامل">Edit any text on the website</span>
+                </div>
+                <div class="topbar-actions">
+                    <div class="lang-toggle">
+                        <button onclick="setLang('en')" class="active" id="btn-en">EN</button>
+                        <button onclick="setLang('ar')" id="btn-ar">AR</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PORTAL CONTENT -->
+            <form id="settingsForm" onsubmit="saveSettings(event)" style="display:contents;">
+                <div class="cms-builder-wrapper">
+                    
+                    <!-- Left Sidebar Forms -->
+                    <div class="cms-builder-sidebar">
+                        <div class="cms-nav-horizontal" id="cmsNav">
+                            <!-- Injected by Schema -->
+                        </div>
+                        
+                        <div class="cms-builder-content">
+                            <!-- Global Lang Toggle for fields -->
+                            <div class="cms-lang-tabs">
+                                <div class="cms-lang-tab active" id="tabLangEN" onclick="toggleCMSLang('en')">English Fields</div>
+                                <div class="cms-lang-tab" id="tabLangAR" onclick="toggleCMSLang('ar')">Arabic Fields</div>
+                            </div>
+
+                            <div id="cmsSections">
+                                <!-- Injected by Schema -->
+                            </div>
+                        </div>
+
+                        <!-- Sticky Footer Save -->
+                        <div style="padding: 15px 20px; background: var(--dark-3); border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center;">
+                            <span id="saveStatus" style="font-size: 0.85rem; color: var(--gray-400);"></span>
+                            <button type="submit" class="btn btn-primary" id="btnSave" style="min-width: 150px;">
+                                <i class="fa fa-save"></i> <span data-en="Publish Changes" data-ar="نشر التعديلات">Publish Changes</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Right Iframe Preview -->
+                    <div class="cms-preview-pane">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;">
+                            <div style="color: var(--gray-400); font-size: 0.85rem;"><i class="fa fa-eye"></i> Live Preview</div>
+                            <div style="display:flex; gap: 10px;">
+                                <button type="button" class="btn btn-outline btn-sm" onclick="reloadPreview()"><i class="fa fa-rotate-right"></i></button>
+                            </div>
+                        </div>
+                        <div class="cms-iframe-container">
+                            <iframe id="livePreviewFrame" src="../index.html" style="width:100%; height:100%; border:none;"></iframe>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <!-- CMS Engine Script -->
+    <script>
+        const cmsSchema = [
+            {
+                id: 'global', icon: 'fa-globe', titleEn: 'Global Settings', titleAr: 'الإعدادات العامة',
+                groups: [
+                    {
+                        titleEn: 'Contact Info', titleAr: 'بيانات التواصل',
+                        fields: [
+                            { type: 'text', key: 'contact_phone', labelEn: 'Primary Phone', labelAr: 'الجوال الرئيسي' },
+                            { type: 'email', key: 'contact_email', labelEn: 'Primary Email', labelAr: 'البريد الإلكتروني' },
+                            { type: 'text', key: 'contact_address', labelEn: 'Physical Address', labelAr: 'العنوان المادي', localized: true }
+                        ]
+                    },
+                    {
+                        titleEn: 'Footer Details', titleAr: 'تفاصيل الفوتر',
+                        fields: [
+                            { type: 'text', key: 'footer_copyright', labelEn: 'Copyright Text', labelAr: 'نص حقوق النشر', localized: true },
+                            { type: 'text', key: 'footer_slogan', labelEn: 'Footer Slogan', labelAr: 'الشعار النصي السفلي', localized: true }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'home', icon: 'fa-home', titleEn: 'Home Page', titleAr: 'الصفحة الرئيسية',
+                groups: [
+                    {
+                        titleEn: 'Hero Section', titleAr: 'الواجهة الرئيسية',
+                        fields: [
+                            { type: 'text', key: 'hero_title', labelEn: 'Hero Title', labelAr: 'العنوان الرئيسي', localized: true },
+                            { type: 'textarea', key: 'hero_sub', labelEn: 'Hero Subtitle', labelAr: 'النص الفرعي', localized: true }
+                        ]
+                    },
+                    {
+                        titleEn: 'Why Us Section', titleAr: 'قسم لماذا نحن',
+                        fields: [
+                            { type: 'text', key: 'home_why_sec_label', labelEn: 'Section Label', labelAr: 'الوسم', localized: true },
+                            { type: 'text', key: 'home_why_sec_title', labelEn: 'Section Title', labelAr: 'عنوان القسم', localized: true },
+                            
+                            { type: 'image', key: 'home_why_1_icon', labelEn: 'Point 1 Icon', labelAr: 'أيقونة 1 (صورة)' },
+                            { type: 'text', key: 'home_why_1_title', labelEn: 'Point 1 Title', labelAr: 'عنوان 1', localized: true },
+                            { type: 'textarea', key: 'home_why_1_desc', labelEn: 'Point 1 Description', labelAr: 'وصف 1', localized: true },
+                            
+                            { type: 'image', key: 'home_why_2_icon', labelEn: 'Point 2 Icon', labelAr: 'أيقونة 2 (صورة)' },
+                            { type: 'text', key: 'home_why_2_title', labelEn: 'Point 2 Title', labelAr: 'عنوان 2', localized: true },
+                            { type: 'textarea', key: 'home_why_2_desc', labelEn: 'Point 2 Description', labelAr: 'وصف 2', localized: true },
+                            
+                            { type: 'image', key: 'home_why_3_icon', labelEn: 'Point 3 Icon', labelAr: 'أيقونة 3 (صورة)' },
+                            { type: 'text', key: 'home_why_3_title', labelEn: 'Point 3 Title', labelAr: 'عنوان 3', localized: true },
+                            { type: 'textarea', key: 'home_why_3_desc', labelEn: 'Point 3 Description', labelAr: 'وصف 3', localized: true },
+                            
+                            { type: 'image', key: 'home_why_4_icon', labelEn: 'Point 4 Icon', labelAr: 'أيقونة 4 (صورة)' },
+                            { type: 'text', key: 'home_why_4_title', labelEn: 'Point 4 Title', labelAr: 'عنوان 4', localized: true },
+                            { type: 'textarea', key: 'home_why_4_desc', labelEn: 'Point 4 Description', labelAr: 'وصف 4', localized: true },
+
+                            { type: 'image', key: 'home_why_5_icon', labelEn: 'Point 5 Icon', labelAr: 'أيقونة 5 (صورة)' },
+                            { type: 'text', key: 'home_why_5_title', labelEn: 'Point 5 Title', labelAr: 'عنوان 5', localized: true },
+                            { type: 'textarea', key: 'home_why_5_desc', labelEn: 'Point 5 Description', labelAr: 'وصف 5', localized: true },
+
+                            { type: 'image', key: 'home_why_6_icon', labelEn: 'Point 6 Icon', labelAr: 'أيقونة 6 (صورة)' },
+                            { type: 'text', key: 'home_why_6_title', labelEn: 'Point 6 Title', labelAr: 'عنوان 6', localized: true },
+                            { type: 'textarea', key: 'home_why_6_desc', labelEn: 'Point 6 Description', labelAr: 'وصف 6', localized: true }
+                        ]
+                    },
+                    {
+                        titleEn: 'Brands Section', titleAr: 'قسم العلامات التجارية',
+                        fields: [
+                            { type: 'text', key: 'home_brands_label', labelEn: 'Section Label', labelAr: 'الوسم', localized: true },
+                            { type: 'text', key: 'home_brands_title', labelEn: 'Section Title', labelAr: 'العنوان', localized: true },
+                            { type: 'textarea', key: 'home_brands_desc', labelEn: 'Section Description', labelAr: 'الوصف', localized: true }
+                        ]
+                    },
+                    {
+                        titleEn: 'Dealer Section', titleAr: 'قسم التجار',
+                        fields: [
+                            { type: 'text', key: 'home_dealer_label', labelEn: 'Section Label', labelAr: 'الوسم', localized: true },
+                            { type: 'text', key: 'home_dealer_title', labelEn: 'Section Title', labelAr: 'العنوان', localized: true },
+                            { type: 'textarea', key: 'home_dealer_desc', labelEn: 'Section Description', labelAr: 'الوصف', localized: true },
+                            { type: 'text', key: 'home_dealer_btn_text', labelEn: 'Button Text', labelAr: 'نص الزر', localized: true }
+                        ]
+                    },
+                    {
+                        titleEn: 'CTA & Newsletter', titleAr: 'الدعوة والنشرة',
+                        fields: [
+                            { type: 'text', key: 'home_cta_label', labelEn: 'CTA Label', labelAr: 'وسم الدعوة', localized: true },
+                            { type: 'text', key: 'home_cta_title', labelEn: 'CTA Title', labelAr: 'عنوان الدعوة', localized: true },
+                            { type: 'textarea', key: 'home_cta_desc', labelEn: 'CTA Description', labelAr: 'وصف الدعوة', localized: true },
+                            { type: 'text', key: 'home_cta_btn1_text', labelEn: 'Button 1 Text', labelAr: 'نص الزر الأول', localized: true },
+                            { type: 'text', key: 'home_cta_btn2_text', labelEn: 'Button 2 Text', labelAr: 'نص الزر الثاني', localized: true },
+                            { type: 'text', key: 'home_news_title', labelEn: 'Newsletter Title', labelAr: 'عنوان النشرة', localized: true },
+                            { type: 'textarea', key: 'home_news_desc', labelEn: 'Newsletter Description', labelAr: 'وصف النشرة', localized: true },
+                            { type: 'text', key: 'home_news_placeholder', labelEn: 'Input Placeholder', labelAr: 'النص المؤقت', localized: true },
+                            { type: 'text', key: 'home_news_btn_text', labelEn: 'Subscribe Button', labelAr: 'زر الاشتراك', localized: true }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'about', icon: 'fa-building', titleEn: 'About Us', titleAr: 'عن الشركة',
+                groups: [
+                    {
+                        titleEn: 'Hero Section', titleAr: 'قسم الهيرو',
+                        fields: [
+                            { type: 'text', key: 'about_hero_label', labelEn: 'Section Label', labelAr: 'الوسم', localized: true },
+                            { type: 'text', key: 'about_hero', labelEn: 'Hero Title', labelAr: 'العنوان الرئيسي', localized: true },
+                            { type: 'textarea', key: 'about_story_1', labelEn: 'Hero Description', labelAr: 'الوصف', localized: true }
+                        ]
+                    },
+                    {
+                        titleEn: 'Stats Section', titleAr: 'قسم الإحصائيات',
+                        fields: [
+                            { type: 'number', key: 'about_stat1_num', labelEn: 'Stat 1 Number', labelAr: 'الرقم الأول' },
+                            { type: 'text', key: 'about_stat1_label', labelEn: 'Stat 1 Label', labelAr: 'التسمية الأولى', localized: true },
+                            { type: 'number', key: 'about_stat2_num', labelEn: 'Stat 2 Number', labelAr: 'الرقم الثاني' },
+                            { type: 'text', key: 'about_stat2_label', labelEn: 'Stat 2 Label', labelAr: 'التسمية الثانية', localized: true },
+                            { type: 'number', key: 'about_stat3_num', labelEn: 'Stat 3 Number', labelAr: 'الرقم الثالث' },
+                            { type: 'text', key: 'about_stat3_label', labelEn: 'Stat 3 Label', labelAr: 'التسمية الثالثة', localized: true },
+                            { type: 'number', key: 'about_stat4_num', labelEn: 'Stat 4 Number', labelAr: 'الرقم الرابع' },
+                            { type: 'text', key: 'about_stat4_label', labelEn: 'Stat 4 Label', labelAr: 'التسمية الرابعة', localized: true }
+                        ]
+                    },
+                    {
+                        titleEn: 'Mission & Vision & Values', titleAr: 'الرؤية والمهمة والقيم',
+                        fields: [
+                            { type: 'text', key: 'about_mvv_label', labelEn: 'Section Label', labelAr: 'الوسم', localized: true },
+                            { type: 'text', key: 'about_mvv_title', labelEn: 'Section Title', labelAr: 'العنوان', localized: true },
+                            { type: 'image', key: 'about_mission_icon', labelEn: 'Mission Icon', labelAr: 'أيقونة المهمة (صورة)' },
+                            { type: 'text', key: 'about_mission_title', labelEn: 'Mission Title', labelAr: 'عنوان المهمة', localized: true },
+                            { type: 'textarea', key: 'about_mission', labelEn: 'Mission Statement', labelAr: 'نص المهمة', localized: true },
+                            { type: 'image', key: 'about_vision_icon', labelEn: 'Vision Icon', labelAr: 'أيقونة الرؤية (صورة)' },
+                            { type: 'text', key: 'about_vision_title', labelEn: 'Vision Title', labelAr: 'عنوان الرؤية', localized: true },
+                            { type: 'textarea', key: 'about_vision', labelEn: 'Vision Statement', labelAr: 'نص الرؤية', localized: true },
+                            { type: 'image', key: 'about_values_icon', labelEn: 'Values Icon', labelAr: 'أيقونة القيم (صورة)' },
+                            { type: 'text', key: 'about_values_title', labelEn: 'Values Title', labelAr: 'عنوان القيم', localized: true },
+                            { type: 'textarea', key: 'about_values', labelEn: 'Values Statement', labelAr: 'نص القيم', localized: true }
+                        ]
+                    },
+                    {
+                        titleEn: 'Our Journey Timeline', titleAr: 'مسيرتنا (الخط الزمني)',
+                        fields: [
+                            { type: 'text', key: 'about_journey_label', labelEn: 'Section Label', labelAr: 'الوسم', localized: true },
+                            { type: 'text', key: 'about_journey_title', labelEn: 'Section Title', labelAr: 'العنوان', localized: true },
+                            { type: 'textarea', key: 'about_journey_desc', labelEn: 'Section Description', labelAr: 'الوصف', localized: true },
+                            { type: 'text', key: 'about_tl1_year', labelEn: 'Timeline 1 Year', labelAr: 'سنة ١' },
+                            { type: 'text', key: 'about_tl1_title', labelEn: 'Timeline 1 Title', labelAr: 'عنوان ١', localized: true },
+                            { type: 'textarea', key: 'about_tl1_desc', labelEn: 'Timeline 1 Desc', labelAr: 'وصف ١', localized: true },
+                            { type: 'text', key: 'about_tl2_year', labelEn: 'Timeline 2 Year', labelAr: 'سنة ٢' },
+                            { type: 'text', key: 'about_tl2_title', labelEn: 'Timeline 2 Title', labelAr: 'عنوان ٢', localized: true },
+                            { type: 'textarea', key: 'about_tl2_desc', labelEn: 'Timeline 2 Desc', labelAr: 'وصف ٢', localized: true },
+                            { type: 'text', key: 'about_tl3_year', labelEn: 'Timeline 3 Year', labelAr: 'سنة ٣' },
+                            { type: 'text', key: 'about_tl3_title', labelEn: 'Timeline 3 Title', labelAr: 'عنوان ٣', localized: true },
+                            { type: 'textarea', key: 'about_tl3_desc', labelEn: 'Timeline 3 Desc', labelAr: 'وصف ٣', localized: true },
+                            { type: 'text', key: 'about_tl4_year', labelEn: 'Timeline 4 Year', labelAr: 'سنة ٤' },
+                            { type: 'text', key: 'about_tl4_title', labelEn: 'Timeline 4 Title', labelAr: 'عنوان ٤', localized: true },
+                            { type: 'textarea', key: 'about_tl4_desc', labelEn: 'Timeline 4 Desc', labelAr: 'وصف ٤', localized: true }
+                        ]
+                    },
+                    {
+                        titleEn: 'Why Choose Us', titleAr: 'لماذا تختارنا',
+                        fields: [
+                            { type: 'text', key: 'about_why_label', labelEn: 'Section Label', labelAr: 'الوسم', localized: true },
+                            { type: 'text', key: 'about_why_title', labelEn: 'Section Title', labelAr: 'العنوان', localized: true },
+                            { type: 'textarea', key: 'about_why_desc', labelEn: 'Section Desc', labelAr: 'الوصف', localized: true },
+                            { type: 'text', key: 'about_why1_title', labelEn: 'Advantage 1 Title', labelAr: 'عنوان الميزة 1', localized: true },
+                            { type: 'textarea', key: 'about_why1_desc', labelEn: 'Advantage 1 Desc', labelAr: 'وصف 1', localized: true },
+                            { type: 'text', key: 'about_why2_title', labelEn: 'Advantage 2 Title', labelAr: 'عنوان الميزة 2', localized: true },
+                            { type: 'textarea', key: 'about_why2_desc', labelEn: 'Advantage 2 Desc', labelAr: 'وصف 2', localized: true },
+                            { type: 'text', key: 'about_why3_title', labelEn: 'Advantage 3 Title', labelAr: 'عنوان الميزة 3', localized: true },
+                            { type: 'textarea', key: 'about_why3_desc', labelEn: 'Advantage 3 Desc', labelAr: 'وصف 3', localized: true },
+                            { type: 'text', key: 'about_why4_title', labelEn: 'Advantage 4 Title', labelAr: 'عنوان الميزة 4', localized: true },
+                            { type: 'textarea', key: 'about_why4_desc', labelEn: 'Advantage 4 Desc', labelAr: 'وصف 4', localized: true },
+                            { type: 'text', key: 'about_why5_title', labelEn: 'Advantage 5 Title', labelAr: 'عنوان الميزة 5', localized: true },
+                            { type: 'textarea', key: 'about_why5_desc', labelEn: 'Advantage 5 Desc', labelAr: 'وصف 5', localized: true },
+                            { type: 'text', key: 'about_why6_title', labelEn: 'Advantage 6 Title', labelAr: 'عنوان الميزة 6', localized: true },
+                            { type: 'textarea', key: 'about_why6_desc', labelEn: 'Advantage 6 Desc', labelAr: 'وصف 6', localized: true }
+                        ]
+                    },
+                    {
+                        titleEn: 'Leadership Team', titleAr: 'فريق القيادة',
+                        fields: [
+                            { type: 'text', key: 'about_team_label', labelEn: 'Section Label', labelAr: 'الوسم', localized: true },
+                            { type: 'text', key: 'about_team_title', labelEn: 'Section Title', labelAr: 'العنوان', localized: true },
+                            { type: 'textarea', key: 'about_team_desc', labelEn: 'Section Desc', labelAr: 'الوصف', localized: true },
+                            { type: 'text', key: 'about_team1_name', labelEn: 'Team 1 Name', labelAr: 'الاسم 1', localized: true },
+                            { type: 'text', key: 'about_team1_role', labelEn: 'Team 1 Role', labelAr: 'المسمى 1', localized: true },
+                            { type: 'textarea', key: 'about_team1_desc', labelEn: 'Team 1 Desc', labelAr: 'الوصف 1', localized: true },
+                            { type: 'text', key: 'about_team2_name', labelEn: 'Team 2 Name', labelAr: 'الاسم 2', localized: true },
+                            { type: 'text', key: 'about_team2_role', labelEn: 'Team 2 Role', labelAr: 'المسمى 2', localized: true },
+                            { type: 'textarea', key: 'about_team2_desc', labelEn: 'Team 2 Desc', labelAr: 'الوصف 2', localized: true },
+                            { type: 'text', key: 'about_team3_name', labelEn: 'Team 3 Name', labelAr: 'الاسم 3', localized: true },
+                            { type: 'text', key: 'about_team3_role', labelEn: 'Team 3 Role', labelAr: 'المسمى 3', localized: true },
+                            { type: 'textarea', key: 'about_team3_desc', labelEn: 'Team 3 Desc', labelAr: 'الوصف 3', localized: true },
+                            { type: 'text', key: 'about_team4_name', labelEn: 'Team 4 Name', labelAr: 'الاسم 4', localized: true },
+                            { type: 'text', key: 'about_team4_role', labelEn: 'Team 4 Role', labelAr: 'المسمى 4', localized: true },
+                            { type: 'textarea', key: 'about_team4_desc', labelEn: 'Team 4 Desc', labelAr: 'الوصف 4', localized: true }
+                        ]
+                    },
+                    {
+                        titleEn: 'Join Network CTA', titleAr: 'قسم الانضمام للشبكة',
+                        fields: [
+                            { type: 'text', key: 'about_cta_label', labelEn: 'Section Label', labelAr: 'الوسم', localized: true },
+                            { type: 'text', key: 'about_cta_title', labelEn: 'Section Title', labelAr: 'العنوان', localized: true },
+                            { type: 'textarea', key: 'about_cta_desc', labelEn: 'Section Desc', labelAr: 'الوصف', localized: true },
+                            { type: 'text', key: 'about_cta_btn1', labelEn: 'Button 1 Text', labelAr: 'زر 1', localized: true },
+                            { type: 'text', key: 'about_cta_btn2', labelEn: 'Button 2 Text', labelAr: 'زر 2', localized: true }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'catalog', icon: 'fa-box-open', titleEn: 'Catalog & Brands', titleAr: 'الكتالوج والماركات',
+                groups: [
+                    {
+                        titleEn: 'Catalog Headers', titleAr: 'عناوين الكتالوج',
+                        fields: [
+                            { type: 'textarea', key: 'catalog_hero', labelEn: 'Main Catalog Description', labelAr: 'وصف الكتالوج الرئيسي', localized: true }
+                        ]
+                    },
+                    {
+                        titleEn: 'Borsehung Info', titleAr: 'معلومات بورسيهونج',
+                        fields: [
+                            { type: 'textarea', key: 'brand_borsehung', labelEn: 'Brand Summary', labelAr: 'ملخص الماركة', localized: true }
+                        ]
+                    },
+                    {
+                        titleEn: 'VIKA Tantivy Info', titleAr: 'معلومات ڤيكا',
+                        fields: [
+                            { type: 'textarea', key: 'brand_vika', labelEn: 'Brand Summary', labelAr: 'ملخص الماركة', localized: true }
+                        ]
+                    },
+                    {
+                        titleEn: 'KDD Info', titleAr: 'معلومات KDD',
+                        fields: [
+                            { type: 'textarea', key: 'brand_kdd', labelEn: 'Brand Summary', labelAr: 'ملخص الماركة', localized: true }
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        // Generator Engine
+        function renderCMS() {
+            const nav = document.getElementById('cmsNav');
+            const sections = document.getElementById('cmsSections');
+            
+            cmsSchema.forEach((page, index) => {
+                // Render Nav Item
+                const navItem = document.createElement('div');
+                navItem.className = 'cms-menu-item' + (index === 0 ? ' active' : '');
+                navItem.innerHTML = '<div><i class="fa ' + page.icon + '" style="margin-right:8px; width:16px;"></i> <span data-en="'+page.titleEn+'" data-ar="'+page.titleAr+'"></span></div>';
+                navItem.onclick = () => switchCMSPage(page.id, navItem);
+                nav.appendChild(navItem);
+
+                // Render Section
+                const section = document.createElement('div');
+                section.className = 'cms-content-section' + (index === 0 ? ' active' : '');
+                section.id = 'cms-page-' + page.id;
+                
+                let html = '<h3 style="margin-bottom:20px; color:var(--white); font-size:1.1rem; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:15px;"><i class="fa ' + page.icon + '" style="color:var(--red);"></i> <span data-en="'+page.titleEn+'" data-ar="'+page.titleAr+'"></span></h3>';
+                
+                page.groups.forEach((group, gIndex) => {
+                    const isOpenClass = gIndex === 0 ? 'open' : '';
+                    html += '<div class="accordion-group ' + isOpenClass + '">';
+                    html += '<div class="accordion-header" onclick="this.parentElement.classList.toggle(\'open\')">';
+                    html += '<span data-en="'+group.titleEn+'" data-ar="'+group.titleAr+'"></span>';
+                    html += '<i class="fa fa-chevron-down" style="font-size:0.8rem; opacity:0.5;"></i>';
+                    html += '</div>';
+                    html += '<div class="accordion-content">';
+                    
+                    group.fields.forEach(f => {
+                        if (f.localized) {
+                            // EN
+                            html += '<div class="cms-lang-en" style="margin-bottom:16px;">';
+                            html += '<label style="display:block; margin-bottom:8px; font-size:0.85rem; color:var(--gray-300)">' + f.labelEn + ' (EN)</label>';
+                            if (f.type === 'textarea') html += '<textarea dyn-setting id="'+f.key+'_en" class="form-control" rows="3" oninput="liveUpdate(this, \''+f.key+'\', \'en\')"></textarea>';
+                            else html += '<input type="text" dyn-setting id="'+f.key+'_en" class="form-control" oninput="liveUpdate(this, \''+f.key+'\', \'en\')">';
+                            html += '</div>';
+                            // AR
+                            html += '<div class="cms-lang-ar" style="margin-bottom:16px; display:none;">';
+                            html += '<label style="display:block; margin-bottom:8px; font-size:0.85rem; color:var(--gray-300)">' + f.labelAr + ' (AR)</label>';
+                            if (f.type === 'textarea') html += '<textarea dyn-setting id="'+f.key+'_ar" class="form-control" rows="3" dir="rtl" oninput="liveUpdate(this, \''+f.key+'\', \'ar\')"></textarea>';
+                            else html += '<input type="text" dyn-setting id="'+f.key+'_ar" class="form-control" dir="rtl" oninput="liveUpdate(this, \''+f.key+'\', \'ar\')">';
+                            html += '</div>';
+                        } else {
+                            html += '<div style="margin-bottom:16px">';
+                            html += '<label style="display:block; margin-bottom:8px; font-size:0.85rem; color:var(--gray-300)" data-en="'+f.labelEn+'" data-ar="'+f.labelAr+'"></label>';
+                            if (f.type === 'textarea') html += '<textarea dyn-setting id="'+f.key+'" class="form-control" rows="3" oninput="liveUpdate(this, \''+f.key+'\')"></textarea>';
+                            else if (f.type === 'image') {
+                                html += '<input type="hidden" dyn-setting id="'+f.key+'">';
+                                html += '<div style="margin-bottom:8px;"><img id="preview_'+f.key+'" src="" style="max-height:50px;display:none;background:rgba(255,255,255,0.1);padding:4px;border-radius:4px;" /></div>';
+                                html += '<input type="file" dyn-setting-file id="file_'+f.key+'" class="form-control" accept="image/*" onchange="previewImg(this, \''+f.key+'\')">';
+                            }
+                            else html += '<input type="'+f.type+'" dyn-setting id="'+f.key+'" class="form-control" oninput="liveUpdate(this, \''+f.key+'\')">';
+                            html += '</div>';
+                        }
+                    });
+                    
+                    html += '</div></div>'; // end accordion content and group
+                });
+                
+                section.innerHTML = html;
+                sections.appendChild(section);
+            });
+        }
+
+        function switchCMSPage(id, el) {
+            document.querySelectorAll('.cms-menu-item').forEach(m => m.classList.remove('active'));
+            el.classList.add('active');
+            
+            document.querySelectorAll('.cms-content-section').forEach(s => s.classList.remove('active'));
+            document.getElementById('cms-page-' + id).classList.add('active');
+
+            // Change iframe preview based on page
+            const iframe = document.getElementById('livePreviewFrame');
+            if (id === 'home' || id === 'global') iframe.src = '../index.html';
+            else if (id === 'about') iframe.src = '../about.html';
+            else if (id === 'catalog') iframe.src = '../catalog.html';
+            else if (id === 'brands') iframe.src = '../brands.html';
+        }
+
+        // Live Update Dispatcher
+        function liveUpdate(input, key, lang) {
+            const iframe = document.getElementById('livePreviewFrame');
+            if(iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage({ type: 'cms-update', key: key, value: input.value, lang: lang }, '*');
+            }
+        }
+        
+        function reloadPreview() {
+            const iframe = document.getElementById('livePreviewFrame');
+            iframe.src = iframe.src;
+        }
+
+        // Bilingual Toggle logic
+        function toggleCMSLang(lang) {
+            document.getElementById('tabLangEN').classList.toggle('active', lang === 'en');
+            document.getElementById('tabLangAR').classList.toggle('active', lang === 'ar');
+            
+            document.querySelectorAll('.cms-lang-en').forEach(el => el.style.display = lang === 'en' ? 'block' : 'none');
+            document.querySelectorAll('.cms-lang-ar').forEach(el => el.style.display = lang === 'ar' ? 'block' : 'none');
+        }
+
+        function previewImg(input, key) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const pv = document.getElementById('preview_' + key);
+                    pv.src = e.target.result;
+                    pv.style.display = 'block';
+                    // Optional: Live update for images
+                    liveUpdate({value: e.target.result}, key);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        let currentLang = localStorage.getItem('lang') || 'en';
+
+        function setLang(lang) {
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+            document.documentElement.lang = lang;
+            document.body.classList.toggle('lang-ar', lang === 'ar');
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+            document.getElementById('btn-ar').classList.toggle('active', lang === 'ar');
+            document.querySelectorAll('[data-en]').forEach(el => {
+                const t = el.getAttribute('data-' + lang);
+                if (t && t !== 'undefined') el.innerHTML = t;
+            });
+        }
+
+        async function fetchSettings() {
+            try {
+                const res = await fetch('http://localhost:5000/api/settings');
+                const json = await res.json();
+                if(json.success && json.data) {
+                    const inputs = document.querySelectorAll('[dyn-setting]');
+                    inputs.forEach(input => {
+                        if(json.data[input.id] !== undefined) {
+                            input.value = json.data[input.id];
+                            if(input.tagName === 'INPUT' && input.type === 'hidden') {
+                                const pv = document.getElementById('preview_' + input.id);
+                                if(pv && input.value) { pv.src = input.value; pv.style.display = 'block'; }
+                            }
+                        }
+                    });
+                }
+                
+                // Pending orders badge loop
+                const ordRes = await fetch('http://localhost:5000/api/orders?status=Pending');
+                const ordJson = await ordRes.json();
+                if(ordJson.success) {
+                    document.getElementById('adminPendingBadge').textContent = ordJson.data.length;
+                }
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+        async function saveSettings(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnSave');
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
+            btn.disabled = true;
+
+            // Handle Image Uploads first
+            const fileInputs = document.querySelectorAll('[dyn-setting-file]');
+            for(let fi of fileInputs) {
+                if(fi.files && fi.files.length > 0) {
+                    const fd = new FormData();
+                    fd.append('image', fi.files[0]);
+                    try {
+                        const upRes = await fetch('http://localhost:5000/api/settings/upload', {
+                            method: 'POST',
+                            body: fd
+                        });
+                        const upJson = await upRes.json();
+                        if(upJson.success) {
+                            const actualKey = fi.id.replace('file_', '');
+                            document.getElementById(actualKey).value = upJson.url;
+                        }
+                    } catch(e) { console.error('Upload failed', e); }
+                }
+            }
+
+            const inputs = document.querySelectorAll('[dyn-setting]');
+            const payload = {};
+            inputs.forEach(input => {
+                if(input.id && input.value.trim() !== '') {
+                    payload[input.id] = input.value;
+                }
+            });
+
+            try {
+                const res = await fetch('http://localhost:5000/api/settings/bulk', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const json = await res.json();
+                if(json.success) {
+                    // Show beautiful save success visually rather than an alert
+                    btn.innerHTML = '<i class="fa fa-check"></i> ' + (currentLang === 'ar' ? 'تم الحفظ والرفع للموقع بنجاح!' : 'Published Successfully!');
+                    btn.style.background = '#22c55e';
+                    setTimeout(() => {
+                        btn.innerHTML = originalContent;
+                        btn.style.background = '';
+                        btn.disabled = false;
+                    }, 3000);
+                } else {
+                    alert('Error: ' + json.message);
+                    btn.innerHTML = originalContent;
+                    btn.disabled = false;
+                }
+            } catch(e) {
+                alert('Connection error');
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCMS(); // Build the UI
+            setLang(currentLang); // Apply Language
+            fetchSettings(); // Fill forms
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>News & Media Center – NUTD Automotive Parts | المركز الإعلامي</title>
+    <meta name="description"
+        content="Discover NUTD's latest news, campaigns, events, partnerships, and automotive spare parts promotions." />
+    <meta name="keywords"
+        content="automotive spare parts, nuts, valvoline, bosch, car news egypt, b2b auto parts, ntd, nama united" />
+    <link rel="canonical" href="https://nutd.example.com/media.html" />
+
+    <!-- Open Graph for Facebook & LinkedIn -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="News & Media Center – NUTD Automotive Parts" />
+    <meta property="og:description"
+        content="Discover NUTD's latest news, campaigns, events, partnerships, and automotive spare parts promotions." />
+    <meta property="og:url" content="https://nutd.example.com/media.html" />
+    <meta property="og:image" content="https://nutd.example.com/img/logo.svg" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="News & Media Center – NUTD Automotive Parts" />
+    <meta name="twitter:description"
+        content="Discover NUTD's latest news, campaigns, events, partnerships, and automotive spare parts promotions." />
+    <meta name="twitter:image" content="https://nutd.example.com/img/logo.svg" />
+
+    <link rel="icon" type="image/svg+xml" href="img/favicon.svg" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        .news-hero {
+            position: relative;
+            height: 65vh;
+            min-height: 500px;
+            display: flex;
+            align-items: flex-end;
+            padding-bottom: 60px;
+            background: #000;
+            overflow: hidden;
+            margin-top: var(--nav-h);
+        }
+
+        .hero-img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.6;
+            transition: transform 0.8s ease;
+        }
+
+        .news-hero:hover .hero-img {
+            transform: scale(1.05);
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.2) 50%, transparent 100%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+        }
+
+        .news-badge {
+            display: inline-block;
+            background: var(--red);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+
+        .hero-title {
+            color: white;
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 16px;
+        }
+
+        .hero-meta {
+            color: var(--gray-400);
+            font-size: 0.9rem;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .news-card {
+            background: var(--dark-2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--r-lg);
+            overflow: hidden;
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .news-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(232, 35, 26, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .news-thumb {
+            height: 220px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .news-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.5s;
+        }
+
+        .news-card:hover .news-thumb img {
+            transform: scale(1.1);
+        }
+
+        .news-cat-tag {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .lang-ar .news-cat-tag {
+            left: auto;
+            right: 16px;
+        }
+
+        .news-body {
+            padding: 24px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .news-card-date {
+            font-size: 0.8rem;
+            color: var(--gray-500);
+            margin-bottom: 12px;
+        }
+
+        .news-card-title {
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 700;
+            line-height: 1.4;
+            margin-bottom: 12px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .news-card-excerpt {
+            color: var(--gray-400);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            flex: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .read-more {
+            color: var(--red);
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        .news-card:hover .read-more {
+            gap: 12px;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 32px;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--gray-300);
+            padding: 8px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .filter-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+        }
+
+        .filter-btn.active {
+            background: var(--red);
+            color: white;
+            border-color: var(--red);
+        }
+
+        @media(max-width:991px) {
+            .news-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .hero-title {
+                font-size: 2.2rem;
+            }
+        }
+
+        @media(max-width:768px) {
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ============================== NAVBAR ============================== -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <a href="index.html" class="nav-logo">
+                <img src="img/logo.svg" alt="NUTD Logo" style="height:36px" />
+                <div class="nav-logo-text">
+                    <span class="name-en">NUTD</span>
+                    <span class="name-ar">نماء المتحدة</span>
+                </div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-link" data-en="Home" data-ar="الرئيسية">Home</a></li>
+                <li><a href="catalog.html" class="nav-link" data-en="Products" data-ar="المنتجات">Products</a></li>
+                <li><a href="brands.html" class="nav-link" data-en="Brands" data-ar="العلامات">Brands</a></li>
+                <li><a href="about.html" class="nav-link" data-en="About" data-ar="عن الشركة">About</a></li>
+                <li><a href="media.html" class="nav-link active" data-en="News & Media" data-ar="الأخبار والميديا">News
+                        & Media</a></li>
+                <li><a href="contact.html" class="nav-link" data-en="Contact" data-ar="تواصل">Contact</a></li>
+            </ul>
+            <div class="nav-actions">
+                <div class="lang-toggle">
+                    <button onclick="setLang('en')" class="active" id="btn-en">EN</button>
+                    <button onclick="setLang('ar')" id="btn-ar">AR</button>
+                </div>
+                <a href="dealer/login.html" class="btn btn-primary btn-sm" data-en="Dealer Portal"
+                    data-ar="بوابة التاجر">Dealer Portal</a>
+            </div>
+            <button class="nav-hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ============================== HERO (Placeholder filled by JS) ============================== -->
+    <div id="heroContainer">
+        <!-- Fetched dynamically so it acts as the featured article -->
+        <div class="news-hero" style="background:#111">
+            <div class="container">
+                <h2 class="text-white" style="text-align:center"><i class="fa fa-spinner fa-spin"></i></h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================== NEWS SECTION ============================== -->
+    <section class="section">
+        <div class="container">
+            <div style="text-align:center; max-width:600px; margin:0 auto 40px;">
+                <div class="section-label" style="justify-content:center;margin-bottom:12px" data-en="Our Updates"
+                    data-ar="تحديثاتنا">Our Updates</div>
+                <h2 data-en="Latest News & Articles" data-ar="أحدث الأخبار والمقالات"
+                    style="font-size:2rem; margin-bottom:16px;">Latest News & Articles</h2>
+            </div>
+
+            <!-- Controls -->
+            <div class="filter-tabs" id="newsFilters">
+                <button class="filter-btn active" data-filter="All" data-en="All" data-ar="الكل">All</button>
+                <button class="filter-btn" data-filter="Company News" data-en="Company News"
+                    data-ar="أخبار الشركة">Company News</button>
+                <button class="filter-btn" data-filter="Campaigns" data-en="Campaigns"
+                    data-ar="حملات ترويجية">Campaigns</button>
+                <button class="filter-btn" data-filter="Events" data-en="Events" data-ar="فعاليات">Events</button>
+                <button class="filter-btn" data-filter="Store Visits" data-en="Store Visits"
+                    data-ar="زيارات ميدانية">Store Visits</button>
+            </div>
+
+            <div class="media-search-wrap" style="max-width:500px; margin:0 auto 40px; position:relative;">
+                <i class="fa fa-search"
+                    style="position:absolute; left:20px; top:50%; transform:translateY(-50%); color:var(--gray-500);"></i>
+                <input type="text" id="newsSearch" class="form-control"
+                    style="padding-left:48px; border-radius:30px; background:var(--dark-2);"
+                    placeholder="Search articles..." data-placeholder-en="Search articles..."
+                    data-placeholder-ar="ابحث في المقالات..." />
+            </div>
+
+            <!-- Grid -->
+            <div class="news-grid" id="newsGrid">
+                <!-- Javascript will populate this -->
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state" id="emptyState" style="display:none; padding: 60px 20px; text-align:center;">
+                <i class="fa fa-newspaper"
+                    style="font-size:3rem; color:var(--gray-700); margin-bottom:16px; display:inline-block;"></i>
+                <h3 data-en="No articles found" data-ar="لا يوجد مقالات" style="color:white; margin-bottom:8px;">No
+                    articles found</h3>
+                <p data-en="Try adjusting your filters or search." data-ar="حاول تعديل الفلتر أو البحث."
+                    style="color:var(--gray-400);">Try adjusting your filters or search.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================== FOOTER ============================== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <span data-en="© 2026 Nama United Trading & Distribution."
+                    data-ar="© 2026 نماء المتحدة للتجارة والتوزيع.">© 2026 Nama United Trading & Distribution.</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JSON-LD Organization Schema for Google SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Nama United Trading & Distribution",
+      "url": "https://nutd.example.com",
+      "logo": "https://nutd.example.com/img/logo.svg",
+      "description": "Leading automotive parts distributor in Egypt.",
+      "sameAs": [
+        "https://www.facebook.com/nutd",
+        "https://www.linkedin.com/company/nutd"
+      ]
+    }
+    </script>
+
+    <!-- ============================== SCRIPTS ============================== -->
+    <script src="js/shared.js"></script>
+    <script>
+        let articles = [];
+        let activeFilter = 'All';
+
+        window.addEventListener('languageChanged', (e) => {
+            const lang = e.detail;
+            const sWrap = document.querySelector('.media-search-wrap i');
+            if (sWrap) {
+                if (lang === 'ar') { sWrap.style.left = 'auto'; sWrap.style.right = '20px'; document.getElementById('newsSearch').style.paddingLeft = '16px'; document.getElementById('newsSearch').style.paddingRight = '48px'; }
+                else { sWrap.style.right = 'auto'; sWrap.style.left = '20px'; document.getElementById('newsSearch').style.paddingRight = '16px'; document.getElementById('newsSearch').style.paddingLeft = '48px'; }
+            }
+            renderContent();
+        });
+
+        async function fetchArticles() {
+            try {
+                // we'll fetch them all here and do frontend filtering for snappiness
+                const res = await fetch('http://localhost:5000/api/articles');
+                const json = await res.json();
+                if (json.success) {
+                    articles = json.data;
+                    renderContent();
+                }
+            } catch (e) {
+                console.error("Failed to fetch articles", e);
+            }
+        }
+
+        function renderContent() {
+            if (!articles.length) {
+                document.getElementById('heroContainer').innerHTML = ''; // hide hero
+                document.getElementById('emptyState').style.display = 'block';
+                return;
+            }
+
+            // Hero is the highest views or newest. We have them sorted by newest
+            const featured = articles[0];
+            const theRest = articles.slice(1);
+
+            // Dictionary for translating category (quick hack)
+            const catMap = {
+                'Company News': currentLang === 'ar' ? 'أخبار الشركة' : 'Company News',
+                'Campaigns': currentLang === 'ar' ? 'حملات ترويجية' : 'Campaigns',
+                'Events': currentLang === 'ar' ? 'فعاليات' : 'Events',
+                'Store Visits': currentLang === 'ar' ? 'زيارات ميدانية' : 'Store Visits',
+            };
+
+            // Render Hero
+            let heroTitle = currentLang === 'ar' ? featured.titleAr : featured.titleEn;
+            let dateStr = new Date(featured.createdAt).toLocaleDateString(currentLang === 'ar' ? 'ar-EG' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' });
+            let heroVideoIcon = featured.videoUrl ? `<div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); z-index:3; font-size:4rem; color:rgba(255,255,255,0.8); pointer-events:none;"><i class="fa fa-circle-play"></i></div>` : '';
+
+            document.getElementById('heroContainer').innerHTML = `
+                <a href="article.html?slug=${featured.slug}" class="news-hero" style="text-decoration:none; display:block; position:relative;">
+                    ${heroVideoIcon}
+                    <img src="${featured.thumbnail || 'https://picsum.photos/1920/1080'}" class="hero-img" alt="Hero">
+                    <div class="hero-overlay"></div>
+                    <div class="container" style="position:relative; z-index:2; height:100%; display:flex; align-items:flex-end; padding-bottom:60px;">
+                        <div class="hero-content">
+                            <span class="news-badge">${catMap[featured.category] || featured.category}</span>
+                            <h1 class="hero-title">${heroTitle}</h1>
+                            <div class="hero-meta">
+                                <span><i class="fa fa-calendar-alt"></i> ${dateStr}</span>
+                                <span><i class="fa fa-eye"></i> ${featured.views}</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            `;
+
+            // Filter logic
+            const q = document.getElementById('newsSearch').value.toLowerCase();
+            const filtered = theRest.filter(a => {
+                const titleStr = (a.titleEn + ' ' + a.titleAr).toLowerCase();
+                const matchCat = activeFilter === 'All' || a.category === activeFilter;
+                const matchSearch = !q || titleStr.includes(q);
+                return matchCat && matchSearch;
+            });
+
+            const grid = document.getElementById('newsGrid');
+            if (!filtered.length) {
+                grid.innerHTML = '';
+                document.getElementById('emptyState').style.display = 'block';
+            } else {
+                document.getElementById('emptyState').style.display = 'none';
+                grid.innerHTML = filtered.map(art => {
+                    const t = currentLang === 'ar' ? art.titleAr : art.titleEn;
+                    const ex = currentLang === 'ar' ? art.excerptAr : art.excerptEn;
+                    const d = new Date(art.createdAt).toLocaleDateString(currentLang === 'ar' ? 'ar-EG' : 'en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+                    // fallback image
+                    const img = art.thumbnail || 'https://picsum.photos/600/400';
+                    const rmText = currentLang === 'ar' ? 'اقرأ المزيد' : 'Read More';
+                    const rArrow = currentLang === 'ar' ? 'fa-arrow-left' : 'fa-arrow-right';
+                    const videoIcon = art.videoUrl ? `<i class="fa fa-circle-play" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:3rem; color:rgba(255,255,255,0.8);"></i>` : '';
+
+                    return `
+                    <a href="article.html?slug=${art.slug}" class="news-card">
+                        <div class="news-thumb">
+                            <img src="${img}" alt="${t}" loading="lazy">
+                            ${videoIcon}
+                            <div class="news-cat-tag">${catMap[art.category] || art.category}</div>
+                        </div>
+                        <div class="news-body">
+                            <div class="news-card-date"><i class="fa fa-calendar-alt"></i> ${d}</div>
+                            <h4 class="news-card-title">${t}</h4>
+                            <div class="news-card-excerpt">${ex || ''}</div>
+                            <div class="read-more">${rmText} <i class="fa ${rArrow}"></i></div>
+                        </div>
+                    </a>
+                    `;
+                }).join('');
+            }
+        }
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                activeFilter = btn.getAttribute('data-filter');
+                renderContent();
+            });
+        });
+
+        document.getElementById('newsSearch').addEventListener('input', () => {
+            renderContent();
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchArticles();
+        });
+    </script>
+</body>
+
+</html>

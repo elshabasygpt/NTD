@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dealer Dashboard – NUTD Portal</title>
+    <link rel="icon" type="image/svg+xml" href="../img/favicon.svg" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        .mini-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+            height: 40px;
+        }
+
+        .mini-bar {
+            flex: 1;
+            background: rgba(232, 35, 26, .15);
+            border-radius: 4px 4px 0 0;
+            transition: background .2s, transform .2s, box-shadow .2s;
+            cursor: pointer;
+        }
+
+        .mini-bar:last-child {
+            background: var(--red);
+        }
+
+        .mini-bar:hover {
+            background: linear-gradient(180deg, var(--red) 0%, rgba(232, 35, 26, .5) 100%);
+            transform: scaleY(1.05);
+            transform-origin: bottom;
+            box-shadow: 0 0 12px rgba(232, 35, 26, .4);
+        }
+
+        .quick-order-card {
+            border: 1px solid rgba(232, 35, 26, .2);
+            border-radius: var(--r-xl);
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-search-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--dark-3);
+            border: 1px solid rgba(255, 255, 255, .1);
+            border-radius: var(--r-md);
+            padding: 10px 16px;
+            margin-bottom: 12px;
+        }
+
+        .product-search-row input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--white);
+            font-size: .88rem;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .product-search-row input::placeholder {
+            color: var(--gray-700);
+        }
+
+        .wholesale-table tbody td:last-child {
+            font-weight: 700;
+            color: var(--red);
+        }
+
+        .notif-panel {
+            background: var(--dark-2);
+            border: 1px solid rgba(255, 255, 255, .07);
+            border-radius: var(--r-lg);
+            overflow: hidden;
+        }
+
+        .notif-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 14px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, .05);
+            transition: background var(--t-fast);
+        }
+
+        .notif-item:last-child {
+            border-bottom: none;
+        }
+
+        .notif-item:hover {
+            background: rgba(255, 255, 255, .02);
+        }
+
+        .notif-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--r-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .9rem;
+            flex-shrink: 0;
+        }
+
+        .notif-icon.info {
+            background: rgba(59, 130, 246, .15);
+            color: var(--info);
+        }
+
+        .notif-icon.warn {
+            background: rgba(245, 158, 11, .15);
+            color: var(--warning);
+        }
+
+        .notif-icon.good {
+            background: rgba(34, 197, 94, .15);
+            color: var(--success);
+        }
+
+        .notif-item .msg {
+            font-size: .85rem;
+            color: var(--gray-300);
+            line-height: 1.4;
+        }
+
+        .notif-item .time {
+            font-size: .72rem;
+            color: var(--gray-700);
+            margin-top: 3px;
+        }
+
+        @media(max-width:768px) {
+            .sidebar {
+                display: none;
+            }
+
+            .portal-main {
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="portal-layout">
+
+        <!-- =========== SIDEBAR =========== -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <img src="../img/logo.svg" alt="NUTD" style="height:32px" />
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="sidebar-section-label" data-en="Main" data-ar="رئيسي">Main</div>
+                <a href="dashboard.html" class="sidebar-link active">
+                    <span class="icon"><i class="fa fa-gauge"></i></span>
+                    <span data-en="Dashboard" data-ar="الداشبورد">Dashboard</span>
+                </a>
+                <a href="products.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-boxes-stacked"></i></span>
+                    <span data-en="Products & Pricing" data-ar="المنتجات والأسعار">Products &amp; Pricing</span>
+                </a>
+                <a href="invoice.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-file-invoice"></i></span>
+                    <span data-en="Create Invoice" data-ar="إنشاء فاتورة">Create Invoice</span>
+                    <span class="badge" data-en="New" data-ar="جديد">New</span>
+                </a>
+
+                <div class="sidebar-section-label" data-en="Orders" data-ar="الطلبات">Orders</div>
+                <a href="orders.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-clock-rotate-left"></i></span>
+                    <span data-en="Order History" data-ar="سجل الطلبات">Order History</span>
+                </a>
+                <a href="orders.html?status=Pending" class="sidebar-link" id="navPending">
+                    <span class="icon"><i class="fa fa-list-check"></i></span>
+                    <span data-en="Pending Approvals" data-ar="في انتظار الموافقة">Pending Approvals</span>
+                    <span class="badge" id="sidebarPendingBadge">0</span>
+                </a>
+
+                <div class="sidebar-section-label" data-en="Account" data-ar="الحساب">Account</div>
+                <a href="#" class="sidebar-link" onclick="alert(currentLang === 'ar' ? 'قريباً!' : 'Coming soon!'); return false;">
+                    <span class="icon"><i class="fa fa-user-gear"></i></span>
+                    <span data-en="Profile" data-ar="الملف الشخصي">Profile</span>
+                </a>
+                <a href="#" class="sidebar-link" onclick="alert(currentLang === 'ar' ? 'قريباً!' : 'Coming soon!'); return false;">
+                    <span class="icon"><i class="fa fa-headset"></i></span>
+                    <span data-en="Support" data-ar="الدعم">Support</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="d-flex align-center gap-12 mb-16">
+                    <div class="topbar-avatar">AH</div>
+                    <div>
+                        <div style="font-size:.85rem;font-weight:600;color:var(--white)">Ahmed Hassan</div>
+                        <div style="font-size:.72rem;color:var(--gray-500)" data-en="Al-Nour Auto Parts"
+                            data-ar="النور لقطع السيارات">Al-Nour Auto Parts</div>
+                    </div>
+                </div>
+                <a href="login.html" class="btn btn-ghost btn-sm btn-full">
+                    <i class="fa fa-right-from-bracket"></i>
+                    <span data-en="Sign Out" data-ar="تسجيل الخروج">Sign Out</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- =========== MAIN CONTENT =========== -->
+        <main class="portal-main">
+
+            <!-- TOP BAR -->
+            <div class="portal-topbar">
+                <div>
+                    <span class="topbar-title" data-en="Dashboard" data-ar="الداشبورد">Dashboard</span>
+                    <span style="font-size:.8rem;color:var(--gray-500);margin-left:12px"
+                        data-en="Good morning, Ahmed 👋" data-ar="صباح الخير، أحمد 👋">Good morning, Ahmed 👋</span>
+                </div>
+                <div class="topbar-actions">
+                    <div class="lang-toggle">
+                        <button onclick="setLang('en')" class="active" id="btn-en">EN</button>
+                        <button onclick="setLang('ar')" id="btn-ar">AR</button>
+                    </div>
+                    <button class="btn-icon btn-ghost notif-btn" style="position:relative">
+                        <i class="fa fa-bell" style="font-size:1rem;color:var(--gray-300)"></i>
+                        <span class="notif-dot"></span>
+                    </button>
+                    <div class="topbar-avatar">AH</div>
+                </div>
+            </div>
+
+            <!-- PORTAL CONTENT -->
+            <div class="portal-content">
+
+                <!-- STATS -->
+                <div class="stats-grid">
+                    <div class="stat-card glass-panel">
+                        <div class="stat-icon red"><i class="fa fa-file-invoice"></i></div>
+                        <div class="stat-info">
+                            <div class="value">18</div>
+                            <div class="label" data-en="Total Orders" data-ar="إجمالي الطلبات">Total Orders</div>
+                            <div class="change up"><i class="fa fa-arrow-up" style="font-size:.6rem"></i> +3 <span
+                                    data-en="this month" data-ar="هذا الشهر">this month</span></div>
+                        </div>
+                    </div>
+                    <div class="stat-card glass-panel">
+                        <div class="stat-icon gold"><i class="fa fa-clock"></i></div>
+                        <div class="stat-info">
+                            <div class="value">2</div>
+                            <div class="label" data-en="Pending Approval" data-ar="في انتظار الموافقة">Pending Approval
+                            </div>
+                            <div class="change" style="color:var(--warning)"><i class="fa fa-circle"
+                                    style="font-size:.5rem"></i> <span data-en="Action needed"
+                                    data-ar="يحتاج إجراء">Action needed</span></div>
+                        </div>
+                    </div>
+                    <div class="stat-card glass-panel">
+                        <div class="stat-icon green"><i class="fa fa-circle-check"></i></div>
+                        <div class="stat-info">
+                            <div class="value">15</div>
+                            <div class="label" data-en="Approved Orders" data-ar="الطلبات المعتمدة">Approved Orders
+                            </div>
+                            <div class="change up"><i class="fa fa-arrow-up" style="font-size:.6rem"></i> 83%</div>
+                        </div>
+                    </div>
+                    <div class="stat-card glass-panel">
+                        <div class="stat-icon blue"><i class="fa fa-boxes-stacked"></i></div>
+                        <div class="stat-info">
+                            <div class="value">5,000<span style="font-size:1rem;color:var(--gray-500)">+</span></div>
+                            <div class="label" data-en="Available SKUs" data-ar="الأصناف المتاحة">Available SKUs</div>
+                            <div class="change" style="color:var(--info)"><i class="fa fa-tag"
+                                    style="font-size:.6rem"></i> <span data-en="Wholesale pricing"
+                                    data-ar="أسعار الجملة">Wholesale pricing</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start">
+
+                    <!-- LEFT COLUMN -->
+                    <div>
+                        <!-- Quick Invoice -->
+                        <div class="quick-order-card glass-panel mb-20">
+                            <div class="d-flex align-center justify-between mb-16">
+                                <div>
+                                    <h4 class="text-white" data-en="Quick Order" data-ar="طلب سريع">Quick Order</h4>
+                                    <p style="font-size:.82rem;color:var(--gray-500);margin-top:3px"
+                                        data-en="Search and add products to a new invoice"
+                                        data-ar="ابحث وأضف منتجات لفاتورة جديدة">Search and add products to a new
+                                        invoice</p>
+                                </div>
+                                <a href="invoice.html" class="btn btn-primary btn-sm" data-en="Full Invoice Builder"
+                                    data-ar="منشئ الفاتورة الكامل">Full Invoice Builder</a>
+                            </div>
+                            <div class="product-search-row">
+                                <i class="fa fa-magnifying-glass" style="color:var(--gray-500)"></i>
+                                <input type="text" placeholder="Search by name or SKU…" id="quickOrderSearch"
+                                    data-placeholder-en="Search by name or SKU…"
+                                    data-placeholder-ar="ابحث بالاسم أو الرقم…" onkeypress="if(event.key === 'Enter') window.location.href='invoice.html?q='+encodeURIComponent(this.value);" />
+                            </div>
+                            <p style="font-size:.78rem;color:var(--gray-700)"
+                                data-en="Start typing to find products with wholesale prices."
+                                data-ar="ابدأ الكتابة للبحث عن المنتجات بأسعار الجملة.">Start typing to find products
+                                with wholesale prices.</p>
+                        </div>
+
+                        <!-- Recent Orders -->
+                        <div class="table-wrap glass-panel">
+                            <div class="table-header">
+                                <h4 class="text-white" data-en="Recent Orders" data-ar="الطلبات الأخيرة">Recent Orders
+                                </h4>
+                                <a href="orders.html" class="btn btn-ghost btn-sm" data-en="View All"
+                                    data-ar="عرض الكل">View All</a>
+                            </div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th data-en="Invoice #" data-ar="رقم الفاتورة">Invoice #</th>
+                                        <th data-en="Date" data-ar="التاريخ">Date</th>
+                                        <th data-en="Items" data-ar="الأصناف">Items</th>
+                                        <th data-en="Total" data-ar="الإجمالي">Total</th>
+                                        <th data-en="Status" data-ar="الحالة">Status</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentOrdersTbody">
+                                    <tr>
+                                        <td colspan="6" style="text-align:center;padding:24px"><i class="fa fa-spinner fa-spin text-muted"></i></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Wholesale Products Preview -->
+                        <div class="table-wrap glass-panel mt-20">
+                            <div class="table-header">
+                                <h4 class="text-white" data-en="Wholesale Price List" data-ar="قائمة أسعار الجملة">
+                                    Wholesale Price List</h4>
+                                <a href="products.html" class="btn btn-ghost btn-sm" data-en="Full Catalog"
+                                    data-ar="الكتالوج الكامل">Full Catalog</a>
+                            </div>
+                            <table class="wholesale-table">
+                                <thead>
+                                    <tr>
+                                        <th data-en="SKU" data-ar="الرقم">SKU</th>
+                                        <th data-en="Product" data-ar="المنتج">Product</th>
+                                        <th data-en="Brand" data-ar="العلامة">Brand</th>
+                                        <th data-en="Wholesale Price" data-ar="سعر الجملة">Wholesale Price</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentProductsTbody">
+                                    <tr>
+                                        <td colspan="5" style="text-align:center;padding:24px"><i class="fa fa-spinner fa-spin text-muted"></i></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT COLUMN -->
+                    <div>
+                        <!-- Status Summary -->
+                        <div class="table-wrap glass-panel mb-16" style="padding:20px">
+                            <div class="d-flex align-center justify-between mb-16">
+                                <h4 class="text-white" style="font-size:.9rem" data-en="Activity This Month"
+                                    data-ar="نشاط هذا الشهر">Activity This Month</h4>
+                            </div>
+                            <div class="mini-chart">
+                                <div class="mini-bar" style="height:30%"></div>
+                                <div class="mini-bar" style="height:55%"></div>
+                                <div class="mini-bar" style="height:40%"></div>
+                                <div class="mini-bar" style="height:70%"></div>
+                                <div class="mini-bar" style="height:50%"></div>
+                                <div class="mini-bar" style="height:85%"></div>
+                                <div class="mini-bar" style="height:65%"></div>
+                                <div class="mini-bar" style="height:100%"></div>
+                            </div>
+                            <div class="d-flex justify-between mt-12">
+                                <div style="text-align:center">
+                                    <div class="value" id="dashboardTotalSpend" style="font-size:1.3rem;font-weight:800;color:var(--white)">
+                                        ...
+                                    </div>
+                                    <div style="font-size:.72rem;color:var(--gray-500)" data-en="Total Ordered"
+                                        data-ar="إجمالي الطلبات">Total Ordered</div>
+                                </div>
+                                <div style="text-align:center">
+                                    <div class="value" id="dashboardCompletedOrders" style="font-size:1.3rem;font-weight:800;color:var(--success)">
+                                        ...
+                                    </div>
+                                    <div style="font-size:.72rem;color:var(--gray-500)" data-en="Completed"
+                                        data-ar="مكتملة">Completed</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notifications -->
+                        <div class="table-wrap glass-panel" style="padding:16px 0">
+                            <div class="table-header" style="padding:0 20px 14px;margin-bottom:0">
+                                <h4 class="text-white" style="font-size:.9rem" data-en="Notifications"
+                                    data-ar="الإشعارات">Notifications</h4>
+                            </div>
+                            <div class="notif-panel" style="border:none;border-radius:0">
+                                <div class="notif-item">
+                                    <div class="notif-icon good"><i class="fa fa-circle-check"></i></div>
+                                    <div>
+                                        <div class="msg" data-en="Invoice #INV-2025-018 has been approved."
+                                            data-ar="تمت الموافقة على الفاتورة #INV-2025-018.">Invoice #INV-2025-018 has
+                                            been approved.</div>
+                                        <div class="time">2 hours ago</div>
+                                    </div>
+                                </div>
+                                <div class="notif-item">
+                                    <div class="notif-icon warn"><i class="fa fa-clock"></i></div>
+                                    <div>
+                                        <div class="msg" data-en="Invoice #INV-2025-017 is pending admin review."
+                                            data-ar="الفاتورة #INV-2025-017 في انتظار مراجعة الإدارة.">Invoice
+                                            #INV-2025-017 is pending admin review.</div>
+                                        <div class="time">3 days ago</div>
+                                    </div>
+                                </div>
+                                <div class="notif-item">
+                                    <div class="notif-icon info"><i class="fa fa-tag"></i></div>
+                                    <div>
+                                        <div class="msg" data-en="New wholesale prices effective from April 1."
+                                            data-ar="أسعار جملة جديدة ابتداءً من 1 أبريل.">New wholesale prices
+                                            effective from April 1.</div>
+                                        <div class="time">5 days ago</div>
+                                    </div>
+                                </div>
+                                <div class="notif-item">
+                                    <div class="notif-icon info"><i class="fa fa-boxes-stacked"></i></div>
+                                    <div>
+                                        <div class="msg" data-en="12 new Borsching products added to catalog."
+                                            data-ar="تم إضافة 12 منتجاً جديداً من بورشينج إلى الكتالوج.">12 new
+                                            Borsching products added to catalog.</div>
+                                        <div class="time">1 week ago</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CTA -->
+                        <div class="mt-16">
+                            <a href="invoice.html" class="btn btn-primary btn-full btn-lg">
+                                <i class="fa fa-plus"></i>
+                                <span data-en="Create New Invoice" data-ar="إنشاء فاتورة جديدة">Create New
+                                    Invoice</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="cartToast"
+        style="position:fixed;bottom:24px;right:24px;background:var(--success);color:white;padding:12px 20px;border-radius:var(--r-md);font-size:.85rem;font-weight:600;transform:translateY(80px);transition:transform .3s;z-index:9999">
+        ✓ <span id="cartMsg">Product added to cart</span>
+    </div>
+
+    <script>
+        let currentLang = localStorage.getItem('lang') || 'en';
+
+        function setLang(lang) {
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+            document.documentElement.lang = lang;
+            document.body.classList.toggle('lang-ar', lang === 'ar');
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+            document.getElementById('btn-ar').classList.toggle('active', lang === 'ar');
+            document.querySelectorAll('[data-en]').forEach(el => {
+                const t = el.getAttribute('data-' + lang);
+                if (t) el.innerHTML = t;
+            });
+            document.querySelectorAll('[data-placeholder-en]').forEach(el => {
+                el.placeholder = el.getAttribute('data-placeholder-' + lang) || el.placeholder;
+            });
+        }
+
+        function addToCart(sku) {
+            const toast = document.getElementById('cartToast');
+            document.getElementById('cartMsg').textContent = currentLang === 'ar' ? `تم إضافة ${sku} إلى طلبك` : `${sku} added to your order`;
+            toast.style.transform = 'translateY(0)';
+            setTimeout(() => toast.style.transform = 'translateY(80px)', 2500);
+        }
+
+        async function fetchDashboardData() {
+            try {
+                // Fetch Orders
+                const ordersRes = await fetch('http://localhost:5000/api/orders');
+                const ordersJson = await ordersRes.json();
+                if(ordersJson.success) {
+                    const orders = ordersJson.data;
+                    
+                    const tbody = document.getElementById('recentOrdersTbody');
+                    if(orders.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center">No orders found.</td></tr>`;
+                    } else {
+                        tbody.innerHTML = orders.slice(0, 4).map(o => {
+                            const dateObj = new Date(o.date);
+                            const dateStr = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                            
+                            let badgeClass = 'badge-pending';
+                            let transAr = 'معلق';
+                            let transEn = o.status;
+                            if(o.status === 'Approved') { badgeClass = 'badge-approved'; transAr = 'معتمد'; }
+                            else if(o.status === 'Completed') { badgeClass = 'badge-approved'; transAr = 'مكتمل'; }
+                            else if(o.status === 'Rejected') { badgeClass = 'badge-rejected'; transAr = 'مرفوض'; transEn = 'Rejected'; }
+    
+                            return `
+                            <tr>
+                                <td class="text-white fw-700">${o.invoiceNumber}</td>
+                                <td>${dateStr}</td>
+                                <td>${o.itemCount} <span data-en="items" data-ar="أصناف">${currentLang === 'ar' ? 'أصناف' : 'items'}</span></td>
+                                <td class="text-white fw-700">EGP ${o.totalAmount.toLocaleString()}</td>
+                                <td><span class="badge ${badgeClass}" data-en="${transEn}" data-ar="${transAr}">${currentLang === 'ar' ? transAr : transEn}</span></td>
+                                <td><a href="orders.html" class="btn btn-ghost btn-sm" data-en="View" data-ar="عرض">${currentLang === 'ar' ? 'عرض' : 'View'}</a></td>
+                            </tr>
+                            `;
+                        }).join('');
+                    }
+
+                    const totalSpend = orders.reduce((acc, curr) => acc + (curr.status !== 'Rejected' ? curr.totalAmount : 0), 0);
+                    const completedCount = orders.filter(o => o.status === 'Completed' || o.status === 'Approved').length;
+                    
+                    document.getElementById('dashboardTotalSpend').textContent = 'EGP ' + (totalSpend/1000).toFixed(1) + 'K';
+                    document.getElementById('dashboardCompletedOrders').textContent = completedCount;
+                }
+                
+                // Fetch Products
+                const productsRes = await fetch('http://localhost:5000/api/products');
+                const productsJson = await productsRes.json();
+                if(productsJson.success) {
+                    const products = productsJson.data;
+                    const tbody = document.getElementById('recentProductsTbody');
+                    if(products.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">No products found.</td></tr>`;
+                    } else {
+                        tbody.innerHTML = products.slice(0, 4).map(p => {
+                            const btnHtml = p.stock > 0 ? 
+                                `<button class="btn btn-primary btn-sm" onclick="addToCart('${p.sku}')" data-en="+ Add" data-ar="+ إضافة">${currentLang==='ar'?'+ إضافة':'+ Add'}</button>` :
+                                `<button class="btn btn-ghost btn-sm" disabled data-en="Out" data-ar="نفد">${currentLang==='ar'?'نفد':'Out'}</button>`;
+                            
+                            return `
+                            <tr>
+                                <td class="text-white" style="font-family:monospace">${p.sku}</td>
+                                <td><span data-en="${p.nameEn}" data-ar="${p.nameAr}">${currentLang === 'ar' ? p.nameAr : p.nameEn}</span></td>
+                                <td>${p.brand}</td>
+                                <td class="text-white fw-700">EGP ${p.wholesalePrice ? p.wholesalePrice.toLocaleString() : 'N/A'}</td>
+                                <td>${btnHtml}</td>
+                            </tr>
+                            `;
+                        }).join('');
+                    }
+                }
+            } catch (err) {
+                console.error("Dashboard fetch error", err);
+            }
+        }
+
+        window.addEventListener('languageChanged', (e) => {
+            fetchDashboardData();
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setLang(currentLang);
+            fetchDashboardData();
+        });
+    </script>
+<script src="../js/shared.js"></script>
+</body>
+
+</html>

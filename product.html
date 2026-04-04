@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Detail – NUTD Automotive Parts</title>
+    <link rel="icon" type="image/svg+xml" href="img/favicon.svg" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        .product-page {
+            padding-top: var(--nav-h);
+            min-height: 100vh;
+        }
+
+        .product-detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 56px;
+            align-items: start;
+            padding: 48px 0;
+        }
+
+        .product-images .main-img {
+            background: var(--dark-2);
+            border: 1px solid rgba(255, 255, 255, .07);
+            border-radius: var(--r-xl);
+            aspect-ratio: 4/3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8rem;
+            margin-bottom: 16px;
+        }
+
+        .thumbs {
+            display: flex;
+            gap: 10px;
+        }
+
+        .thumb {
+            width: 80px;
+            height: 64px;
+            background: var(--dark-3);
+            border: 1.5px solid rgba(255, 255, 255, .1);
+            border-radius: var(--r-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            cursor: pointer;
+            transition: border-color var(--t-fast);
+        }
+
+        .thumb.active,
+        .thumb:hover {
+            border-color: var(--red);
+        }
+
+        .product-info .brand-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .product-info h1 {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            color: var(--white);
+            margin-bottom: 16px;
+            line-height: 1.3;
+        }
+
+        .sku-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .sku-badge {
+            background: var(--dark-3);
+            border: 1px solid rgba(255, 255, 255, .1);
+            border-radius: var(--r-sm);
+            padding: 4px 12px;
+            font-size: .78rem;
+            font-weight: 700;
+            color: var(--gray-300);
+            font-family: monospace;
+            letter-spacing: .05em;
+        }
+
+        .availability {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: .82rem;
+            font-weight: 600;
+            color: var(--success);
+        }
+
+        .availability .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+        }
+
+        .product-desc {
+            color: var(--gray-300);
+            line-height: 1.8;
+            margin-bottom: 28px;
+            font-size: .95rem;
+        }
+
+        .specs-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 28px;
+        }
+
+        .specs-table tr {
+            border-bottom: 1px solid rgba(255, 255, 255, .05);
+        }
+
+        .specs-table tr:last-child {
+            border-bottom: none;
+        }
+
+        .specs-table td {
+            padding: 10px 0;
+            font-size: .88rem;
+        }
+
+        .specs-table td:first-child {
+            color: var(--gray-500);
+            width: 40%;
+        }
+
+        .specs-table td:last-child {
+            color: var(--white);
+            font-weight: 500;
+        }
+
+        .compat-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 28px;
+        }
+
+        .compat-tag {
+            background: var(--dark-3);
+            border: 1px solid rgba(255, 255, 255, .08);
+            padding: 5px 12px;
+            border-radius: var(--r-full);
+            font-size: .78rem;
+            color: var(--gray-300);
+        }
+
+        .action-section {
+            background: var(--dark-2);
+            border: 1px solid rgba(255, 255, 255, .07);
+            border-radius: var(--r-lg);
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .action-notice {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: .82rem;
+            color: var(--gray-500);
+            background: var(--dark-3);
+            border-radius: var(--r-md);
+            padding: 12px 16px;
+            margin-bottom: 20px;
+        }
+
+        .related-section {
+            padding: 64px 0;
+            background: var(--dark);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @media(max-width:768px) {
+            .product-detail-grid {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <a href="index.html" class="nav-logo">
+                <img src="img/logo.svg" alt="NUTD" style="height:36px" />
+                <div class="nav-logo-text"><span class="name-en">NUTD</span><span class="name-ar">نماء المتحدة</span>
+                </div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-link" data-en="Home" data-ar="الرئيسية">Home</a></li>
+                <li><a href="catalog.html" class="nav-link active" data-en="Products" data-ar="المنتجات">Products</a>
+                </li>
+                <li><a href="about.html" class="nav-link" data-en="About" data-ar="عن الشركة">About</a></li>
+            </ul>
+            <div class="nav-actions">
+                <div class="lang-toggle">
+                    <button onclick="setLang('en')" class="active" id="btn-en">EN</button>
+                    <button onclick="setLang('ar')" id="btn-ar">AR</button>
+                </div>
+                <a href="dealer/login.html" class="btn btn-primary btn-sm" data-en="Dealer Portal"
+                    data-ar="بوابة التاجر">Dealer Portal</a>
+            </div>
+            <button class="nav-hamburger" ><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="catalog.html" class="nav-link">Products</a>
+    </div>
+
+    <div class="product-page">
+        <div class="container">
+            <div class="breadcrumb" style="padding-top:24px">
+                <a href="index.html" data-en="Home" data-ar="الرئيسية">Home</a>
+                <span class="sep"><i class="fa fa-chevron-right" style="font-size:.6rem"></i></span>
+                <a href="catalog.html" data-en="Products" data-ar="المنتجات">Products</a>
+                <span class="sep"><i class="fa fa-chevron-right" style="font-size:.6rem"></i></span>
+                <span class="current" id="bc-name">Front Shock Absorber</span>
+            </div>
+
+            <div class="product-detail-grid">
+                <!-- IMAGES -->
+                <div class="product-images">
+                    <div class="main-img" id="mainImg">🔩</div>
+                    <div class="thumbs">
+                        <div class="thumb active">🔩</div>
+                        <div class="thumb">📐</div>
+                        <div class="thumb">🔧</div>
+                        <div class="thumb">📦</div>
+                    </div>
+                </div>
+
+                <!-- INFO -->
+                <div class="product-info">
+                    <div class="brand-row">
+                        <span class="product-brand-tag" style="position:static" id="p-brand">Borsching</span>
+                        <span class="brand-origin german"><i class="fa fa-flag"></i> Germany</span>
+                    </div>
+                    <h1 id="p-name">Front Shock Absorber</h1>
+                    <div class="sku-row">
+                        <span class="sku-badge" id="p-sku">BSG-4401</span>
+                        <span class="availability"><span class="dot"></span> <span data-en="In Stock" data-ar="متوفر">In
+                                Stock</span></span>
+                    </div>
+
+                    <p class="product-desc" id="p-desc"
+                        data-en="High-performance front shock absorber engineered to OEM specifications. Provides superior ride comfort and handling stability. Manufactured by Borsching Germany using advanced gas-pressure technology for lasting performance."
+                        data-ar="ماص صدمات أمامي عالي الأداء مصنوع وفق مواصفات المُصنِّع الأصلي. يوفر راحة ركوب متفوقة واستقرار في القيادة. تصنيع بورشينج ألمانيا باستخدام تقنية الغاز المضغوط المتقدمة لأداء دائم.">
+                        High-performance front shock absorber engineered to OEM specifications. Provides superior ride
+                        comfort and handling stability. Manufactured by Borsching Germany using advanced gas-pressure
+                        technology for lasting performance.
+                    </p>
+
+                    <!-- TABS -->
+                    <div class="tabs mb-24">
+                        <button class="tab-btn active" onclick="switchTab(this,'specs')" data-en="Specifications"
+                            data-ar="المواصفات">Specifications</button>
+                        <button class="tab-btn" onclick="switchTab(this,'compat')" data-en="Compatibility"
+                            data-ar="التوافق">Compatibility</button>
+                    </div>
+
+                    <div id="tab-specs" class="tab-content active">
+                        <table class="specs-table">
+                            <tr>
+                                <td data-en="Brand" data-ar="العلامة">Brand</td>
+                                <td id="sp-brand">Borsching</td>
+                            </tr>
+                            <tr>
+                                <td data-en="SKU" data-ar="الرقم">SKU</td>
+                                <td id="sp-sku">BSG-4401</td>
+                            </tr>
+                            <tr>
+                                <td data-en="Category" data-ar="الفئة">Category</td>
+                                <td id="sp-cat">Suspension</td>
+                            </tr>
+                            <tr>
+                                <td data-en="Type" data-ar="النوع">Type</td>
+                                <td data-en="Gas-Pressure Monotube" data-ar="أنبوب مفرد بضغط الغاز">Gas-Pressure
+                                    Monotube</td>
+                            </tr>
+                            <tr>
+                                <td data-en="Position" data-ar="الموضع">Position</td>
+                                <td data-en="Front Left / Front Right" data-ar="أمامي أيسر / أمامي أيمن">Front Left /
+                                    Front Right</td>
+                            </tr>
+                            <tr>
+                                <td data-en="OEM Ref" data-ar="رقم المُصنِّع">OEM Ref</td>
+                                <td>48520-02190</td>
+                            </tr>
+                            <tr>
+                                <td data-en="Warranty" data-ar="الضمان">Warranty</td>
+                                <td data-en="24 Months" data-ar="24 شهراً">24 Months</td>
+                            </tr>
+                            <tr>
+                                <td data-en="Origin" data-ar="بلد المنشأ">Origin</td>
+                                <td data-en="Germany" data-ar="ألمانيا">Germany</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div id="tab-compat" class="tab-content">
+                        <p class="text-muted mb-16" style="font-size:.85rem" data-en="Compatible vehicle models:"
+                            data-ar="نماذج السيارات المتوافقة:">Compatible vehicle models:</p>
+                        <div class="compat-tags">
+                            <span class="compat-tag">Toyota Corolla 2016–2023</span>
+                            <span class="compat-tag">Toyota Camry 2018–2023</span>
+                            <span class="compat-tag">Toyota Yaris 2019–2023</span>
+                            <span class="compat-tag">Toyota Auris 2016–2019</span>
+                            <span class="compat-tag">Lexus ES 2019–2023</span>
+                        </div>
+                    </div>
+
+                    <!-- FIND DEALER -->
+                    <div class="action-section">
+                        <div class="action-notice">
+                            <i class="fa fa-circle-info text-red"></i>
+                            <span
+                                data-en="This product is sold exclusively through our authorized dealer network. Find a dealer near you to purchase."
+                                data-ar="يُباع هذا المنتج حصريًا عبر شبكة التجار المعتمدين لدينا. ابحث عن تاجر بالقرب منك للشراء.">
+                                This product is sold exclusively through our authorized dealer network. Find a dealer
+                                near you to purchase.
+                            </span>
+                        </div>
+                        <button class="btn btn-primary btn-full btn-lg" onclick="openDealerModal()">
+                            <i class="fa fa-location-dot"></i>
+                            <span data-en="Find Nearest Dealer" data-ar="ابحث عن أقرب تاجر">Find Nearest Dealer</span>
+                        </button>
+                        <div class="mt-8" style="text-align:center">
+                            <a href="dealer/login.html" style="font-size:.82rem;color:var(--gray-500)"
+                                data-en="Are you a dealer? Login to order wholesale →"
+                                data-ar="هل أنت تاجر؟ سجل دخول لطلب بالجملة ←">
+                                Are you a dealer? Login to order wholesale →
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-8">
+                        <button class="btn btn-ghost btn-sm flex-1" onclick="shareProduct()">
+                            <i class="fa fa-share-nodes"></i> <span data-en="Share" data-ar="مشاركة">Share</span>
+                        </button>
+                        <button class="btn btn-ghost btn-sm flex-1">
+                            <i class="fa fa-print"></i> <span data-en="Print Spec" data-ar="طباعة">Print Spec</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RELATED PRODUCTS -->
+        <div class="related-section">
+            <div class="container">
+                <div class="section-label mb-16" data-en="Related Products" data-ar="منتجات ذات صلة">Related Products
+                </div>
+                <h3 class="text-white mb-24" data-en="You May Also Need" data-ar="قد تحتاج أيضاً">You May Also Need</h3>
+                <div class="product-grid" id="relatedGrid"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DEALER MODAL -->
+    <div class="modal-overlay" id="dealerModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 data-en="Find Nearest Dealer" data-ar="اعثر على أقرب تاجر">Find Nearest Dealer</h3>
+                <button class="modal-close" onclick="closeDealerModal()"><i class="fa fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted mb-16" style="font-size:.85rem" data-en="Looking for: " data-ar="تبحث عن: ">Looking
+                    for: <strong id="modal-product-name" class="text-white">Front Shock Absorber (BSG-4401)</strong></p>
+                <div class="d-flex gap-8 mb-16">
+                    <input type="text" class="form-control flex-1" placeholder="Search city or area…"
+                        data-placeholder-en="Search city…" data-placeholder-ar="ابحث عن مدينة…" />
+                    <button class="btn btn-primary" onclick="detectLocation()"><i
+                            class="fa fa-location-arrow"></i></button>
+                </div>
+                <div class="map-placeholder mb-16"><span class="map-icon">🗺️</span><span
+                        data-en="Click to detect location" data-ar="انقر للكشف عن الموقع">Click to detect
+                        location</span></div>
+                <div class="dealer-list">
+                    <div class="dealer-card">
+                        <div class="dealer-card-info">
+                            <div class="dealer-name" data-en="Al-Nour Auto Parts" data-ar="النور لقطع السيارات">Al-Nour
+                                Auto Parts</div>
+                            <div class="dealer-addr" data-en="Nasr City, Cairo" data-ar="مدينة نصر، القاهرة">Nasr City,
+                                Cairo</div>
+                            <div class="dealer-phone">010 XXXX XXXX</div>
+                        </div>
+                        <div><span class="dealer-dist">1.2 km</span>
+                            <div class="mt-8"><a href="#" class="btn btn-primary btn-sm" data-en="Call"
+                                    data-ar="اتصل">Call</a></div>
+                        </div>
+                    </div>
+                    <div class="dealer-card">
+                        <div class="dealer-card-info">
+                            <div class="dealer-name" data-en="Speed Auto" data-ar="سبيد أوتو">Speed Auto</div>
+                            <div class="dealer-addr" data-en="Heliopolis" data-ar="مصر الجديدة">Heliopolis</div>
+                            <div class="dealer-phone">011 XXXX XXXX</div>
+                        </div>
+                        <div><span class="dealer-dist">3.8 km</span>
+                            <div class="mt-8"><a href="#" class="btn btn-primary btn-sm" data-en="Call"
+                                    data-ar="اتصل">Call</a></div>
+                        </div>
+                    </div>
+                    <div class="dealer-card">
+                        <div class="dealer-card-info">
+                            <div class="dealer-name" data-en="Gulf Parts Center" data-ar="مركز الخليج">Gulf Parts Center
+                            </div>
+                            <div class="dealer-addr" data-en="Downtown Cairo" data-ar="وسط البلد">Downtown Cairo</div>
+                            <div class="dealer-phone">012 XXXX XXXX</div>
+                        </div>
+                        <div><span class="dealer-dist">5.1 km</span>
+                            <div class="mt-8"><a href="#" class="btn btn-primary btn-sm" data-en="Call"
+                                    data-ar="اتصل">Call</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentLang = localStorage.getItem('lang') || 'en';
+        const related = [
+            { id: 4, sku: 'BSG-8830', name: 'Brake Disc Set', nameAr: 'طقم أقراص الفرامل', icon: '🔴', brand: 'Borsching' },
+            { id: 7, sku: 'BSG-2210', name: 'Tie Rod End Assembly', nameAr: 'مجموعة طرف الجهاز', icon: '🔩', brand: 'Borsching' },
+            { id: 10, sku: 'BSG-6640', name: 'Rear Shock Absorber', nameAr: 'ماص الصدمات الخلفي', icon: '🔩', brand: 'Borsching' },
+        ];
+
+        function setLang(lang) {
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+            document.documentElement.lang = lang;
+            document.body.classList.toggle('lang-ar', lang === 'ar');
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+            document.getElementById('btn-ar').classList.toggle('active', lang === 'ar');
+            document.querySelectorAll('[data-en]').forEach(el => {
+                const t = el.getAttribute('data-' + lang);
+                if (t) el.innerHTML = t;
+            });
+            document.querySelectorAll('[data-placeholder-en]').forEach(el => {
+                el.placeholder = el.getAttribute('data-placeholder-' + lang) || el.placeholder;
+            });
+        }
+
+        function switchTab(btn, id) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('tab-' + id).classList.add('active');
+        }
+
+        function openDealerModal() { document.getElementById('dealerModal').classList.add('open'); }
+        function closeDealerModal() { document.getElementById('dealerModal').classList.remove('open'); }
+        document.getElementById('dealerModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeDealerModal(); });
+
+        function detectLocation() { }
+        function toggleMobileMenu() { document.getElementById('mobileMenu').classList.toggle('open'); }
+        function shareProduct() { if (navigator.share) navigator.share({ title: document.title, url: location.href }); }
+
+        window.addEventListener('scroll', () => { document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50); });
+
+        // Render related
+        document.getElementById('relatedGrid').innerHTML = related.map(p => `
+    <div class="product-card">
+      <div class="product-card-img"><div style="font-size:3.5rem;user-select:none;color:var(--dark-4)">${p.icon}</div><span class="product-brand-tag">${p.brand}</span></div>
+      <div class="product-card-body"><div class="product-sku">${p.sku}</div><h4>${currentLang === 'ar' ? p.nameAr : p.name}</h4></div>
+      <div class="product-card-footer">
+        <a href="product.html?id=${p.id}" class="btn btn-ghost btn-sm" data-en="Details" data-ar="التفاصيل">Details</a>
+        <button class="btn btn-primary btn-sm" onclick="openDealerModal()" data-en="Find Dealer" data-ar="تاجر">Find Dealer</button>
+      </div>
+    </div>
+  `).join('');
+
+        setLang(currentLang);
+    </script>
+<script src="js/shared.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Our Brand Agencies – NUTD Automotive</title>
+    <meta name="description"
+        content="NUTD is the exclusive regional distributor for Borsehung (Germany), VIKA and KDD (China). Explore our three international automotive parts brands." />
+    <link rel="icon" type="image/svg+xml" href="img/favicon.svg" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        /* ── Page wrapper ── */
+        .brands-page {
+            padding-top: var(--nav-h);
+        }
+
+        /* ── Hero ── */
+        .brands-hero {
+            padding: 72px 0 60px;
+            border-bottom: 1px solid rgba(255, 255, 255, .06);
+            position: relative;
+            overflow: hidden;
+            background: var(--dark);
+        }
+
+        .brands-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 60% 80% at 20% 50%, rgba(232, 35, 26, .15) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 70% at 80% 30%, rgba(26, 58, 107, .2) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .brands-hero-inner {
+            position: relative;
+            z-index: 1;
+        }
+
+        .brands-hero h1 {
+            font-size: 2.6rem;
+            color: var(--white);
+            margin-bottom: 12px;
+            line-height: 1.2;
+        }
+
+        .brands-hero h1 span {
+            color: var(--red);
+        }
+
+        .hero-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(232, 35, 26, .1);
+            border: 1px solid rgba(232, 35, 26, .2);
+            border-radius: var(--r-full);
+            padding: 5px 14px;
+            font-size: .75rem;
+            font-weight: 700;
+            color: var(--red);
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            margin-bottom: 18px;
+        }
+
+        .hero-trust-bar {
+            display: flex;
+            gap: 28px;
+            margin-top: 28px;
+            flex-wrap: wrap;
+        }
+
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: .82rem;
+            color: var(--gray-400);
+        }
+
+        .trust-item i {
+            color: var(--red);
+        }
+
+        /* ── National flags accent strip ── */
+        .flag-strip {
+            display: flex;
+            gap: 12px;
+            margin-top: 22px;
+            flex-wrap: wrap;
+        }
+
+        .flag-tag {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, .05);
+            border: 1px solid rgba(255, 255, 255, .08);
+            border-radius: var(--r-full);
+            padding: 6px 14px;
+            font-size: .8rem;
+            color: var(--gray-300);
+        }
+
+        /* ── Brand cards row ── */
+        .brands-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .brand-card {
+            background: var(--dark-2);
+            border: 1px solid rgba(255, 255, 255, .08);
+            border-radius: var(--r-xl);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform .3s, box-shadow .3s, border-color .3s;
+            text-decoration: none;
+        }
+
+        .brand-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 48px rgba(0, 0, 0, .35);
+        }
+
+        /* Borsehung — blue */
+        .brand-card.borsehung {
+            --bc: #1a3a6b;
+            --bc-light: rgba(26, 58, 107, .15);
+        }
+
+        .brand-card.borsehung:hover {
+            border-color: rgba(26, 58, 107, .4);
+            box-shadow: 0 20px 48px rgba(26, 58, 107, .2);
+        }
+
+        /* VIKA — orange/amber */
+        .brand-card.vika {
+            --bc: #c27c1a;
+            --bc-light: rgba(194, 124, 26, .12);
+        }
+
+        .brand-card.vika:hover {
+            border-color: rgba(194, 124, 26, .4);
+            box-shadow: 0 20px 48px rgba(194, 124, 26, .15);
+        }
+
+        /* KDD — teal */
+        .brand-card.kdd {
+            --bc: #0f766e;
+            --bc-light: rgba(15, 118, 110, .15);
+        }
+
+        .brand-card.kdd:hover {
+            border-color: rgba(15, 118, 110, .4);
+            box-shadow: 0 20px 48px rgba(15, 118, 110, .15);
+        }
+
+        /* Card header strip */
+        .bc-header {
+            padding: 32px 28px 24px;
+            background: var(--bc-light);
+            border-bottom: 1px solid rgba(255, 255, 255, .06);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bc-header::after {
+            content: '';
+            position: absolute;
+            bottom: -40px;
+            right: -40px;
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: var(--bc);
+            opacity: .07;
+        }
+
+        .bc-badge {
+            width: 60px;
+            height: 60px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .9rem;
+            font-weight: 900;
+            color: #fff;
+            background: var(--bc);
+            margin-bottom: 14px;
+            letter-spacing: -.5px;
+        }
+
+        .bc-name {
+            color: var(--white);
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .bc-origin {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: .78rem;
+            color: var(--gray-500);
+            margin-bottom: 10px;
+        }
+
+        .bc-exclusive {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(232, 35, 26, .1);
+            border: 1px solid rgba(232, 35, 26, .2);
+            border-radius: var(--r-full);
+            padding: 3px 10px;
+            font-size: .7rem;
+            font-weight: 700;
+            color: var(--red);
+            text-transform: uppercase;
+            letter-spacing: .04em;
+        }
+
+        /* Card body */
+        .bc-body {
+            padding: 24px 28px;
+            flex: 1;
+        }
+
+        .bc-desc {
+            font-size: .85rem;
+            color: var(--gray-400);
+            line-height: 1.65;
+            margin-bottom: 18px;
+        }
+
+        .bc-cats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+
+        .bc-cat {
+            background: rgba(255, 255, 255, .05);
+            border: 1px solid rgba(255, 255, 255, .07);
+            border-radius: var(--r-sm);
+            padding: 4px 10px;
+            font-size: .73rem;
+            color: var(--gray-400);
+        }
+
+        .bc-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, .06);
+        }
+
+        .bc-stat {
+            text-align: center;
+        }
+
+        .bc-stat .sv {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--white);
+        }
+
+        .bc-stat .sl {
+            font-size: .67rem;
+            color: var(--gray-600);
+            text-transform: uppercase;
+            letter-spacing: .03em;
+            margin-top: 2px;
+        }
+
+        /* Card footer */
+        .bc-footer {
+            padding: 16px 28px;
+            border-top: 1px solid rgba(255, 255, 255, .06);
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .bc-link {
+            font-size: .8rem;
+            font-weight: 700;
+            color: var(--red);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: gap .2s;
+        }
+
+        .bc-link:hover {
+            gap: 10px;
+        }
+
+        /* ── Comparison table ── */
+        .compare-table-wrap {
+            overflow-x: auto;
+        }
+
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .85rem;
+        }
+
+        .compare-table th {
+            padding: 12px 16px;
+            font-size: .72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            color: var(--gray-500);
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+            text-align: left;
+        }
+
+        .compare-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, .05);
+            color: var(--gray-300);
+            vertical-align: middle;
+        }
+
+        .compare-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .compare-table td:first-child {
+            color: var(--gray-500);
+            font-size: .8rem;
+        }
+
+        .compare-table .brand-col {
+            color: var(--white);
+            font-weight: 700;
+        }
+
+        .ct-check {
+            color: #22c55e;
+        }
+
+        .ct-x {
+            color: #ef4444;
+        }
+
+        .ct-center {
+            text-align: center;
+        }
+
+        body.lang-ar .compare-table th,
+        body.lang-ar .compare-table td {
+            text-align: right;
+        }
+
+        /* ── Why choose NUTD ── */
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .why-card {
+            border-radius: var(--r-xl);
+            padding: 28px 22px;
+            text-align: center;
+            transition: all var(--t-normal);
+        }
+        .why-card:hover {
+            box-shadow: 0 16px 40px rgba(232, 35, 26, 0.25), inset 0 1px 0 rgba(255,255,255,0.08);
+            border-color: rgba(232, 35, 26, 0.3);
+            transform: translateY(-6px);
+        }
+
+        .why-card .wi {
+            font-size: 2rem;
+            margin-bottom: 14px;
+        }
+
+        .why-card h4 {
+            color: var(--white);
+            margin-bottom: 8px;
+            font-size: .95rem;
+        }
+
+        .why-card p {
+            color: var(--gray-500);
+            font-size: .8rem;
+            line-height: 1.6;
+        }
+
+        /* ── CTA banner ── */
+        .cta-banner {
+            background: linear-gradient(135deg, rgba(232, 35, 26, .12) 0%, rgba(17, 17, 22, .98) 100%);
+            border: 1px solid rgba(232, 35, 26, .18);
+            border-radius: var(--r-xl);
+            padding: 52px 40px;
+            text-align: center;
+        }
+
+        .cta-banner h2 {
+            color: var(--white);
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .cta-banner p {
+            color: var(--gray-400);
+            max-width: 520px;
+            margin: 0 auto 28px;
+            font-size: .9rem;
+            line-height: 1.65;
+        }
+
+        .cta-actions {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* ── Responsive ── */
+        @media(max-width:900px) {
+            .brands-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .why-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media(max-width:640px) {
+            .why-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .brands-hero h1 {
+                font-size: 1.8rem;
+            }
+        }
+
+        body.lang-ar .bc-footer {
+            flex-direction: row-reverse;
+        }
+
+        body.lang-ar .bc-link {
+            flex-direction: row-reverse;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <a href="index.html" class="nav-logo">
+                <img src="img/logo.svg" alt="NUTD" style="height:36px" />
+                <div class="nav-logo-text"><span class="name-en">NUTD</span><span class="name-ar">نماء المتحدة</span>
+                </div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-link" data-en="Home" data-ar="الرئيسية">Home</a></li>
+                <li><a href="catalog.html" class="nav-link" data-en="Products" data-ar="المنتجات">Products</a></li>
+                <li><a href="brands.html" class="nav-link active" data-en="Brands" data-ar="العلامات">Brands</a></li>
+                <li><a href="about.html" class="nav-link" data-en="About" data-ar="عن الشركة">About</a></li>
+                <li><a href="media.html" class="nav-link" data-en="Media Center" data-ar="المركز الإعلامي">Media Center</a></li>
+                <li><a href="contact.html" class="nav-link" data-en="Contact" data-ar="تواصل">Contact</a></li>
+            </ul>
+            <div class="nav-actions">
+                <div class="lang-toggle">
+                    <button onclick="setLang('en')" class="active" id="btn-en">EN</button>
+                    <button onclick="setLang('ar')" id="btn-ar">AR</button>
+                </div>
+                <a href="dealer/login.html" class="btn btn-primary btn-sm" data-en="Dealer Portal"
+                    data-ar="بوابة التاجر">Dealer Portal</a>
+            </div>
+            <button class="nav-hamburger" ><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="index.html" class="nav-link" data-en="Home" data-ar="الرئيسية">Home</a>
+        <a href="catalog.html" class="nav-link" data-en="Products" data-ar="المنتجات">Products</a>
+        <a href="brands.html" class="nav-link active" data-en="Brands" data-ar="العلامات">Brands</a>
+        <a href="warranty.html" class="nav-link" data-en="Warranty" data-ar="الضمان">Warranty</a>
+        <a href="about.html" class="nav-link" data-en="About" data-ar="عن الشركة">About</a>
+    </div>
+
+    <div class="brands-page">
+
+        <!-- HERO -->
+        <div class="brands-hero">
+            <div class="container brands-hero-inner">
+                <div class="breadcrumb">
+                    <a href="index.html" data-en="Home" data-ar="الرئيسية">Home</a>
+                    <span class="sep"><i class="fa fa-chevron-right" style="font-size:.6rem"></i></span>
+                    <span class="current" data-en="Our Brands" data-ar="علاماتنا">Our Brands</span>
+                </div>
+
+                <div class="hero-tag"><i class="fa fa-certificate"></i> <span data-en="Exclusive Regional Distribution"
+                        data-ar="التوزيع الإقليمي الحصري">Exclusive Regional Distribution</span></div>
+                <h1 data-en="3 International Brands.<br><span>One Trusted Partner.</span>"
+                    data-ar="3 علامات عالمية.<br><span>شريك واحد موثوق.</span>">3 International Brands.<br><span>One
+                        Trusted Partner.</span></h1>
+                <p class="text-muted" style="max-width:580px;margin-top:12px;font-size:.95rem;line-height:1.7"
+                    data-en="NUTD holds exclusive distribution rights for three internationally certified automotive parts brands — bringing German engineering and Chinese precision directly to the regional market."
+                    data-ar="تمتلك نماء المتحدة حقوق التوزيع الحصري لثلاث علامات تجارية عالمية معتمدة لقطع غيار السيارات — تجلب الهندسة الألمانية والدقة الصينية مباشرة إلى السوق الإقليمية.">
+                    NUTD holds exclusive distribution rights for three internationally certified automotive parts brands
+                    — bringing German engineering and Chinese precision directly to the regional market.</p>
+
+                <div class="flag-strip">
+                    <div class="flag-tag">🇩🇪 <span data-en="Germany — Borsehung" data-ar="ألمانيا — بورسيهونج">Germany
+                            — Borsehung</span></div>
+                    <div class="flag-tag">🇨🇳 <span data-en="China — VIKA / Tantivy"
+                            data-ar="الصين — VIKA / Tantivy">China — VIKA / Tantivy</span></div>
+                    <div class="flag-tag">🇨🇳 <span data-en="China — KDD" data-ar="الصين — KDD">China — KDD</span>
+                    </div>
+                </div>
+
+                <div class="hero-trust-bar">
+                    <div class="trust-item"><i class="fa fa-shield-halved"></i><span data-en="3 Exclusive Agencies"
+                            data-ar="3 وكالات حصرية">3 Exclusive Agencies</span></div>
+                    <div class="trust-item"><i class="fa fa-star"></i><span data-en="OE-Quality Standards"
+                            data-ar="معايير جودة OE">OE-Quality Standards</span></div>
+                    <div class="trust-item"><i class="fa fa-globe"></i><span data-en="Globally Certified"
+                            data-ar="معتمد عالمياً">Globally Certified</span></div>
+                    <div class="trust-item"><i class="fa fa-truck-fast"></i><span data-en="Regional Distribution"
+                            data-ar="توزيع إقليمي">Regional Distribution</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BRAND CARDS -->
+        <section class="section">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-label" data-en="Our Portfolio" data-ar="محفظتنا">Our Portfolio</div>
+                    <h2 data-en="Exclusive Brand Agencies" data-ar="وكالاتنا الحصرية">Exclusive Brand Agencies</h2>
+                    <p data-en="Click any brand to explore their full product range, certifications, and compatibility."
+                        data-ar="انقر على أي علامة لاستعراض نطاق منتجاتها الكامل والشهادات والتوافق.">Click any brand to
+                        explore their full product range, certifications, and compatibility.</p>
+                </div>
+
+                <div class="brands-grid">
+
+                    <!-- BORSEHUNG -->
+                    <a href="brands/borsehung.html" class="brand-card glass-panel borsehung">
+                        <div class="bc-header">
+                            <div class="bc-badge">BSG</div>
+                            <div class="bc-name">Borsehung</div>
+                            <div class="bc-origin">🇩🇪 <span data-en="Germany — Premium European Parts"
+                                    data-ar="ألمانيا — قطع أوروبية متميزة">Germany — Premium European Parts</span></div>
+                            <div class="bc-exclusive"><i class="fa fa-certificate"></i> <span data-en="Exclusive Agency"
+                                    data-ar="وكيل حصري">Exclusive Agency</span></div>
+                        </div>
+                        <div class="bc-body">
+                            <p class="bc-desc" id="dyn_brand_borsehung"
+                                data-en="A global leader in OE-grade automotive parts. Borsehung engineers components specifically for Volkswagen Group, Mercedes-Benz, and BMW — with full TecDoc certification and digital catalogue support."
+                                data-ar="رائد عالمي في قطع غيار السيارات بمستوى OE. تقوم بورسيهونج بهندسة المكونات خصيصاً لمجموعة فولكسفاغن وميرسيدس بنز وبي إم دبليو — مع شهادة TecDoc الكاملة ودعم الكتالوج الرقمي.">
+                                A global leader in OE-grade automotive parts. Borsehung engineers components
+                                specifically for Volkswagen Group, Mercedes-Benz, and BMW — with full TecDoc
+                                certification and digital catalogue support.</p>
+                            <div class="bc-cats">
+                                <span class="bc-cat" data-en="Suspension" data-ar="نظام التعليق">Suspension</span>
+                                <span class="bc-cat" data-en="Braking" data-ar="الفرامل">Braking</span>
+                                <span class="bc-cat" data-en="Steering" data-ar="التوجيه">Steering</span>
+                                <span class="bc-cat" data-en="Engine Parts" data-ar="قطع المحرك">Engine Parts</span>
+                                <span class="bc-cat" data-en="Electrical" data-ar="الكهربائية">Electrical</span>
+                            </div>
+                            <div class="bc-stats">
+                                <div class="bc-stat">
+                                    <div class="sv">OE+</div>
+                                    <div class="sl" data-en="Quality" data-ar="الجودة">Quality</div>
+                                </div>
+                                <div class="bc-stat">
+                                    <div class="sv">24mo</div>
+                                    <div class="sl" data-en="Warranty" data-ar="الضمان">Warranty</div>
+                                </div>
+                                <div class="bc-stat">
+                                    <div class="sv">TecDoc</div>
+                                    <div class="sl" data-en="Certified" data-ar="معتمد">Certified</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bc-footer">
+                            <span class="bc-link"><span data-en="Explore Borsehung" data-ar="استعراض بورسيهونج">Explore
+                                    Borsehung</span> <i class="fa fa-arrow-right"></i></span>
+                            <span
+                                style="margin-left:auto;font-size:.72rem;color:var(--gray-600)">www.borsehung.de</span>
+                        </div>
+                    </a>
+
+                    <!-- VIKA -->
+                    <a href="brands/vika.html" class="brand-card glass-panel vika">
+                        <div class="bc-header" style="--bc:#c27c1a;--bc-light:rgba(194,124,26,.12)">
+                            <div class="bc-badge" style="background:#c27c1a">VKA</div>
+                            <div class="bc-name">VIKA / Tantivy</div>
+                            <div class="bc-origin">🇨🇳 <span data-en="China — High-Quality Aftermarket"
+                                    data-ar="الصين — قطع بديلة عالية الجودة">China — High-Quality Aftermarket</span>
+                            </div>
+                            <div class="bc-exclusive"><i class="fa fa-certificate"></i> <span data-en="Exclusive Agency"
+                                    data-ar="وكيل حصري">Exclusive Agency</span></div>
+                        </div>
+                        <div class="bc-body">
+                            <p class="bc-desc" id="dyn_brand_vika"
+                                data-en="VIKA (distributed via Tantivy) delivers a comprehensive range of aftermarket parts designed to meet or exceed OEM standards — offering wide cross-car compatibility with competitive pricing and strong quality assurance."
+                                data-ar="تقدم VIKA (موزعة عبر Tantivy) مجموعة شاملة من قطع الغيار البديلة المصممة لتلبية أو تجاوز معايير المصنع الأصلي — وتوفر توافقاً واسعاً عبر السيارات بأسعار تنافسية وضمان جودة قوي.">
+                                VIKA (distributed via Tantivy) delivers a comprehensive range of aftermarket parts
+                                designed to meet or exceed OEM standards — offering wide cross-car compatibility with
+                                competitive pricing and strong quality assurance.</p>
+                            <div class="bc-cats">
+                                <span class="bc-cat" data-en="Body Parts" data-ar="قطع الهيكل">Body Parts</span>
+                                <span class="bc-cat" data-en="Lighting" data-ar="الإضاءة">Lighting</span>
+                                <span class="bc-cat" data-en="Cooling" data-ar="التبريد">Cooling</span>
+                                <span class="bc-cat" data-en="Electrical" data-ar="الكهربائية">Electrical</span>
+                                <span class="bc-cat" data-en="Engine" data-ar="المحرك">Engine</span>
+                            </div>
+                            <div class="bc-stats">
+                                <div class="bc-stat">
+                                    <div class="sv">ISO</div>
+                                    <div class="sl" data-en="Certified" data-ar="معتمد">Certified</div>
+                                </div>
+                                <div class="bc-stat">
+                                    <div class="sv">12mo</div>
+                                    <div class="sl" data-en="Warranty" data-ar="الضمان">Warranty</div>
+                                </div>
+                                <div class="bc-stat">
+                                    <div class="sv">10K+</div>
+                                    <div class="sl" data-en="SKUs" data-ar="رقم قطعة">SKUs</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bc-footer">
+                            <span class="bc-link"><span data-en="Explore VIKA" data-ar="استعراض VIKA">Explore
+                                    VIKA</span> <i class="fa fa-arrow-right"></i></span>
+                            <span style="margin-left:auto;font-size:.72rem;color:var(--gray-600)">www.tantivy.com</span>
+                        </div>
+                    </a>
+
+                    <!-- KDD -->
+                    <a href="brands/kdd.html" class="brand-card glass-panel kdd">
+                        <div class="bc-header" style="--bc:#0f766e;--bc-light:rgba(15,118,110,.12)">
+                            <div class="bc-badge" style="background:#0f766e">KDD</div>
+                            <div class="bc-name">KDD</div>
+                            <div class="bc-origin">🇨🇳 <span data-en="China — Professional Auto Parts"
+                                    data-ar="الصين — قطع غيار احترافية">China — Professional Auto Parts</span></div>
+                            <div class="bc-exclusive"><i class="fa fa-certificate"></i> <span data-en="Exclusive Agency"
+                                    data-ar="وكيل حصري">Exclusive Agency</span></div>
+                        </div>
+                        <div class="bc-body">
+                            <p class="bc-desc" id="dyn_brand_kdd"
+                                data-en="KDD is a professional automotive parts manufacturer with a broad catalogue covering Japanese, Korean, and American vehicles. Known for robust filtration products and engine components, KDD delivers reliability at every price point."
+                                data-ar="KDD هي شركة تصنيع قطع غيار سيارات احترافية مع كتالوج واسع يغطي سيارات يابانية وكورية وأمريكية. تشتهر بمنتجات التصفية القوية ومكونات المحرك، وتقدم KDD موثوقية في كل نقطة سعر.">
+                                KDD is a professional automotive parts manufacturer with a broad catalogue covering
+                                Japanese, Korean, and American vehicles. Known for robust filtration products and engine
+                                components, KDD delivers reliability at every price point.</p>
+                            <div class="bc-cats">
+                                <span class="bc-cat" data-en="Filters" data-ar="الفلاتر">Filters</span>
+                                <span class="bc-cat" data-en="Engine" data-ar="المحرك">Engine</span>
+                                <span class="bc-cat" data-en="Cooling" data-ar="التبريد">Cooling</span>
+                                <span class="bc-cat" data-en="Suspension" data-ar="التعليق">Suspension</span>
+                                <span class="bc-cat" data-en="Braking" data-ar="الفرامل">Braking</span>
+                            </div>
+                            <div class="bc-stats">
+                                <div class="bc-stat">
+                                    <div class="sv">IATF</div>
+                                    <div class="sl" data-en="Certified" data-ar="معتمد">Certified</div>
+                                </div>
+                                <div class="bc-stat">
+                                    <div class="sv">12mo</div>
+                                    <div class="sl" data-en="Warranty" data-ar="الضمان">Warranty</div>
+                                </div>
+                                <div class="bc-stat">
+                                    <div class="sv">5K+</div>
+                                    <div class="sl" data-en="SKUs" data-ar="رقم قطعة">SKUs</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bc-footer">
+                            <span class="bc-link"><span data-en="Explore KDD" data-ar="استعراض KDD">Explore KDD</span>
+                                <i class="fa fa-arrow-right"></i></span>
+                            <span style="margin-left:auto;font-size:.72rem;color:var(--gray-600)">www.autokdd.com</span>
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- COMPARISON TABLE -->
+        <section class="section section-alt">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-label" data-en="Side by Side" data-ar="مقارنة مباشرة">Side by Side</div>
+                    <h2 data-en="Brand Comparison" data-ar="مقارنة العلامات">Brand Comparison</h2>
+                    <p data-en="All three brands are exclusively distributed by NUTD in the region."
+                        data-ar="العلامات الثلاثة موزعة حصرياً من قِبَل نماء المتحدة في المنطقة.">All three brands are
+                        exclusively distributed by NUTD in the region.</p>
+                </div>
+
+                <div class="compare-table-wrap">
+                    <table class="compare-table">
+                        <thead>
+                            <tr>
+                                <th data-en="Feature" data-ar="الميزة">Feature</th>
+                                <th>Borsehung 🇩🇪</th>
+                                <th>VIKA 🇨🇳</th>
+                                <th>KDD 🇨🇳</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td data-en="Country of Origin" data-ar="بلد المنشأ">Country of Origin</td>
+                                <td class="brand-col">Germany</td>
+                                <td class="brand-col">China</td>
+                                <td class="brand-col">China</td>
+                            </tr>
+                            <tr>
+                                <td data-en="Quality Standard" data-ar="معيار الجودة">Quality Standard</td>
+                                <td>OE-Grade / TecDoc</td>
+                                <td>ISO Certified</td>
+                                <td>IATF 16949</td>
+                            </tr>
+                            <tr>
+                                <td data-en="Primary Vehicle Coverage" data-ar="التغطية الرئيسية للسيارات">Primary
+                                    Vehicle Coverage</td>
+                                <td>VW, BMW, Mercedes</td>
+                                <td>Multi-brand (EU + Asian)</td>
+                                <td>Toyota, Hyundai, Kia, Nissan</td>
+                            </tr>
+                            <tr>
+                                <td data-en="Warranty Period" data-ar="فترة الضمان">Warranty Period</td>
+                                <td class="ct-center"><strong style="color:#22c55e">24 months</strong></td>
+                                <td class="ct-center">12 months</td>
+                                <td class="ct-center">12 months</td>
+                            </tr>
+                            <tr>
+                                <td data-en="TecDoc Catalogue" data-ar="كتالوج TecDoc">TecDoc Catalogue</td>
+                                <td class="ct-center ct-check"><i class="fa fa-circle-check"></i></td>
+                                <td class="ct-center" style="color:var(--gray-600)">Partial</td>
+                                <td class="ct-center" style="color:var(--gray-600)">—</td>
+                            </tr>
+                            <tr>
+                                <td data-en="Filtration Products" data-ar="منتجات الفلترة">Filtration Products</td>
+                                <td class="ct-center ct-check"><i class="fa fa-circle-check"></i></td>
+                                <td class="ct-center ct-check"><i class="fa fa-circle-check"></i></td>
+                                <td class="ct-center ct-check" style="color:#22c55e;font-weight:700"><i
+                                        class="fa fa-circle-check"></i> Primary</td>
+                            </tr>
+                            <tr>
+                                <td data-en="Body &amp; Lighting Parts" data-ar="قطع الهيكل والإضاءة">Body &amp;
+                                    Lighting Parts</td>
+                                <td class="ct-center" style="color:var(--gray-600)">—</td>
+                                <td class="ct-center ct-check"><i class="fa fa-circle-check"></i></td>
+                                <td class="ct-center" style="color:var(--gray-600)">—</td>
+                            </tr>
+                            <tr>
+                                <td data-en="Price Point" data-ar="نقطة السعر">Price Point</td>
+                                <td data-en="Premium" data-ar="متميز">Premium</td>
+                                <td data-en="Mid-Range" data-ar="متوسط">Mid-Range</td>
+                                <td data-en="Value / Competitive" data-ar="تنافسي">Value / Competitive</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- WHY NUTD -->
+        <section class="section">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-label" data-en="Our Advantage" data-ar="ميزتنا">Our Advantage</div>
+                    <h2 data-en="Why Source From NUTD?" data-ar="لماذا تشتري من نماء المتحدة؟">Why Source From NUTD?
+                    </h2>
+                </div>
+                <div class="why-grid">
+                    <div class="why-card glass-panel">
+                        <div class="wi">🏆</div>
+                        <h4 data-en="100% Authentic Parts" data-ar="قطع 100% أصلية">100% Authentic Parts</h4>
+                        <p data-en="As the official exclusive distributor, every part comes directly from manufacturer — zero counterfeit risk."
+                            data-ar="بصفتنا الموزع الحصري الرسمي، كل قطعة تأتي مباشرة من الشركة المصنعة — بدون أي مخاطر للتزوير.">
+                            As the official exclusive distributor, every part comes directly from manufacturer — zero
+                            counterfeit risk.</p>
+                    </div>
+                    <div class="why-card glass-panel">
+                        <div class="wi">📜</div>
+                        <h4 data-en="Official Certificates" data-ar="شهادات رسمية">Official Certificates</h4>
+                        <p data-en="Full certificate of authenticity, warranty documentation, and conformity declarations available for every order."
+                            data-ar="شهادة أصالة كاملة ووثائق الضمان وإعلانات المطابقة متاحة لكل طلب.">Full certificate
+                            of authenticity, warranty documentation, and conformity declarations available for every
+                            order.</p>
+                    </div>
+                    <div class="why-card glass-panel">
+                        <div class="wi">⚡</div>
+                        <h4 data-en="Fast Regional Fulfillment" data-ar="توصيل إقليمي سريع">Fast Regional Fulfillment
+                        </h4>
+                        <p data-en="Local warehousing and established dealer network means faster delivery times compared to direct imports."
+                            data-ar="التخزين المحلي وشبكة التجار الراسخة تعني أوقات تسليم أسرع مقارنة بالاستيراد المباشر.">
+                            Local warehousing and established dealer network means faster delivery times compared to
+                            direct imports.</p>
+                    </div>
+                    <div class="why-card glass-panel">
+                        <div class="wi">🛡️</div>
+                        <h4 data-en="Backed Warranty Claims" data-ar="مطالبات ضمان مدعومة">Backed Warranty Claims</h4>
+                        <p data-en="All parts include NUTD-backed warranty. Register online and claim through any authorized dealer in the region."
+                            data-ar="جميع القطع تشمل ضمان NUTD. سجّل عبر الإنترنت وتقدم بالمطالبة من خلال أي تاجر معتمد في المنطقة.">
+                            All parts include NUTD-backed warranty. Register online and claim through any authorized
+                            dealer in the region.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="section section-alt">
+            <div class="container">
+                <div class="cta-banner glass-panel">
+                    <h2 data-en="Ready to Stock These Brands?" data-ar="هل أنت مستعد لتخزين هذه العلامات؟">Ready to
+                        Stock These Brands?</h2>
+                    <p data-en="Become an authorized NUTD dealer and gain access to wholesale pricing, full product catalogue, and exclusive distribution benefits for all three brands."
+                        data-ar="كن تاجراً معتمداً لنماء المتحدة واحصل على أسعار الجملة والكتالوج الكامل للمنتجات وفوائد التوزيع الحصري للعلامات الثلاثة.">
+                        Become an authorized NUTD dealer and gain access to wholesale pricing, full product catalogue,
+                        and exclusive distribution benefits for all three brands.</p>
+                    <div class="cta-actions">
+                        <a href="catalog.html" class="btn btn-primary btn-lg"><i class="fa fa-boxes-stacked"></i> <span
+                                data-en="Browse Full Catalog" data-ar="تصفح الكتالوج الكامل">Browse Full
+                                Catalog</span></a>
+                        <a href="dealer/login.html" class="btn btn-outline btn-lg"><i class="fa fa-user-tie"></i> <span
+                                data-en="Dealer Portal" data-ar="بوابة التاجر">Dealer Portal</span></a>
+                        <a href="warranty.html" class="btn btn-ghost btn-lg"><i class="fa fa-shield-halved"></i> <span
+                                data-en="Register Warranty" data-ar="تفعيل الضمان">Register Warranty</span></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div><!-- /brands-page -->
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <span data-en="© 2025 NUTD — Exclusive Distributor: Borsehung (DE) · VIKA (CN) · KDD (CN)"
+                    data-ar="© 2025 نماء المتحدة — الموزع الحصري: بورسيهونج (DE) · VIKA (CN) · KDD (CN)">© 2025 NUTD —
+                    Exclusive Distributor: Borsehung (DE) · VIKA (CN) · KDD (CN)</span>
+                <div class="d-flex gap-16">
+                    <a href="index.html" data-en="Home" data-ar="الرئيسية">Home</a>
+                    <a href="catalog.html" data-en="Catalog" data-ar="الكتالوج">Catalog</a>
+                    <a href="warranty.html" data-en="Warranty" data-ar="الضمان">Warranty</a>
+                    <a href="dealer/login.html" data-en="Dealer Portal" data-ar="بوابة التاجر">Dealer Portal</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let currentLang = localStorage.getItem('lang') || 'en';
+        function setLang(l) {
+            currentLang = l;
+            localStorage.setItem('lang', l);
+            document.documentElement.lang = l;
+            document.documentElement.dir = l === 'ar' ? 'rtl' : 'ltr';
+            document.body.classList.toggle('lang-ar', l === 'ar');
+            document.getElementById('btn-en').classList.toggle('active', l === 'en');
+            document.getElementById('btn-ar').classList.toggle('active', l === 'ar');
+            document.querySelectorAll('[data-en]').forEach(el => {
+                const t = el.getAttribute('data-' + l);
+                if (t) el.innerHTML = t;
+            });
+        }
+        function toggleMobileMenu() { document.getElementById('mobileMenu').classList.toggle('open'); }
+        window.addEventListener('scroll', () => {
+            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+        });
+        if (localStorage.getItem('lang') === 'ar') setLang('ar');
+    </script>
+<script src="js/shared.js"></script>
+</body>
+
+</html>

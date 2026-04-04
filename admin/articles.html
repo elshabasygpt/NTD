@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage News & Articles – Admin Portal</title>
+    <link rel="icon" type="image/svg+xml" href="../img/favicon.svg" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <!-- Quill Rich Text Editor -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <style>
+        .sidebar { background: #0c0c0c; border-right: 1px solid rgba(232, 35, 26, 0.3); }
+        .sidebar-link.active, .sidebar-link:hover { background: rgba(232, 35, 26, 0.1); border-left: 3px solid var(--red); color: var(--red); }
+        .sidebar-link.active .icon, .sidebar-link:hover .icon { color: var(--red); }
+
+        .dataTable { width: 100%; border-collapse: collapse; }
+        .dataTable th { text-align: left; padding: 12px 16px; font-size: 0.8rem; color: var(--gray-500); text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.08); }
+        .lang-ar .dataTable th { text-align: right; }
+        .dataTable td { padding: 16px; border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--gray-200); font-size: 0.9rem; vertical-align: middle; }
+
+        .ql-toolbar.ql-snow { background: #1a1a1a; border: 1px solid rgba(255, 255, 255, 0.1); border-top-left-radius: 4px; border-top-right-radius: 4px; }
+        .ql-container.ql-snow { border: 1px solid rgba(255, 255, 255, 0.1); background: #0a0a0a; color: #fff; min-height: 200px; border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; font-family: inherit; font-size: 1rem; }
+        .ql-stroke { stroke: #ccc !important; }
+        .ql-fill { fill: #ccc !important; }
+        .ql-picker { color: #ccc !important; }
+
+        .article-thumb-preview { width: 60px; height: 40px; border-radius: 4px; object-fit: cover; background: #333; }
+        
+        /* Layout Fixes */
+        .modal { max-width: 900px !important; width: 90%; }
+        .lang-tabs { display: flex; background: var(--dark-3); border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden; margin-bottom: 16px; }
+        .lang-tab { flex: 1; text-align: center; padding: 10px; cursor: pointer; color: var(--gray-400); font-weight: 600; font-size: 0.9rem; transition: 0.2s; }
+        .lang-tab.active { background: var(--red); color: white; }
+    </style>
+</head>
+<body>
+
+    <div class="portal-layout">
+        <!-- =========== SIDEBAR =========== -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <img src="../img/logo.svg" alt="NUTD" style="height:32px" />
+                <span style="color:var(--red); font-weight:800; padding:0 8px; font-size:1.1rem;">ADMIN</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="sidebar-section-label" data-en="Management" data-ar="الإدارة">Management</div>
+                <a href="dashboard.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-gauge"></i></span>
+                    <span data-en="Overview" data-ar="نظرة عامة">Overview</span>
+                </a>
+                <a href="orders.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-list-check"></i></span>
+                    <span data-en="Approve Orders" data-ar="اعتماد الطلبات">Approve Orders</span>
+                    <span class="badge" id="adminPendingBadge" style="background:var(--warning);">0</span>
+                </a>
+                <a href="products.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-boxes-stacked"></i></span>
+                    <span data-en="Manage Products" data-ar="إدارة المنتجات">Manage Products</span>
+                </a>
+                <a href="articles.html" class="sidebar-link active">
+                    <span class="icon"><i class="fa fa-newspaper"></i></span>
+                    <span data-en="Manage News & Media" data-ar="إدارة الأخبار والميديا">Manage News & Media</span>
+                </a>
+                
+                <div class="sidebar-section-label" data-en="System" data-ar="النظام">System</div>
+                <a href="settings.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-globe"></i></span>
+                    <span data-en="CMS Editor" data-ar="محرر الموقع (CMS)">CMS Editor</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- =========== MAIN CONTENT =========== -->
+        <main class="portal-main">
+            <!-- TOP BAR -->
+            <div class="portal-topbar glass-panel" style="border-radius:0;border-left:none;border-right:none;border-top:none">
+                <div>
+                    <span class="topbar-title" data-en="News & Media Management" data-ar="إدارة الأخبار والمقالات">News & Media Management</span>
+                </div>
+                <div class="topbar-actions">
+                    <div class="lang-toggle">
+                        <button onclick="setLang('en')" class="active" id="btn-en">EN</button>
+                        <button onclick="setLang('ar')" id="btn-ar">AR</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PORTAL CONTENT -->
+            <div class="portal-content">
+                <div class="d-flex justify-between align-center mb-24">
+                    <h2 class="text-white" data-en="All Articles" data-ar="جميع المقالات">All Articles</h2>
+                    <button class="btn btn-primary" onclick="openArtModal()"><i class="fa fa-plus"></i> <span data-en="Create Article" data-ar="إنشاء مقال جديد">Create Article</span></button>
+                </div>
+
+                <div class="glass-panel" style="border-radius: var(--r-lg); overflow: hidden;">
+                    <table class="dataTable">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th data-en="Title" data-ar="العنوان">Title</th>
+                                <th data-en="Category" data-ar="القسم">Category</th>
+                                <th data-en="Views" data-ar="المشاهدات">Views</th>
+                                <th data-en="Status" data-ar="الحالة">Status</th>
+                                <th data-en="Actions" data-ar="إجراءات" style="text-align:right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="articlesTbody">
+                            <tr>
+                                <td colspan="6" style="text-align:center; padding: 40px;"><i class="fa fa-spinner fa-spin"></i></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Article Modal -->
+    <div class="modal-overlay" id="artModal">
+        <div class="modal" style="height: 90vh; display: flex; flex-direction: column;">
+            <div class="modal-header" style="flex: 0 0 auto;">
+                <h3 id="modalTitle" data-en="Create Article" data-ar="إنشاء مقال جديد">Create Article</h3>
+                <button class="close-btn" onclick="closeArtModal()"><i class="fa fa-times"></i></button>
+            </div>
+            
+            <div class="modal-body" style="flex: 1; overflow-y: auto; padding: 24px;">
+                <form id="artForm" onsubmit="saveArticle(event)">
+                    <input type="hidden" id="artId">
+
+                    <!-- Settings Row -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" data-en="Category" data-ar="القسم">Category</label>
+                            <select id="artCategory" class="form-control" required>
+                                <option value="News" data-en="Company News" data-ar="أخبار الشركة">Company News</option>
+                                <option value="Campaigns" data-en="Campaigns" data-ar="حملات ترويجية">Campaigns</option>
+                                <option value="Events" data-en="Events" data-ar="فعاليات">Events</option>
+                                <option value="Store Visits" data-en="Store Visits" data-ar="زيارات ميدانية">Store Visits</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" data-en="URL Slug (English only, no spaces)" data-ar="رابط المقال (إنجليزي فقط وبدون مسافات)">URL Slug</label>
+                            <input type="text" id="artSlug" class="form-control" placeholder="e.g. autotech-event-2026" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" data-en="Display Thumbnail" data-ar="الصورة المصغرة">Display Thumbnail</label>
+                            <div style="display:flex; gap:10px; align-items:center;">
+                                <img id="artThumbPreview" src="" style="width:50px; height:50px; background:#222; border-radius:4px; object-fit:cover; display:none;">
+                                <input type="file" id="artThumbFile" class="form-control" accept="image/*" onchange="previewThumb(this)">
+                            </div>
+                            <input type="hidden" id="artThumbUrl">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" data-en="Video (YouTube Link or Upload)" data-ar="فيديو (رابط يوتيوب أو ملف)">Video (YouTube Link or Upload)</label>
+                            <div style="display:flex; flex-direction:column; gap:5px;">
+                                <input type="text" id="artVideoUrl" class="form-control" placeholder="https://youtube.com/watch?v=...">
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <span style="font-size:0.8rem; color:var(--gray-400);" data-en="OR upload:" data-ar="أو قم برفع ملف:">OR upload:</span>
+                                    <input type="file" id="artVideoFile" class="form-control" accept="video/mp4,video/webm">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row" style="margin-top: 10px;">
+                        <div class="form-group" style="display:flex;flex-direction:column;justify-content:flex-end;">
+                            <label style="display:flex;align-items:center;gap:8px;cursor:pointer; color:var(--white);">
+                                <input type="checkbox" id="artPublished" checked style="width:18px;height:18px;">
+                                <span data-en="Publish immediately" data-ar="نشر فوراً">Publish immediately</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Bilingual Content Tabs -->
+                    <div class="lang-tabs" style="margin-top: 24px;">
+                        <div class="lang-tab active" id="tabEn" onclick="switchArtLang('en')" data-en="English Content" data-ar="المحتوى الإنجليزي">English Content</div>
+                        <div class="lang-tab" id="tabAr" onclick="switchArtLang('ar')" data-en="Arabic Content" data-ar="المحتوى العربي">Arabic Content</div>
+                    </div>
+
+                    <!-- EN Fields -->
+                    <div id="fieldsEn">
+                        <div class="form-group">
+                            <label class="form-label">Title (EN)</label>
+                            <input type="text" id="artTitleEn" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Short Excerpt (EN)</label>
+                            <textarea id="artExcerptEn" class="form-control" rows="2" placeholder="Brief summary for the news cards..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Full Content (EN)</label>
+                            <div id="editorEn"></div>
+                        </div>
+                    </div>
+
+                    <!-- AR Fields -->
+                    <div id="fieldsAr" style="display:none;">
+                        <div class="form-group">
+                            <label class="form-label">العنوان (AR)</label>
+                            <input type="text" id="artTitleAr" class="form-control" dir="rtl">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">مقتطف قصير (AR)</label>
+                            <textarea id="artExcerptAr" class="form-control" rows="2" dir="rtl" placeholder="ملخص قصير للبطاقات..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" style="text-align:right;">المحتوى الكامل (AR)</label>
+                            <div dir="rtl">
+                                <div id="editorAr" style="text-align:right;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="btnSaveArt" style="display:none;"></button>
+                </form>
+            </div>
+            
+            <div class="modal-footer" style="flex: 0 0 auto; display: flex; justify-content: flex-end; gap: 12px; background: var(--dark-2);">
+                <button type="button" class="btn btn-ghost" onclick="closeArtModal()" data-en="Cancel" data-ar="إلغاء">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="document.getElementById('btnSaveArt').click()">
+                    <i class="fa fa-save"></i> <span data-en="Save Article" data-ar="حفظ المقال">Save Article</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    <script src="../js/shared.js"></script>
+    <script>
+        let quillEn, quillAr;
+        let articles = [];
+
+        window.addEventListener('languageChanged', (e) => {
+            renderTable();
+        });
+
+        // Init Quill
+        document.addEventListener('DOMContentLoaded', () => {
+            const toolbarOptions = [
+                ['bold', 'italic', 'underline', 'strike'],        
+                ['blockquote'],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                [{ 'direction': 'rtl' }],
+                [{ 'header': [2, 3, false] }],
+                [{ 'color': [] }, { 'background': [] }],
+                ['link', 'image', 'video'],
+                ['clean']
+            ];
+
+            quillEn = new Quill('#editorEn', { theme: 'snow', modules: { toolbar: toolbarOptions }});
+            quillAr = new Quill('#editorAr', { theme: 'snow', modules: { toolbar: toolbarOptions }});
+            fetchArticles();
+        });
+
+        async function fetchArticles() {
+            try {
+                const res = await fetch('http://localhost:5000/api/articles/admin');
+                const json = await res.json();
+                if(json.success) {
+                    articles = json.data;
+                    renderTable();
+                }
+
+                // pending badge
+                const ordRes = await fetch('http://localhost:5000/api/orders?status=Pending');
+                const ordJson = await ordRes.json();
+                if(ordJson.success) document.getElementById('adminPendingBadge').textContent = ordJson.data.length;
+            } catch(e) {
+                document.getElementById('articlesTbody').innerHTML = '<tr><td colspan="6" style="text-align:center">Error connecting to server</td></tr>';
+            }
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('articlesTbody');
+            if(!articles.length) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center">No articles found. Create one.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = articles.map(art => {
+                const title = currentLang === 'ar' ? art.titleAr : art.titleEn;
+                const badges = art.isPublished 
+                    ? `<span class="badge badge-approved" data-en="Published" data-ar="منشور">${currentLang === 'ar' ? 'منشور' : 'Published'}</span>` 
+                    : `<span class="badge badge-rejected" data-en="Draft" data-ar="مسودة">${currentLang === 'ar' ? 'مسودة' : 'Draft'}</span>`;
+                
+                // Truncate title
+                const tDisp = title.length > 50 ? title.substring(0,50)+'...' : title;
+
+                return `
+                    <tr>
+                        <td style="width:70px;">
+                            ${art.thumbnail ? `<img src="${art.thumbnail}" class="article-thumb-preview">` : `<div class="article-thumb-preview" style="display:flex;align-items:center;justify-content:center"><i class="fa fa-image" style="color:var(--gray-600)"></i></div>`}
+                        </td>
+                        <td style="font-weight:600; color:var(--white);">${tDisp}</td>
+                        <td>${art.category}</td>
+                        <td><i class="fa fa-eye" style="color:var(--gray-500);font-size:0.8rem"></i> ${art.views}</td>
+                        <td>${badges}</td>
+                        <td style="text-align:right">
+                            <a href="../article.html?slug=${art.slug}" target="_blank" class="btn btn-ghost btn-sm" title="Preview"><i class="fa fa-external-link"></i></a>
+                            <button class="btn btn-ghost btn-sm text-info" onclick="editArt('${art._id}')" title="Edit"><i class="fa fa-pen"></i></button>
+                            <button class="btn btn-ghost btn-sm text-danger" onclick="deleteArt('${art._id}')" title="Delete"><i class="fa fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function switchArtLang(lang) {
+            document.getElementById('tabEn').classList.toggle('active', lang==='en');
+            document.getElementById('tabAr').classList.toggle('active', lang==='ar');
+            document.getElementById('fieldsEn').style.display = lang==='en' ? 'block' : 'none';
+            document.getElementById('fieldsAr').style.display = lang==='ar' ? 'block' : 'none';
+        }
+
+        function previewThumb(input) {
+            const preview = document.getElementById('artThumbPreview');
+            if (input.files && input.files[0]) {
+                const r = new FileReader();
+                r.onload = e => { preview.src = e.target.result; preview.style.display = 'block'; };
+                r.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function generateSlug(str) {
+            return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+        }
+
+        // Auto slug generation if empty
+        document.getElementById('artTitleEn').addEventListener('blur', (e) => {
+            const slug = document.getElementById('artSlug');
+            if(!slug.value && e.target.value) slug.value = generateSlug(e.target.value);
+        });
+
+        function openArtModal() {
+            document.getElementById('artForm').reset();
+            document.getElementById('artId').value = '';
+            document.getElementById('artThumbPreview').style.display = 'none';
+            document.getElementById('artThumbUrl').value = '';
+            document.getElementById('artVideoUrl').value = '';
+            document.getElementById('artVideoFile').value = '';
+            quillEn.root.innerHTML = '';
+            quillAr.root.innerHTML = '';
+            
+            document.getElementById('modalTitle').textContent = currentLang === 'ar' ? 'إنشاء مقال جديد' : 'Create Article';
+            switchArtLang('en');
+            document.getElementById('artModal').classList.add('open');
+        }
+
+        function editArt(id) {
+            const art = articles.find(a => a._id === id);
+            if(!art) return;
+
+            document.getElementById('artId').value = art._id;
+            document.getElementById('artCategory').value = art.category || 'News';
+            document.getElementById('artSlug').value = art.slug || '';
+            document.getElementById('artPublished').checked = art.isPublished;
+            
+            document.getElementById('artTitleEn').value = art.titleEn || '';
+            document.getElementById('artExcerptEn').value = art.excerptEn || '';
+            quillEn.root.innerHTML = art.contentEn || '';
+
+            document.getElementById('artTitleAr').value = art.titleAr || '';
+            document.getElementById('artExcerptAr').value = art.excerptAr || '';
+            quillAr.root.innerHTML = art.contentAr || '';
+
+            const preview = document.getElementById('artThumbPreview');
+            document.getElementById('artThumbUrl').value = art.thumbnail || '';
+            document.getElementById('artVideoUrl').value = art.videoUrl || '';
+            
+            if(art.thumbnail) {
+                preview.src = art.thumbnail;
+                preview.style.display = 'block';
+            } else {
+                preview.style.display = 'none';
+            }
+            
+            document.getElementById('modalTitle').textContent = currentLang === 'ar' ? 'تعديل المقال' : 'Edit Article';
+            switchArtLang('en');
+            document.getElementById('artModal').classList.add('open');
+        }
+
+        function closeArtModal() {
+            document.getElementById('artModal').classList.remove('open');
+        }
+
+        async function saveArticle(e) {
+            e.preventDefault();
+            
+            // basic validations
+            if(!document.getElementById('artTitleEn').value || !document.getElementById('artTitleAr').value) {
+                alert(currentLang === 'ar' ? 'يرجى كتابة العنوان باللغتين.' : 'Please enter title in both languages.');
+                return;
+            }
+
+            const id = document.getElementById('artId').value;
+            const payload = {
+                titleEn: document.getElementById('artTitleEn').value,
+                titleAr: document.getElementById('artTitleAr').value,
+                slug: generateSlug(document.getElementById('artSlug').value),
+                excerptEn: document.getElementById('artExcerptEn').value,
+                excerptAr: document.getElementById('artExcerptAr').value,
+                contentEn: quillEn.root.innerHTML,
+                contentAr: quillAr.root.innerHTML,
+                category: document.getElementById('artCategory').value,
+                isPublished: document.getElementById('artPublished').checked,
+                thumbnail: document.getElementById('artThumbUrl').value,
+                videoUrl: document.getElementById('artVideoUrl').value
+            };
+
+            const fileInput = document.getElementById('artThumbFile');
+            if(fileInput.files.length > 0) {
+                const fd = new FormData();
+                fd.append('image', fileInput.files[0]);
+                try {
+                    const upRes = await fetch('http://localhost:5000/api/articles/upload', { method: 'POST', body: fd });
+                    const upJson = await upRes.json();
+                    if(upJson.success) payload.thumbnail = upJson.url;
+                } catch(e) { console.error('Upload fail'); }
+            }
+
+            const videoInput = document.getElementById('artVideoFile');
+            if(videoInput.files.length > 0) {
+                const fd = new FormData();
+                fd.append('video', videoInput.files[0]);
+                try {
+                    const upRes = await fetch('http://localhost:5000/api/articles/upload-video', { method: 'POST', body: fd });
+                    const upJson = await upRes.json();
+                    if(upJson.success) payload.videoUrl = upJson.url;
+                } catch(e) { console.error('Video Upload fail'); }
+            }
+
+            try {
+                const url = id ? `http://localhost:5000/api/articles/${id}` : `http://localhost:5000/api/articles`;
+                const method = id ? 'PUT' : 'POST';
+                
+                const res = await fetch(url, {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                const json = await res.json();
+                if(json.success) {
+                    closeArtModal();
+                    fetchArticles();
+                } else {
+                    alert('Error: ' + json.error);
+                }
+            } catch(e) {
+                alert('Connection error');
+            }
+        }
+
+        async function deleteArt(id) {
+            if(!confirm(currentLang === 'ar' ? 'هل أنت متأكد من حذف هذا المقال؟' : 'Are you sure you want to delete this article?')) return;
+            try {
+                const res = await fetch(`http://localhost:5000/api/articles/${id}`, { method: 'DELETE' });
+                const json = await res.json();
+                if(json.success) fetchArticles();
+            } catch(e) {
+                alert('Connection error');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Borsehung – Exclusive Agency | NUTD</title>
+    <meta name="description"
+        content="NUTD is the exclusive distributor of Borsehung German automotive parts for VW, Mercedes-Benz and BMW in the region." />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        :root {
+            --brand: #1a3a6b;
+            --brand-light: rgba(26, 58, 107, .12);
+        }
+
+        /* Borsehung blue */
+        .brand-hero {
+            margin-top: var(--nav-h);
+            background:
+                linear-gradient(135deg, rgba(10, 10, 14, .97) 0%, rgba(26, 58, 107, .18) 100%),
+                repeating-linear-gradient(-45deg, rgba(26, 58, 107, .04) 0, rgba(26, 58, 107, .04) 1px, transparent 0, transparent 50%);
+            background-size: cover, 24px 24px;
+            padding: 80px 0 60px;
+            border-bottom: 1px solid rgba(255, 255, 255, .06);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -80px;
+            right: -100px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(26, 58, 107, .18) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .brand-hero-inner {
+            position: relative;
+            z-index: 1;
+        }
+
+        .brand-logo-display {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+
+        .brand-badge-lg {
+            width: 72px;
+            height: 72px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            font-weight: 900;
+            letter-spacing: -.5px;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .borsehung-badge {
+            background: linear-gradient(135deg, #1a3a6b 0%, #0f2347 100%);
+        }
+
+        .brand-origin {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 6px;
+            font-size: .8rem;
+            color: var(--gray-500);
+        }
+
+        .flag {
+            font-size: 1.2rem;
+        }
+
+        .exclusive-ribbon {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(232, 35, 26, .12);
+            border: 1px solid rgba(232, 35, 26, .25);
+            border-radius: var(--r-full);
+            padding: 6px 16px;
+            font-size: .78rem;
+            font-weight: 700;
+            color: var(--red);
+            letter-spacing: .04em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 32px;
+            margin-top: 32px;
+            flex-wrap: wrap;
+        }
+
+        .hero-stat .val {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--white);
+        }
+
+        .hero-stat .lbl {
+            font-size: .78rem;
+            color: var(--gray-500);
+            margin-top: 2px;
+        }
+
+        .car-model-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 0;
+        }
+
+        .car-model-card {
+            background: var(--dark-2);
+            border: 1px solid rgba(255, 255, 255, .07);
+            border-radius: var(--r-lg);
+            padding: 28px 24px;
+            transition: all var(--t-normal);
+            text-align: center;
+        }
+
+        .car-model-card:hover {
+            border-color: rgba(26, 58, 107, .4);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, .3);
+        }
+
+        .car-model-card .car-icon {
+            font-size: 2.5rem;
+            margin-bottom: 14px;
+        }
+
+        .car-model-card h4 {
+            color: var(--white);
+            margin-bottom: 14px;
+        }
+
+        .system-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .system-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: .84rem;
+            color: var(--gray-400);
+            background: rgba(255, 255, 255, .03);
+            border-radius: var(--r-sm);
+            padding: 8px 12px;
+        }
+
+        .system-item .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--brand);
+            flex-shrink: 0;
+        }
+
+        .cert-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .cert-card {
+            background: var(--dark-2);
+            border: 1px solid rgba(255, 255, 255, .07);
+            border-radius: var(--r-lg);
+            padding: 24px 20px;
+            text-align: center;
+        }
+
+        .cert-card .icon {
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+
+        .cert-card h5 {
+            color: var(--white);
+            margin-bottom: 6px;
+            font-size: .9rem;
+        }
+
+        .cert-card p {
+            font-size: .8rem;
+            color: var(--gray-500);
+        }
+
+        .product-cat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 12px;
+        }
+
+        .product-cat {
+            background: var(--dark-2);
+            border: 1px solid rgba(255, 255, 255, .07);
+            border-radius: var(--r-md);
+            padding: 18px 16px;
+            text-align: center;
+            font-size: .84rem;
+            color: var(--gray-300);
+            transition: all .2s;
+            cursor: default;
+        }
+
+        .product-cat:hover {
+            border-color: rgba(26, 58, 107, .4);
+            color: var(--white);
+        }
+
+        .product-cat .icon {
+            display: block;
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+        }
+
+        @media(max-width:768px) {
+            .car-model-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-stats {
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="container">
+            <a href="../index.html" class="nav-logo">
+                <div class="brand-logo-box">NUTD</div>
+                <div class="nav-logo-text"><span class="name-en">NUTD</span><span class="name-ar">نماء المتحدة</span>
+                </div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="../index.html" class="nav-link" data-en="Home" data-ar="الرئيسية">Home</a></li>
+                <li><a href="../catalog.html" class="nav-link" data-en="Products" data-ar="المنتجات">Products</a></li>
+                <li><a href="#" class="nav-link active" data-en="Brands" data-ar="العلامات">Brands</a></li>
+                <li><a href="../about.html" class="nav-link" data-en="About" data-ar="عن الشركة">About</a></li>
+            </ul>
+            <div class="nav-actions">
+                <div class="lang-toggle">
+                    <button onclick="setLang('en')" class="active" id="btn-en">EN</button>
+                    <button onclick="setLang('ar')" id="btn-ar">AR</button>
+                </div>
+                <a href="../dealer/login.html" class="btn btn-primary btn-sm" data-en="Dealer Portal"
+                    data-ar="بوابة التاجر">Dealer Portal</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <div class="brand-hero">
+        <div class="container brand-hero-inner">
+            <div class="d-flex gap-12 mb-16 flex-wrap">
+                <a href="../index.html" style="font-size:.8rem;color:var(--gray-600)">Home</a>
+                <span style="color:var(--gray-700)">›</span>
+                <a href="#" style="font-size:.8rem;color:var(--gray-600)" data-en="Brands" data-ar="العلامات">Brands</a>
+                <span style="color:var(--gray-700)">›</span>
+                <span style="font-size:.8rem;color:var(--white)">Borsehung</span>
+            </div>
+
+            <div class="exclusive-ribbon">
+                <i class="fa fa-certificate"></i>
+                <span data-en="Exclusive Regional Distributor" data-ar="الموزع الإقليمي الحصري">Exclusive Regional
+                    Distributor</span>
+            </div>
+
+            <div class="brand-logo-display">
+                <div class="brand-badge-lg borsehung-badge">BSG</div>
+                <div>
+                    <h1 class="text-white" style="margin:0;font-size:2.4rem">Borsehung</h1>
+                    <div class="brand-origin">
+                        <span class="flag">🇩🇪</span>
+                        <span data-en="Professional European Auto Parts — Germany"
+                            data-ar="قطع غيار سيارات أوروبية احترافية — ألمانيا">Professional European Auto Parts —
+                            Germany</span>
+                    </div>
+                </div>
+            </div>
+
+            <p style="max-width:620px;font-size:1rem;color:var(--gray-300);line-height:1.7"
+                data-en="Borsehung is a global extension of OE (Original Equipment) products and a value engine of the automotive aftermarket. NUTD holds the exclusive distribution rights for Borsehung across the region — bringing certified European engineering directly to your workshop."
+                data-ar="بورسيهونج هي امتداد عالمي لمنتجات تجهيز المصنع الأصلي (OE) ومحرك قيمة في سوق قطع الغيار البديلة. تمتلك نماء المتحدة حقوق التوزيع الحصرية لبورسيهونج في المنطقة — وتجلب الهندسة الأوروبية المعتمدة مباشرة إلى ورشتك.">
+                Borsehung is a global extension of OE (Original Equipment) products and a value engine of the automotive
+                aftermarket. NUTD holds the exclusive distribution rights for Borsehung across the region — bringing
+                certified European engineering directly to your workshop.
+            </p>
+
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="val">3</div>
+                    <div class="lbl" data-en="Premium Car Brands" data-ar="علامات سيارات متميزة">Premium Car Brands
+                    </div>
+                </div>
+                <div class="hero-stat">
+                    <div class="val">OE+</div>
+                    <div class="lbl" data-en="Quality Standard" data-ar="معيار الجودة">Quality Standard</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="val">🇩🇪</div>
+                    <div class="lbl" data-en="German Engineered" data-ar="مصنوع في ألمانيا">German Engineered</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="val">TecDoc</div>
+                    <div class="lbl" data-en="Certified Supplier" data-ar="مورد معتمد">Certified Supplier</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- COMPATIBLE VEHICLES -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label" data-en="Vehicle Coverage" data-ar="تغطية المركبات">Vehicle Coverage</div>
+                <h2 data-en="Spare Parts For Every Premium German Brand" data-ar="قطع غيار لكل علامة ألمانية متميزة">
+                    Spare Parts For Every Premium German Brand</h2>
+                <p data-en="Borsehung engineers parts specifically for Volkswagen Group, Mercedes-Benz, and BMW vehicles — engineered to OE specifications."
+                    data-ar="تقوم بورسيهونج بتصميم القطع خصيصاً لمركبات مجموعة فولكسفاغن وميرسيدس بنز وبي إم دبليو — مهندسة وفق مواصفات المصنع الأصلي.">
+                    Borsehung engineers parts specifically for Volkswagen Group, Mercedes-Benz, and BMW vehicles —
+                    engineered to OE specifications.</p>
+            </div>
+            <div class="car-model-grid">
+                <!-- VW -->
+                <div class="car-model-card">
+                    <div class="car-icon">🚗</div>
+                    <h4>Volkswagen <span style="font-size:.7rem;font-weight:400;color:var(--gray-500)">Group</span></h4>
+                    <div class="system-list">
+                        <div class="system-item"><span class="dot"></span><span data-en="Engine System"
+                                data-ar="منظومة المحرك">Engine System</span></div>
+                        <div class="system-item"><span class="dot"></span><span data-en="Electrical System"
+                                data-ar="المنظومة الكهربائية">Electrical System</span></div>
+                        <div class="system-item"><span class="dot"></span><span data-en="Chassis System"
+                                data-ar="منظومة الهيكل">Chassis System</span></div>
+                        <div class="system-item"><span class="dot"></span><span data-en="Golf, Passat, Tiguan, Polo"
+                                data-ar="جولف، باسات، تيغوان، بولو">Golf, Passat, Tiguan, Polo</span></div>
+                    </div>
+                </div>
+                <!-- MB -->
+                <div class="car-model-card">
+                    <div class="car-icon">⭐</div>
+                    <h4>Mercedes-Benz</h4>
+                    <div class="system-list">
+                        <div class="system-item"><span class="dot"></span><span data-en="Engine System"
+                                data-ar="منظومة المحرك">Engine System</span></div>
+                        <div class="system-item"><span class="dot"></span><span data-en="Electrical System"
+                                data-ar="المنظومة الكهربائية">Electrical System</span></div>
+                        <div class="system-item"><span class="dot"></span><span data-en="Chassis System"
+                                data-ar="منظومة الهيكل">Chassis System</span></div>
+                        <div class="system-item"><span class="dot"></span><span data-en="C-Class, E-Class, GLC, GLE"
+                                data-ar="الفئة C، الفئة E، GLC، GLE">C-Class, E-Class, GLC, GLE</span></div>
+                    </div>
+                </div>
+                <!-- BMW -->
+                <div class="car-model-card">
+                    <div class="car-icon">🏎️</div>
+                    <h4>BMW</h4>
+                    <div class="system-list">
+                        <div class="system-item"><span class="dot"></span><span data-en="Engine System"
+                                data-ar="منظومة المحرك">Engine System</span></div>
+                        <div class="system-item"><span class="dot"></span><span data-en="Electrical System"
+                                data-ar="المنظومة الكهربائية">Electrical System</span></div>
+                        <div class="system-item"><span class="dot"></span><span data-en="Chassis System"
+                                data-ar="منظومة الهيكل">Chassis System</span></div>
+                        <div class="system-item"><span class="dot"></span><span data-en="3 Series, 5 Series, X3, X5"
+                                data-ar="الفئة 3، الفئة 5، X3، X5">3 Series, 5 Series, X3, X5</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRODUCT CATEGORIES -->
+    <section class="section section-alt">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label" data-en="What We Carry" data-ar="ما نحمله في المخزون">What We Carry</div>
+                <h2 data-en="Product Categories" data-ar="فئات المنتجات">Product Categories</h2>
+            </div>
+            <div class="product-cat-grid">
+                <div class="product-cat"><span class="icon">⚙️</span><span data-en="Engine Parts"
+                        data-ar="قطع المحرك">Engine Parts</span></div>
+                <div class="product-cat"><span class="icon">🔌</span><span data-en="Electrical Parts"
+                        data-ar="القطع الكهربائية">Electrical Parts</span></div>
+                <div class="product-cat"><span class="icon">🦿</span><span data-en="Chassis Parts"
+                        data-ar="قطع الهيكل">Chassis Parts</span></div>
+                <div class="product-cat"><span class="icon">🛞</span><span data-en="Suspension"
+                        data-ar="نظام التعليق">Suspension</span></div>
+                <div class="product-cat"><span class="icon">🛑</span><span data-en="Braking System"
+                        data-ar="نظام الفرامل">Braking System</span></div>
+                <div class="product-cat"><span class="icon">🌡️</span><span data-en="Cooling System"
+                        data-ar="نظام التبريد">Cooling System</span></div>
+                <div class="product-cat"><span class="icon">🔩</span><span data-en="Steering"
+                        data-ar="نظام التوجيه">Steering</span></div>
+                <div class="product-cat"><span class="icon">🔦</span><span data-en="Body & Lights"
+                        data-ar="الهيكل والإضاءة">Body &amp; Lights</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WHY BORSEHUNG -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label" data-en="Quality Assurance" data-ar="ضمان الجودة">Quality Assurance</div>
+                <h2 data-en="Why Borsehung Stands Apart" data-ar="لماذا تتميز بورسيهونج">Why Borsehung Stands Apart</h2>
+            </div>
+            <div class="cert-grid">
+                <div class="cert-card">
+                    <div class="icon">🏭</div>
+                    <h5 data-en="OE-Grade Manufacturing" data-ar="تصنيع بمستوى المصنع الأصلي">OE-Grade Manufacturing
+                    </h5>
+                    <p data-en="Parts manufactured to Original Equipment specifications — same factories, same tolerances."
+                        data-ar="قطع مصنعة وفق مواصفات المصنع الأصلي — نفس المصانع، نفس التفاوتات.">Parts manufactured
+                        to Original Equipment specifications — same factories, same tolerances.</p>
+                </div>
+                <div class="cert-card">
+                    <div class="icon">📋</div>
+                    <h5>TecDoc Certified</h5>
+                    <p data-en="An approved TecDoc data supplier — all parts cross-referenced and searchable by OEM number."
+                        data-ar="مورد بيانات TecDoc معتمد — جميع القطع مرجعية وقابلة للبحث برقم المصنع الأصلي.">An
+                        approved TecDoc data supplier — all parts cross-referenced and searchable by OEM number.</p>
+                </div>
+                <div class="cert-card">
+                    <div class="icon">💻</div>
+                    <h5 data-en="Digital Order Management" data-ar="إدارة الطلبات الرقمية">Digital Order Management</h5>
+                    <p data-en="Full digital lifecycle management — online catalogues, parameter comparison, and order tracking."
+                        data-ar="إدارة رقمية كاملة للدورة — كتالوجات أونلاين، مقارنة المعاملات، وتتبع الطلبات.">Full
+                        digital lifecycle management — online catalogues, parameter comparison, and order tracking.</p>
+                </div>
+                <div class="cert-card">
+                    <div class="icon">🌍</div>
+                    <h5 data-en="Global Distribution" data-ar="توزيع عالمي">Global Distribution</h5>
+                    <p data-en="Trusted by workshops and distributors across Europe, Asia, and the Middle East."
+                        data-ar="موثوق به من قبل الورش والموزعين في أوروبا وآسيا والشرق الأوسط.">Trusted by workshops
+                        and distributors across Europe, Asia, and the Middle East.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- EXCLUSIVE DISTRIBUTOR -->
+    <section class="section section-alt">
+        <div class="container">
+            <div class="locate-card"
+                style="background:linear-gradient(135deg,rgba(26,58,107,.15) 0%,rgba(10,10,14,.95) 100%);border:1px solid rgba(26,58,107,.25)">
+                <div class="locate-card-icon" style="background:rgba(26,58,107,.15);color:#4a8cd4">
+                    <i class="fa fa-certificate"></i>
+                </div>
+                <div class="locate-card-content">
+                    <div class="exclusive-ribbon" style="margin-bottom:12px">
+                        <i class="fa fa-shield-halved"></i>
+                        <span data-en="Official Exclusive Distribution Rights"
+                            data-ar="حقوق التوزيع الحصري الرسمي">Official Exclusive Distribution Rights</span>
+                    </div>
+                    <h3 data-en="NUTD is the Only Authorized Borsehung Distributor in the Region"
+                        data-ar="نماء المتحدة هي الموزع الوحيد المعتمد لبورسيهونج في المنطقة">NUTD is the Only
+                        Authorized Borsehung Distributor in the Region</h3>
+                    <p data-en="When you purchase Borsehung parts through any of our authorized dealers, you are guaranteed authentic, OE-certified products backed by the full warranty and technical support network."
+                        data-ar="عند شرائك لقطع بورسيهونج من خلال أي من تجارنا المعتمدين، تحصل على ضمان الأصالة ومنتجات معتمدة OE مدعومة بشبكة الضمان الكاملة والدعم الفني.">
+                        When you purchase Borsehung parts through any of our authorized dealers, you are guaranteed
+                        authentic, OE-certified products backed by the full warranty and technical support network.</p>
+                    <div class="d-flex gap-12 flex-wrap">
+                        <a href="../catalog.html?brand=borsehung" class="btn btn-primary btn-lg">
+                            <i class="fa fa-boxes-stacked"></i>
+                            <span data-en="Browse Borsehung Products" data-ar="تصفح منتجات بورسيهونج">Browse Borsehung
+                                Products</span>
+                        </a>
+                        <a href="../dealer/login.html" class="btn btn-outline btn-lg" data-en="Order as Dealer"
+                            data-ar="اطلب كتاجر">Order as Dealer</a>
+                    </div>
+                    <p style="font-size:.78rem;color:var(--gray-700);margin-top:16px">
+                        <i class="fa fa-earth-africa"></i>
+                        <a href="https://www.borsehung.de/en/" target="_blank" rel="noopener"
+                            style="color:var(--gray-600)">www.borsehung.de</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- OTHER BRANDS -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label" data-en="Our Other Agencies" data-ar="وكالاتنا الأخرى">Our Other Agencies
+                </div>
+                <h2 data-en="Also Distributed Exclusively by NUTD" data-ar="موزعة أيضاً بشكل حصري من نماء المتحدة">Also
+                    Distributed Exclusively by NUTD</h2>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:540px">
+                <a href="vika.html" class="product-cat"
+                    style="background:var(--dark-2);border:1px solid rgba(255,255,255,.07);border-radius:var(--r-lg);padding:24px;text-decoration:none">
+                    <span class="icon" style="font-size:2rem;display:block;margin-bottom:10px">🇨🇳</span>
+                    <div style="font-weight:700;color:var(--white);margin-bottom:4px">VIKA / Tantivy</div>
+                    <div style="font-size:.78rem;color:var(--gray-500)" data-en="Chinese Premium Parts"
+                        data-ar="قطع صينية متميزة">Chinese Premium Parts</div>
+                </a>
+                <a href="kdd.html" class="product-cat"
+                    style="background:var(--dark-2);border:1px solid rgba(255,255,255,.07);border-radius:var(--r-lg);padding:24px;text-decoration:none">
+                    <span class="icon" style="font-size:2rem;display:block;margin-bottom:10px">🇨🇳</span>
+                    <div style="font-weight:700;color:var(--white);margin-bottom:4px">KDD</div>
+                    <div style="font-size:.78rem;color:var(--gray-500)" data-en="Chinese Auto Parts"
+                        data-ar="قطع غيار صينية">Chinese Auto Parts</div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <span data-en="© 2025 Nama United Trading & Distribution — Official Borsehung Distributor"
+                    data-ar="© 2025 نماء المتحدة للتجارة والتوزيع — الموزع الرسمي لبورسيهونج">© 2025 Nama United Trading
+                    &amp; Distribution — Official Borsehung Distributor</span>
+                <div class="d-flex gap-16">
+                    <a href="../index.html" data-en="Home" data-ar="الرئيسية">Home</a>
+                    <a href="../catalog.html" data-en="Catalog" data-ar="الكتالوج">Catalog</a>
+                    <a href="../dealer/login.html" data-en="Dealer Portal" data-ar="بوابة التاجر">Dealer Portal</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let currentLang = localStorage.getItem('lang') || 'en';
+        function setLang(lang) {
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+            document.documentElement.lang = lang;
+            document.body.classList.toggle('lang-ar', lang === 'ar');
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+            document.getElementById('btn-ar').classList.toggle('active', lang === 'ar');
+            document.querySelectorAll('[data-en]').forEach(el => {
+                const t = el.getAttribute('data-' + lang);
+                if (t) el.innerHTML = t;
+            });
+        }
+        window.addEventListener('scroll', () => { document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50); });
+        setLang(currentLang);
+    </script>
+</body>
+
+</html>
