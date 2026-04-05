@@ -8,13 +8,48 @@
     <link rel="icon" type="image/svg+xml" href="../img/favicon.svg" />
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <!-- Add Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        .sidebar { background: #0c0c0c; border-right: 1px solid rgba(232, 35, 26, 0.3); } /* Admin thematic red hue */
+        .sidebar { background: #0c0c0c; border-right: 1px solid rgba(232, 35, 26, 0.3); } 
         .sidebar-link.active, .sidebar-link:hover { background: rgba(232, 35, 26, 0.1); border-left: 3px solid var(--red); color: var(--red); }
         .sidebar-link.active .icon, .sidebar-link:hover .icon { color: var(--red); }
         
-        .stat-card.admin-card { border: 1px solid rgba(232, 35, 26, 0.2); background: linear-gradient(135deg, rgba(20,20,20,0.9), rgba(30,10,10,0.9)); }
+        .stat-card.admin-card { border: 1px solid rgba(232, 35, 26, 0.2); background: linear-gradient(135deg, rgba(20,20,20,0.9), rgba(30,10,10,0.9)); box-shadow: 0 4px 16px rgba(232, 35, 26, 0.1); }
+        .stat-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .stat-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
         
+        .glass-chart {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--r-xl);
+            padding: 24px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            margin-top: 24px;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .activity-item:last-child { border-bottom: none; }
+        .activity-icon {
+            width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0;
+        }
+        
+        @media(max-width:1024px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+        }
         @media(max-width:768px) {
             .sidebar { display: none; }
             .portal-main { margin-left: 0 !important; margin-right: 0 !important; }
@@ -38,6 +73,10 @@
                 <a href="dashboard.html" class="sidebar-link active">
                     <span class="icon"><i class="fa fa-gauge"></i></span>
                     <span data-en="Overview" data-ar="نظرة عامة">Overview</span>
+                </a>
+                <a href="dealers.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-users"></i></span>
+                    <span data-en="Manage Dealers" data-ar="إدارة الوكلاء">Manage Dealers</span>
                 </a>
                 <a href="orders.html" class="sidebar-link">
                     <span class="icon"><i class="fa fa-list-check"></i></span>
@@ -96,61 +135,77 @@
                 <!-- STATS -->
                 <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
                     <div class="stat-card admin-card glass-panel">
-                        <div class="stat-icon gold"><i class="fa fa-clock"></i></div>
+                        <div class="stat-icon gold" style="color:var(--warning)"><i class="fa fa-clock"></i></div>
                         <div class="stat-info">
                             <div class="value" id="globalPendingCount">0</div>
-                            <div class="label" data-en="Pending Actions" data-ar="إجراءات معلقة">Pending Actions</div>
+                            <div class="label" data-en="Pending Orders" data-ar="الطلبات المعلقة">Pending Orders</div>
                         </div>
                     </div>
                     <div class="stat-card glass-panel">
                         <div class="stat-icon green"><i class="fa fa-money-bill-wave"></i></div>
                         <div class="stat-info">
                             <div class="value" id="globalRevenue">EGP 0</div>
-                            <div class="label" data-en="Total Revenue" data-ar="إجمالي الإيرادات">Total Revenue</div>
+                            <div class="label" data-en="Total Revenue" data-ar="إجمالي المبيعات">Total Revenue</div>
                         </div>
                     </div>
                     <div class="stat-card glass-panel">
-                        <div class="stat-icon blue"><i class="fa fa-box-open"></i></div>
+                        <div class="stat-icon blue" style="color:#60a5fa"><i class="fa fa-box-open"></i></div>
                         <div class="stat-info">
                             <div class="value" id="globalProductCount">0</div>
-                            <div class="label" data-en="Catalog Size" data-ar="حجم الكتالوج">Catalog Size</div>
+                            <div class="label" data-en="Total Products" data-ar="إجمالي المنتجات">Total Products</div>
                         </div>
                     </div>
-                    <div class="stat-card admin-card glass-panel" style="border-color: rgba(232, 35, 26, 0.4);">
-                        <div class="stat-icon" style="color:var(--danger)"><i class="fa fa-triangle-exclamation"></i></div>
+                    <div class="stat-card glass-panel">
+                        <div class="stat-icon" style="color:var(--success)"><i class="fa fa-users"></i></div>
                         <div class="stat-info">
-                            <div class="value" style="color:var(--danger)" id="globalLowStockCount">0</div>
-                            <div class="label" data-en="Low Stock Alerts" data-ar="تنبيهات نواقص">Low Stock Alerts</div>
+                            <div class="value" id="globalDealersCount">0</div>
+                            <div class="label" data-en="Registered Dealers" data-ar="الوكلاء المسجلين">Registered Dealers</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- QUICK ACTIONS -->
-                <div style="display:flex; gap:12px; margin-top:20px; align-items:center; flex-wrap:wrap;">
-                    <a href="products.html" class="btn btn-outline btn-sm" data-en="+ Add New Product" data-ar="+ إضافة منتج جديد"><i class="fa fa-plus"></i> + Add New Product</a>
-                    <a href="settings.html" class="btn btn-outline btn-sm" data-en="Site Settings" data-ar="إعدادات الموقع"><i class="fa fa-gear"></i> Site Settings</a>
-                    <a href="../index.html" target="_blank" class="btn btn-ghost btn-sm" data-en="View Live Site" data-ar="معاينة الموقع"><i class="fa fa-external-link-alt"></i> View Live Site</a>
+                <!-- CHARTS AND ACTIVITY -->
+                <div class="dashboard-grid">
+                    <!-- Analytics Chart -->
+                    <div class="glass-chart">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                            <h4 class="text-white" data-en="Revenue Analytics" data-ar="إحصائيات المبيعات">Revenue Analytics</h4>
+                            <select style="background:var(--dark-2); border:1px solid rgba(255,255,255,0.1); color:var(--gray-300); padding:4px 8px; border-radius:4px;">
+                                <option>Last 30 Days</option>
+                            </select>
+                        </div>
+                        <div style="position: relative; height: 300px; width: 100%;">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="glass-chart" style="padding:24px;">
+                        <h4 class="text-white" style="margin-bottom:20px;" data-en="Recent Activity" data-ar="أحدث الأنشطة">Recent Activity</h4>
+                        <div id="activityFeed">
+                            <div style="text-align:center; padding: 20px;"><i class="fa fa-spinner fa-spin text-muted"></i></div>
+                        </div>
+                    </div>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 20px; margin-top: 20px;">
+                <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 24px; margin-top: 24px;">
                     <!-- Pending Orders -->
                     <div class="table-wrap glass-panel mt-0">
                         <div class="table-header">
                             <h4 class="text-white" data-en="Recent Pending Orders" data-ar="الطلبات المعلقة الأخيرة">Recent Pending Orders</h4>
                             <a href="orders.html" class="btn btn-primary btn-sm" data-en="Manage Orders" data-ar="إدارة الفواتير">Manage Orders</a>
                         </div>
-                        <table>
+                        <table style="width:100%; border-collapse:collapse;">
                             <thead>
-                                <tr>
-                                    <th data-en="Invoice #" data-ar="رقم الفاتورة">Invoice #</th>
-                                    <th data-en="Date" data-ar="التاريخ">Date</th>
-                                    <th data-en="Total" data-ar="الإجمالي">Total</th>
-                                    <th></th>
+                                <tr style="border-bottom:1px solid rgba(255,255,255,0.05)">
+                                    <th style="padding:12px; text-align:left; color:var(--gray-500); font-size:0.8rem" data-en="Invoice #" data-ar="رقم الفاتورة">Invoice #</th>
+                                    <th style="padding:12px; text-align:left; color:var(--gray-500); font-size:0.8rem" data-en="Date" data-ar="التاريخ">Date</th>
+                                    <th style="padding:12px; text-align:left; color:var(--gray-500); font-size:0.8rem" data-en="Total" data-ar="الإجمالي">Total</th>
                                 </tr>
                             </thead>
                             <tbody id="recentPendingOrdersTbody">
                                 <tr>
-                                    <td colspan="4" style="text-align:center;padding:24px"><i class="fa fa-spinner fa-spin text-muted"></i></td>
+                                    <td colspan="3" style="text-align:center;padding:24px"><i class="fa fa-spinner fa-spin text-muted"></i></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -159,20 +214,19 @@
                     <!-- Low Stock Alerts -->
                     <div class="table-wrap glass-panel mt-0" style="border: 1px solid rgba(232, 26, 26, 0.2);">
                         <div class="table-header">
-                            <h4 class="text-white" style="color:var(--danger) !important" data-en="Low Stock (< 10)" data-ar="نواقص (أقل من 10)">Low Stock (< 10)</h4>
+                            <h4 class="text-white" style="color:var(--danger) !important" data-en="Low Stock Alerts" data-ar="نواقص المخزون">Low Stock Alerts</h4>
                             <a href="products.html" class="btn btn-ghost btn-sm text-danger" data-en="Refill" data-ar="إدارة المقاسات">Refill</a>
                         </div>
-                        <table>
+                        <table style="width:100%; border-collapse:collapse;">
                             <thead>
-                                <tr>
-                                    <th data-en="SKU" data-ar="الكود">SKU</th>
-                                    <th data-en="Name" data-ar="الاسم">Name</th>
-                                    <th data-en="Stock" data-ar="المخزون">Stock</th>
+                                <tr style="border-bottom:1px solid rgba(255,255,255,0.05)">
+                                    <th style="padding:12px; text-align:left; color:var(--gray-500); font-size:0.8rem" data-en="SKU" data-ar="الكود">SKU</th>
+                                    <th style="padding:12px; text-align:left; color:var(--gray-500); font-size:0.8rem" data-en="Stock" data-ar="المخزون">Stock</th>
                                 </tr>
                             </thead>
                             <tbody id="lowStockTbody">
                                 <tr>
-                                    <td colspan="3" style="text-align:center;padding:24px"><i class="fa fa-spinner fa-spin text-muted"></i></td>
+                                    <td colspan="2" style="text-align:center;padding:24px"><i class="fa fa-spinner fa-spin text-muted"></i></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -184,30 +238,18 @@
     </div>
 
     <script>
-        let currentLang = localStorage.getItem('lang') || 'en';
-
-        function setLang(lang) {
-            currentLang = lang;
-            localStorage.setItem('lang', lang);
-            document.documentElement.lang = lang;
-            document.body.classList.toggle('lang-ar', lang === 'ar');
-            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-            document.getElementById('btn-ar').classList.toggle('active', lang === 'ar');
-            document.querySelectorAll('[data-en]').forEach(el => {
-                const t = el.getAttribute('data-' + lang);
-                if (t) el.innerHTML = t;
-            });
-        }
+        
 
         async function fetchAdminDashboard() {
             try {
                 // Fetch Orders
                 const ordersRes = await fetch('http://localhost:5000/api/orders');
                 const ordersJson = await ordersRes.json();
+                let allOrders = [];
+                let pendingOrders = [];
                 if(ordersJson.success) {
-                    const allOrders = ordersJson.data;
-                    const pendingOrders = allOrders.filter(o => o.status === 'Pending');
+                    allOrders = ordersJson.data || [];
+                    pendingOrders = allOrders.filter(o => o.status === 'Pending');
                     
                     document.getElementById('globalPendingCount').textContent = pendingOrders.length;
                     document.getElementById('adminPendingBadge').textContent = pendingOrders.length;
@@ -217,52 +259,149 @@
                     
                     const tbody = document.getElementById('recentPendingOrdersTbody');
                     if(pendingOrders.length === 0) {
-                        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">No pending orders found.</td></tr>`;
+                        tbody.innerHTML = `<tr><td colspan="3" style="text-align:center">No pending orders found.</td></tr>`;
                     } else {
                         tbody.innerHTML = pendingOrders.slice(0, 5).map(o => {
                             const dateObj = new Date(o.date);
-                            const dateStr = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                            const dateStr = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
                             return `
                             <tr>
-                                <td class="text-white fw-700">${o.invoiceNumber}</td>
-                                <td>${dateStr}</td>
-                                <td class="text-white fw-700">EGP ${o.totalAmount.toLocaleString()}</td>
-                                <td style="text-align:right"><a href="orders.html" class="btn btn-ghost btn-sm" style="color:var(--warning)" data-en="Review" data-ar="مراجعة">${currentLang === 'ar' ? 'مراجعة' : 'Review'}</a></td>
+                                <td class="text-white fw-700" style="padding:12px; border-bottom:1px solid rgba(255,255,255,.05)">${o.invoiceNumber}</td>
+                                <td style="padding:12px; border-bottom:1px solid rgba(255,255,255,.05)">${dateStr}</td>
+                                <td class="text-white fw-700" style="padding:12px; border-bottom:1px solid rgba(255,255,255,.05)">EGP ${o.totalAmount.toLocaleString()}</td>
                             </tr>
                             `;
                         }).join('');
                     }
                 }
                 
-                // Fetch Products Count & Low stock
+                // Fetch Products
                 const pRes = await fetch('http://localhost:5000/api/products');
                 const pJson = await pRes.json();
                 if(pJson.success) {
-                    const allProducts = pJson.data;
+                    const allProducts = pJson.data || [];
                     document.getElementById('globalProductCount').textContent = allProducts.length;
                     
                     const lowStockItems = allProducts.filter(p => p.stock !== undefined && p.stock < 10);
-                    document.getElementById('globalLowStockCount').textContent = lowStockItems.length;
-                    
                     const lstbody = document.getElementById('lowStockTbody');
                     if(lowStockItems.length === 0) {
-                        lstbody.innerHTML = `<tr><td colspan="3" style="text-align:center" data-en="No low stock items." data-ar="لا يوجد منتجات ناقصة.">${currentLang==='ar'?'لا يوجد منتجات ناقصة.':'No low stock items.'}</td></tr>`;
+                        lstbody.innerHTML = `<tr><td colspan="2" style="text-align:center" data-en="No low stock items." data-ar="لا يوجد منتجات ناقصة.">${currentLang==='ar'?'لا يوجد منتجات ناقصة.':'No low stock items.'}</td></tr>`;
                     } else {
                         lstbody.innerHTML = lowStockItems.slice(0, 6).map(p => {
-                            const name = currentLang === 'ar' ? (p.nameAr || p.nameEn) : (p.nameEn || p.nameAr);
                             return `
                             <tr>
-                                <td class="text-white fw-700" style="font-size:0.85rem">${p.sku}</td>
-                                <td>${name}</td>
-                                <td style="color:var(--danger); font-weight:700;">${p.stock}</td>
+                                <td class="text-white fw-700" style="font-size:0.85rem; padding:12px; border-bottom:1px solid rgba(255,255,255,.05)">${p.sku}</td>
+                                <td style="color:var(--danger); font-weight:700; padding:12px; border-bottom:1px solid rgba(255,255,255,.05)">${p.stock}</td>
                             </tr>
                             `;
                         }).join('');
                     }
                 }
+
+                // Fetch Dealers
+                const dRes = await fetch('http://localhost:5000/api/dealers');
+                const dJson = await dRes.json();
+                let newDealersCount = 0;
+                if(dJson.success) {
+                    document.getElementById('globalDealersCount').textContent = (dJson.data || []).length;
+                    newDealersCount = (dJson.data || []).filter(d => d.status === 'Pending').length;
+                }
+
+                initChart(allOrders);
+
+                // Build Activity Feed
+                const feed = document.getElementById('activityFeed');
+                let activities = [];
+                allOrders.slice(0, 3).forEach(o => {
+                    activities.push({
+                        icon: '<i class="fa fa-file-invoice"></i>',
+                        bg: 'rgba(59, 130, 246, 0.1)', color: '#60a5fa',
+                        time: new Date(o.date).toLocaleDateString(),
+                        textEn: `New order <strong style="color:var(--white)">${o.invoiceNumber}</strong> placed for EGP ${o.totalAmount.toLocaleString()}`,
+                        textAr: `طلب جديد <strong style="color:var(--white)">${o.invoiceNumber}</strong> بقيمة ${o.totalAmount.toLocaleString()} جنيه`
+                    });
+                });
+                if(newDealersCount > 0) {
+                     activities.unshift({
+                        icon: '<i class="fa fa-user-plus"></i>',
+                        bg: 'rgba(34, 197, 94, 0.1)', color: '#4ade80',
+                        time: 'Recently',
+                        textEn: `New <strong>${newDealersCount}</strong> dealer registrations waiting for approval.`,
+                        textAr: `يوجد <strong>${newDealersCount}</strong> طلبات تسجيل وكلاء جديدة.`
+                    });
+                }
+                
+                feed.innerHTML = activities.map(a => `
+                    <div class="activity-item">
+                        <div class="activity-icon" style="background:${a.bg}; color:${a.color}">${a.icon}</div>
+                        <div>
+                            <div style="font-size:0.85rem; color:var(--gray-300)" data-en='${a.textEn}' data-ar='${a.textAr}'>${currentLang==='ar'?a.textAr:a.textEn}</div>
+                            <div style="font-size:0.75rem; color:var(--gray-500); margin-top:4px;">${a.time}</div>
+                        </div>
+                    </div>
+                `).join('');
+
             } catch(e) {
                 console.error(e);
             }
+        }
+
+        function initChart(allOrders) {
+            const monthlyRevenue = {
+                'Jan': 0, 'Feb': 0, 'Mar': 0, 'Apr': 0, 'May': 0, 'Jun': 0,
+                'Jul': 0, 'Aug': 0, 'Sep': 0, 'Oct': 0, 'Nov': 0, 'Dec': 0
+            };
+            
+            allOrders.forEach(o => {
+                if (o.status !== 'Rejected' && o.status !== 'Pending') {
+                    const date = new Date(o.date || o.createdAt);
+                    const month = date.toLocaleString('en-US', { month: 'short' });
+                    if (monthlyRevenue[month] !== undefined) {
+                        monthlyRevenue[month] += o.totalAmount || 0;
+                    }
+                }
+            });
+
+            const labels = Object.keys(monthlyRevenue);
+            const data = Object.values(monthlyRevenue);
+            
+            const ctx = document.getElementById('revenueChart').getContext('2d');
+            
+            if (window.myChartInstance) {
+                window.myChartInstance.destroy();
+            }
+
+            Chart.defaults.color = "rgba(255, 255, 255, 0.5)";
+            Chart.defaults.font.family = "'Outfit', 'Cairo', sans-serif";
+
+            window.myChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: currentLang === 'ar' ? 'الإيرادات (جنيه)' : 'Revenue (EGP)',
+                        data: data,
+                        borderColor: '#e8231a',
+                        backgroundColor: 'rgba(232, 35, 26, 0.1)',
+                        borderWidth: 3,
+                        pointBackgroundColor: '#e8231a',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { color: 'rgba(255, 255, 255, 0.05)', drawBorder: false } },
+                        y: { grid: { color: 'rgba(255, 255, 255, 0.05)', drawBorder: false }, beginAtZero: true }
+                    }
+                }
+            });
         }
 
         window.addEventListener('languageChanged', (e) => {

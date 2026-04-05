@@ -983,6 +983,7 @@
                 <li><a href="about.html" class="nav-link" data-en="About" data-ar="عن الشركة">About</a></li>
                 <li><a href="media.html" class="nav-link" data-en="Media Center" data-ar="المركز الإعلامي">Media Center</a></li>
                 <li><a href="contact.html" class="nav-link" data-en="Contact" data-ar="تواصل">Contact</a></li>
+                <li><a href="warranty.html" class="nav-link" data-en="Warranty" data-ar="الضمان">Warranty</a></li>
             </ul>
             <div class="nav-actions">
                 <div class="lang-toggle">
@@ -1317,20 +1318,31 @@
     <script>
         // currentLang is now managed by shared.js
         /* ── Vehicle database (make → model → years) ── */
-        const vehicleDB = {
-            'Toyota': { 'Camry': [2018, 2019, 2020, 2021, 2022, 2023, 2024], 'Corolla': [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023], 'Land Cruiser': [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023], 'RAV4': [2018, 2019, 2020, 2021, 2022, 2023], 'Hilux': [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023] },
-            'Hyundai': { 'Elantra': [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024], 'Tucson': [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023], 'Santa Fe': [2018, 2019, 2020, 2021, 2022, 2023], 'i30': [2016, 2017, 2018, 2019, 2020, 2021, 2022], 'Accent': [2017, 2018, 2019, 2020, 2021, 2022, 2023] },
-            'BMW': { '3 Series': [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024], '5 Series': [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024], 'X3': [2018, 2019, 2020, 2021, 2022, 2023, 2024], 'X5': [2019, 2020, 2021, 2022, 2023, 2024], '1 Series': [2017, 2018, 2019, 2020, 2021, 2022, 2023] },
-            'Mercedes-Benz': { 'C-Class': [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023], 'E-Class': [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024], 'GLC': [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023], 'GLE': [2020, 2021, 2022, 2023, 2024], 'A-Class': [2018, 2019, 2020, 2021, 2022, 2023] },
-            'Volkswagen': { 'Golf': [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024], 'Passat': [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022], 'Tiguan': [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024], 'Polo': [2018, 2019, 2020, 2021, 2022, 2023, 2024] },
-            'Nissan': { 'Altima': [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023], 'Patrol': [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023], 'X-Trail': [2017, 2018, 2019, 2020, 2021, 2022, 2023], 'Qashqai': [2017, 2018, 2019, 2020, 2021, 2022, 2023] },
-            'Kia': { 'Sportage': [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024], 'Cerato': [2017, 2018, 2019, 2020, 2021, 2022, 2023], 'Sorento': [2018, 2019, 2020, 2021, 2022, 2023, 2024], 'K5': [2020, 2021, 2022, 2023, 2024] },
-            'Ford': { 'Focus': [2015, 2016, 2017, 2018, 2019], 'Escape': [2017, 2018, 2019, 2020, 2021, 2022, 2023], 'F-150': [2019, 2020, 2021, 2022, 2023, 2024], 'Explorer': [2018, 2019, 2020, 2021, 2022, 2023] },
-            'Audi': { 'A4': [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023], 'Q5': [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024], 'A3': [2015, 2016, 2017, 2018, 2019, 2020, 2021], 'Q3': [2019, 2020, 2021, 2022, 2023] },
-            'Renault': { 'Duster': [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023], 'Clio': [2016, 2017, 2018, 2019, 2020, 2021, 2022], 'Megane': [2016, 2017, 2018, 2019, 2020, 2021] },
-            'Honda': { 'Civic': [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024], 'CR-V': [2017, 2018, 2019, 2020, 2021, 2022, 2023], 'Accord': [2018, 2019, 2020, 2021, 2022, 2023] },
-            'Mitsubishi': { 'Pajero': [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022], 'L200': [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023], 'Eclipse Cross': [2018, 2019, 2020, 2021, 2022, 2023] },
-        };
+        let vehicleDB = {};
+
+        async function fetchVehicles() {
+            try {
+                const res = await fetch('http://localhost:5000/api/vehicles');
+                const json = await res.json();
+                if(json.success) {
+                    json.data.forEach(v => {
+                        const m = currentLang === 'ar' ? (v.makeAr || v.make) : v.make;
+                        if (!vehicleDB[m]) vehicleDB[m] = {};
+                        const mod = currentLang === 'ar' ? (v.modelAr || v.model) : v.model;
+                        if (!vehicleDB[m][mod]) vehicleDB[m][mod] = [];
+                        
+                        if (v.years && v.years.length > 0) {
+                            v.years.forEach(yr => {
+                                const yNum = Number(yr);
+                                if (!isNaN(yNum) && !vehicleDB[m][mod].includes(yNum)) {
+                                    vehicleDB[m][mod].push(yNum);
+                                }
+                            });
+                        }
+                    });
+                }
+            } catch(e) { console.error('Failed to load vehicles from API', e); }
+        }
 
         let vsbMake = '', vsbModel = '', vsbYear = '';
 
@@ -1379,10 +1391,42 @@
                 const json = await res.json();
                 if(json.success) {
                     allProducts = json.data.map(p => {
-                        // Map compatibility array to a valid make
-                        let foundMake = 'Toyota';
-                        for(let make in vehicleDB) {
-                            if(p.compatibility.some(m => vehicleDB[make][m])) { foundMake = make; break; }
+                        // Map vehicles array to a valid make and extract models/years
+                        let foundMake = 'Universal';
+                        let extractedModels = [];
+                        let extractedYears = [2019, 2020, 2021, 2022]; // Default years
+                        
+                        if (p.vehicles && p.vehicles.length > 0) {
+                            foundMake = p.vehicles[0].make || 'Universal';
+                            extractedModels = p.vehicles.map(v => v.model).filter(Boolean);
+                            const parsedYears = [];
+                            p.vehicles.forEach(v => {
+                                if(!v.year) return;
+                                if(v.year === "All") return;
+                                if (v.year.includes('-')) {
+                                    const parts = v.year.split('-');
+                                    const start = parseInt(parts[0]);
+                                    const end = parseInt(parts[1]);
+                                    if (!isNaN(start) && !isNaN(end)) {
+                                        for(let y = start; y <= end; y++) {
+                                            parsedYears.push(y);
+                                        }
+                                    }
+                                } else {
+                                    const numYear = Number(v.year);
+                                    if (!isNaN(numYear)) parsedYears.push(numYear);
+                                }
+                            });
+                            
+                            if (parsedYears.length > 0) extractedYears = Array.from(new Set(parsedYears));
+                        }
+                        
+                        // Fallback logic if products are using legacy 'compatibility' property
+                        if (p.compatibility && Array.isArray(p.compatibility)) {
+                            for(let make in vehicleDB) {
+                                if(p.compatibility.some(m => vehicleDB[make][m])) { foundMake = make; break; }
+                            }
+                            extractedModels = p.compatibility;
                         }
                         
                         // Map category to icon
@@ -1391,18 +1435,19 @@
                         return {
                             id: p.sku,
                             sku: p.sku,
-                            name: p.nameEn,
-                            nameAr: p.nameAr,
-                            brand: p.brand,
+                            name: p.nameEn || p.nameAr || 'Unknown Part',
+                            nameAr: p.nameAr || p.nameEn || 'قطعة مجهولة',
+                            brand: p.brand || 'Unknown',
                             cat: p.category === 'Body' ? 'Body Parts' : (p.category === 'Brakes' ? 'Braking' : p.category),
                             make: foundMake,
-                            models: p.compatibility,
-                            years: [2019, 2020, 2021, 2022], // Simplified mapping
+                            models: extractedModels,
+                            years: extractedYears,
                             icon: catIcons[p.category] || '🔧',
                             stock: p.stock > 10 ? 'in' : (p.stock > 0 ? 'low' : 'out'),
-                            isOE: p.isOE,
-                            isHot: p.isHot,
-                            isNew: p.isNew
+                            isOE: p.isOE || false,
+                            isHot: p.isHot || false,
+                            isNew: p.isNew || false,
+                            imageUrl: p.imageUrl || null
                         };
                     });
                     filtered = [...allProducts];
@@ -1530,7 +1575,11 @@
             document.getElementById('qvTitle').textContent = ar ? p.nameAr : p.name;
             document.getElementById('qvSku').textContent = p.sku;
             document.getElementById('qvName').textContent = ar ? p.nameAr : p.name;
-            document.getElementById('qvIcon').textContent = p.icon;
+            if(p.imageUrl) {
+                document.getElementById('qvIcon').innerHTML = `<img src="http://localhost:5000/uploads/${p.imageUrl}" style="max-width:80%; max-height:80%; object-fit:contain; border-radius: var(--r-xl)" />`;
+            } else {
+                document.getElementById('qvIcon').textContent = p.icon;
+            }
             document.getElementById('qvDetailLink').href = `product.html?id=${p.id}`;
             const sl = stockLabels[p.stock || 'in'];
             
@@ -1636,15 +1685,17 @@
                 const oeLabel = catalogTranslations.ui.oe[ar ? 'ar' : 'en'];
 
                 return `
-                <div class="product-card glass-panel reveal" onclick="openQuickView(${p.id})">
+                <div class="product-card glass-panel reveal" onclick="openQuickView('${p.id}')">
                     <div class="product-badge-group">
                         ${p.isNew ? `<span class="badge badge-new">${ar ? 'جديد' : 'New'}</span>` : ''}
                         ${p.isHot ? `<span class="badge badge-hot">${ar ? 'الأكثر طلباً' : 'Hot'}</span>` : ''}
                         ${p.isOE ? `<span class="badge badge-oe">${oeLabel}</span>` : ''}
                     </div>
-                    <div class="product-icon-box">
-                        <span class="product-icon">${p.icon}</span>
-                    </div>
+                    ${p.imageUrl ? 
+                    `<div class="product-card-img" style="background:#fff"><img src="http://localhost:5000/uploads/${p.imageUrl}" style="width:100%; height:100%; object-fit:contain;"></div>` 
+                    : 
+                    `<div class="product-icon-box"><span class="product-icon">${p.icon}</span></div>`
+                    }
                     <div class="product-info">
                         <div class="product-cat">${catTrans}</div>
                         <h3 class="product-name">${ar ? p.nameAr : p.name}</h3>
@@ -1713,8 +1764,13 @@
         document.getElementById('dealerModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeDealerModal(); });
 
         // Initialized by shared.js
-        vsbInit();
-        fetchProducts();
+        async function runCatalog() {
+            await fetchVehicles();
+            vsbInit();
+            fetchProducts();
+        }
+        
+        runCatalog();
     </script>
 <script src="js/shared.js"></script>
 </body>

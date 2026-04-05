@@ -641,24 +641,7 @@
     </div>
 
     <script>
-        let currentLang = localStorage.getItem('lang') || 'en';
-
-        function setLang(lang) {
-            currentLang = lang;
-            localStorage.setItem('lang', lang);
-            document.documentElement.lang = lang;
-            document.body.classList.toggle('lang-ar', lang === 'ar');
-            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-            document.getElementById('btn-ar').classList.toggle('active', lang === 'ar');
-            document.querySelectorAll('[data-en]').forEach(el => {
-                const t = el.getAttribute('data-' + lang);
-                if (t) el.innerHTML = t;
-            });
-            document.querySelectorAll('[data-placeholder-en]').forEach(el => {
-                el.placeholder = el.getAttribute('data-placeholder-' + lang) || el.placeholder;
-            });
-        }
+        
 
         function switchTab(name) {
             document.querySelectorAll('.tab-section').forEach(t => t.classList.remove('active'));

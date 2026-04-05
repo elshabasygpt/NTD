@@ -212,6 +212,37 @@ function showToast(message, type = 'info', duration = 3500) {
     }, duration);
 }
 
+// ─── Dealer Authentication Bindings ───
+function initDealerProfileSidebar() {
+    const dealerStr = localStorage.getItem('dealerData');
+    // Basic verification that we are inside a dealer view (checking for the specific sidebar-footer pattern)
+    const sidebarFooterBox = document.querySelector('.sidebar-footer .d-flex > div:nth-child(2)');
+    if (dealerStr && sidebarFooterBox && !window.location.pathname.includes('/admin')) {
+        try {
+            const data = JSON.parse(dealerStr);
+            const name = data.contactPerson || 'Dealer';
+            const company = data.companyNameEn || (data.companyNameAr || 'Company');
+            const initials = name.substring(0, 2).toUpperCase();
+
+            // Update Avatars (if not already overwritten by an image via profile fetch)
+            document.querySelectorAll('.topbar-avatar').forEach(el => {
+                if(!el.innerHTML.includes('<img')) {
+                    el.textContent = initials;
+                }
+            });
+
+            // Update the sidebar text dynamically
+            if (sidebarFooterBox.children.length >= 2) {
+                sidebarFooterBox.children[0].textContent = name;
+                sidebarFooterBox.children[1].textContent = company;
+                // Remove data-en/data-ar so setLang doesn't overwrite it!
+                sidebarFooterBox.children[1].removeAttribute('data-en');
+                sidebarFooterBox.children[1].removeAttribute('data-ar');
+            }
+        } catch(e) {}
+    }
+}
+
 // ─── Initialize Everything ───
 document.addEventListener('DOMContentLoaded', () => {
     setLang(currentLang);
@@ -222,6 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initBackToTop();
     initLoadingBar();
     fetchDynamicSettings();
+    initDealerProfileSidebar();
 });
 
 // ─── Dynamic Settings ───

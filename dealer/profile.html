@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile – NUTD Portal</title>
+    <link rel="icon" type="image/svg+xml" href="../img/favicon.svg" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: .85rem;
+            color: var(--gray-300);
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            background: rgba(255, 255, 255, .03);
+            border: 1px solid rgba(255, 255, 255, .1);
+            color: var(--white);
+            padding: 12px 16px;
+            border-radius: var(--r-md);
+            font-family: inherit;
+            font-size: .9rem;
+            transition: all .2s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: rgba(232, 35, 26, .5);
+            background: rgba(232, 35, 26, .05);
+        }
+
+        .form-control:disabled {
+            background: rgba(255, 255, 255, .01);
+            color: var(--gray-500);
+            cursor: not-allowed;
+            border-color: rgba(255, 255, 255, .05);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .profile-header-card {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            padding: 30px;
+            margin-bottom: 24px;
+        }
+
+        .profile-avatar-lg {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--red) 0%, #aa140f 100%);
+            border-radius: 50%;
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 700;
+            box-shadow: 0 4px 20px rgba(232, 35, 26, 0.4);
+        }
+
+        @media(max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .profile-header-card {
+                flex-direction: column;
+                text-align: center;
+            }
+            .sidebar {
+                display: none;
+            }
+            .portal-main {
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="portal-layout">
+
+        <!-- =========== SIDEBAR =========== -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <img src="../img/logo.svg" alt="NUTD" style="height:32px" />
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="sidebar-section-label" data-en="Main" data-ar="رئيسي">Main</div>
+                <a href="dashboard.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-gauge"></i></span>
+                    <span data-en="Dashboard" data-ar="الداشبورد">Dashboard</span>
+                </a>
+                <a href="products.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-boxes-stacked"></i></span>
+                    <span data-en="Products & Pricing" data-ar="المنتجات والأسعار">Products &amp; Pricing</span>
+                </a>
+                <a href="invoice.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-file-invoice"></i></span>
+                    <span data-en="Create Invoice" data-ar="إنشاء فاتورة">Create Invoice</span>
+                    <span class="badge" data-en="New" data-ar="جديد">New</span>
+                </a>
+
+                <div class="sidebar-section-label" data-en="Orders" data-ar="الطلبات">Orders</div>
+                <a href="orders.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-clock-rotate-left"></i></span>
+                    <span data-en="Order History" data-ar="سجل الطلبات">Order History</span>
+                </a>
+                <a href="orders.html?status=Pending" class="sidebar-link" id="navPending">
+                    <span class="icon"><i class="fa fa-list-check"></i></span>
+                    <span data-en="Pending Approvals" data-ar="في انتظار الموافقة">Pending Approvals</span>
+                    <span class="badge" id="sidebarPendingBadge">0</span>
+                </a>
+
+                <div class="sidebar-section-label" data-en="Account" data-ar="الحساب">Account</div>
+                <a href="profile.html" class="sidebar-link active">
+                    <span class="icon"><i class="fa fa-user-gear"></i></span>
+                    <span data-en="Profile" data-ar="الملف الشخصي">Profile</span>
+                </a>
+                <a href="#" class="sidebar-link" onclick="alert(currentLang === 'ar' ? 'قريباً!' : 'Coming soon!'); return false;">
+                    <span class="icon"><i class="fa fa-headset"></i></span>
+                    <span data-en="Support" data-ar="الدعم">Support</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="d-flex align-center gap-12 mb-16">
+                    <div class="topbar-avatar">AH</div>
+                    <div>
+                        <div style="font-size:.85rem;font-weight:600;color:var(--white)">Ahmed Hassan</div>
+                        <div style="font-size:.72rem;color:var(--gray-500)" data-en="Al-Nour Auto Parts"
+                            data-ar="النور لقطع السيارات">Al-Nour Auto Parts</div>
+                    </div>
+                </div>
+                <a href="login.html" class="btn btn-ghost btn-sm btn-full">
+                    <i class="fa fa-right-from-bracket"></i>
+                    <span data-en="Sign Out" data-ar="تسجيل الخروج">Sign Out</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- =========== MAIN CONTENT =========== -->
+        <main class="portal-main">
+
+            <!-- TOP BAR -->
+            <div class="portal-topbar">
+                <div>
+                    <span class="topbar-title" data-en="Profile" data-ar="الملف الشخصي">Profile</span>
+                </div>
+                <div class="topbar-actions">
+                    <div class="lang-toggle">
+                        <button onclick="setLang('en')" class="active" id="btn-en">EN</button>
+                        <button onclick="setLang('ar')" id="btn-ar">AR</button>
+                    </div>
+                    <button class="btn-icon btn-ghost notif-btn" style="position:relative">
+                        <i class="fa fa-bell" style="font-size:1rem;color:var(--gray-300)"></i>
+                        <span class="notif-dot"></span>
+                    </button>
+                    <div class="topbar-avatar">AH</div>
+                </div>
+            </div>
+
+            <!-- PORTAL CONTENT -->
+            <div class="portal-content">
+                
+                <!-- HEADER CARD -->
+                <div class="glass-panel profile-header-card">
+                    <div class="profile-avatar-lg">AH</div>
+                    <div>
+                        <h2 class="text-white" style="margin-bottom: 4px;">Ahmed Hassan</h2>
+                        <div style="color: var(--gray-400); font-size: .95rem; margin-bottom: 12px;" data-en="Al-Nour Auto Parts" data-ar="النور لقطع السيارات">Al-Nour Auto Parts</div>
+                        <span class="badge badge-approved" data-en="Approved Dealer" data-ar="تاجر معتمد">Approved Dealer</span>
+                        <span class="badge" style="background: rgba(255,255,255,0.05); color: var(--gray-300);" data-en="Member since April 2024" data-ar="عضو منذ أبريل 2024">Member since April 2024</span>
+                    </div>
+                </div>
+
+                <div style="display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start">
+
+                    <!-- LEFT COLUMN: Profile Details -->
+                    <div>
+                        <div class="glass-panel" style="padding: 24px;">
+                            <h4 class="text-white mb-24" data-en="Account Information" data-ar="معلومات الحساب">Account Information</h4>
+                            
+                            <form onsubmit="saveProfile(event)">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label" data-en="Full Name" data-ar="الاسم الكامل">Full Name</label>
+                                        <input type="text" id="profileName" class="form-control" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" data-en="Email Address" data-ar="البريد الإلكتروني">Email Address</label>
+                                        <input type="email" id="profileEmail" class="form-control" disabled />
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label" data-en="Phone Number" data-ar="رقم الجوال">Phone Number</label>
+                                        <input type="tel" id="profilePhone" class="form-control" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" data-en="Region / City" data-ar="المنطقة / المدينة">Region / City</label>
+                                        <input type="text" id="profileRegion" class="form-control" />
+                                    </div>
+                                </div>
+
+                                <div class="auth-divider" style="margin: 20px 0; border-top: 1px dashed rgba(255,255,255,0.1);"></div>
+
+                                <h4 class="text-white mb-20" style="font-size: 1.05rem;" data-en="Business Details" data-ar="تفاصيل النشاط التجاري">Business Details</h4>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label" data-en="Company Name" data-ar="اسم الشركة">Company Name</label>
+                                        <input type="text" id="profileCompany" class="form-control" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" data-en="Tax ID / Commercial Register" data-ar="الرقم الضريبي / السجل التجاري">Tax ID / Commercial Register</label>
+                                        <input type="text" id="profileTaxId" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" data-en="Physical Address" data-ar="العنوان المادي">Physical Address</label>
+                                    <input type="text" id="profileAddress" class="form-control" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" data-en="Google Maps Link (Optional)" data-ar="رابط خرائط جوجل (اختياري)">Google Maps Link (Optional)</label>
+                                    <input type="url" id="profileMapsUrl" class="form-control" placeholder="https://maps.google.com/..." />
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label" data-en="Company Logo (Optional)" data-ar="شعار الشركة (اختياري)">Company Logo (Optional)</label>
+                                    <div class="d-flex align-center gap-12">
+                                        <div style="width: 50px; height: 50px; background: rgba(255,255,255,0.05); border: 1px dashed rgba(255,255,255,0.2); border-radius: var(--r-sm); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+                                            <i id="logoIcon" class="fa fa-image text-muted"></i>
+                                            <img id="logoPreviewImg" style="width:100%; height:100%; object-fit:cover; display:none;" />
+                                        </div>
+                                        <input type="file" id="logoUploadInput" class="form-control" style="flex:1; padding: 9px;" accept="image/*" onchange="previewLogo(event)" />
+                                    </div>
+                                </div>
+
+                                <div class="mt-24" style="text-align: right;">
+                                    <button type="submit" class="btn btn-primary btn-lg">
+                                        <i class="fa fa-save"></i>
+                                        <span data-en="Save Changes" data-ar="حفظ التعديلات">Save Changes</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT COLUMN: Security -->
+                    <div>
+                        <div class="glass-panel" style="padding: 24px;">
+                            <h4 class="text-white mb-24" data-en="Security Settings" data-ar="إعدادات الأمان">Security Settings</h4>
+                            
+                            <form onsubmit="changePassword(event)">
+                                <div class="form-group">
+                                    <label class="form-label" data-en="Current Password" data-ar="كلمة المرور الحالية">Current Password</label>
+                                    <input type="password" class="form-control" placeholder="••••••••" required />
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" data-en="New Password" data-ar="كلمة المرور الجديدة">New Password</label>
+                                    <input type="password" class="form-control" placeholder="••••••••" required />
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" data-en="Confirm New Password" data-ar="تأكيد كلمة المرور">Confirm New Password</label>
+                                    <input type="password" class="form-control" placeholder="••••••••" required />
+                                </div>
+
+                                <div class="mt-24">
+                                    <button type="submit" class="btn btn-outline btn-full">
+                                        <i class="fa fa-lock"></i>
+                                        <span data-en="Update Password" data-ar="تحديث كلمة المرور">Update Password</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast"
+        style="position:fixed;bottom:24px;right:24px;background:var(--success);color:white;padding:12px 20px;border-radius:var(--r-md);font-size:.85rem;font-weight:600;transform:translateY(80px);transition:transform .3s;z-index:9999;box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+        <i class="fa fa-check-circle" style="margin-right: 6px;"></i> <span id="toastMsg">Changes Saved</span>
+    </div>
+
+    <script>
+        
+
+        function showToast(msgEn, msgAr) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').textContent = currentLang === 'ar' ? msgAr : msgEn;
+            toast.style.transform = 'translateY(0)';
+            setTimeout(() => toast.style.transform = 'translateY(80px)', 3000);
+        }
+
+        async function saveProfile(e) {
+            e.preventDefault();
+            const dealerId = localStorage.getItem('dealerId');
+            if (!dealerId) return alert('Not logged in!');
+
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
+            btn.disabled = true;
+
+            const formData = new FormData();
+            formData.append('contactPerson', document.getElementById('profileName').value);
+            formData.append('phone', document.getElementById('profilePhone').value);
+            formData.append('region', document.getElementById('profileRegion').value);
+            formData.append('companyNameEn', document.getElementById('profileCompany').value);
+            formData.append('taxId', document.getElementById('profileTaxId').value);
+            formData.append('address', document.getElementById('profileAddress').value);
+            formData.append('mapsUrl', document.getElementById('profileMapsUrl').value);
+            
+            const fileInput = document.getElementById('logoUploadInput');
+            if (fileInput.files[0]) {
+                formData.append('logo', fileInput.files[0]);
+            }
+
+            try {
+                const res = await fetch(`http://localhost:5000/api/dealers/${dealerId}`, {
+                    method: 'PUT',
+                    body: formData
+                });
+                const json = await res.json();
+                if (json.success) {
+                    showToast('Profile updated successfully!', 'تم تحديث الملف الشخصي بنجاح!');
+                    // Update header info dynamically
+                    if (json.data.companyNameEn) {
+                        document.querySelectorAll('.profile-header-card h2 + div').forEach(el => {
+                            el.textContent = json.data.companyNameEn;
+                        });
+                    }
+                    if (json.data.contactPerson) {
+                        document.querySelector('.profile-header-card h2').textContent = json.data.contactPerson;
+                    }
+                    
+                    localStorage.setItem('dealerData', JSON.stringify(json.data));
+                    if (typeof initDealerProfileSidebar === 'function') initDealerProfileSidebar();
+                } else {
+                    alert('Error updating profile: ' + json.error);
+                }
+            } catch (err) {
+                alert('Connection error');
+            }
+
+            btn.innerHTML = originalContent;
+            btn.disabled = false;
+        }
+
+        async function changePassword(e) {
+            e.preventDefault();
+            const dealerId = localStorage.getItem('dealerId');
+            if (!dealerId) return;
+
+            const inputs = e.target.querySelectorAll('input');
+            const newPassword = inputs[1].value;
+            const confirmPassword = inputs[2].value;
+
+            if (newPassword !== confirmPassword) {
+                return alert(currentLang === 'ar' ? 'كلمات المرور غير متطابقة!' : 'Passwords do not match!');
+            }
+
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
+            btn.disabled = true;
+
+            try {
+                // We fake a multipart form just for simplicity to match our router
+                const formData = new FormData();
+                formData.append('password', newPassword);
+
+                const res = await fetch(`http://localhost:5000/api/dealers/${dealerId}`, {
+                    method: 'PUT',
+                    body: formData
+                });
+                const json = await res.json();
+                if (json.success) {
+                    e.target.reset(); // clear form
+                    showToast('Password updated successfully!', 'تم تحديث كلمة المرور بنجاح!');
+                } else {
+                    alert('Error: ' + json.error);
+                }
+            } catch (err) {
+                alert('Connection error');
+            }
+
+            btn.innerHTML = originalContent;
+            btn.disabled = false;
+        }
+
+        function previewLogo(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const objectUrl = URL.createObjectURL(file);
+                document.getElementById('logoIcon').style.display = 'none';
+                const previewImg = document.getElementById('logoPreviewImg');
+                previewImg.src = objectUrl;
+                previewImg.style.display = 'block';
+                
+                // Update Avatars globally for a great user experience
+                document.querySelectorAll('.profile-avatar-lg, .topbar-avatar').forEach(el => {
+                    el.style.background = 'none';
+                    el.innerHTML = `<img src="${objectUrl}" style="width:100%; height:100%; object-fit:cover; border-radius:inherit;" />`;
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setLang(currentLang);
+            const dealerId = localStorage.getItem('dealerId');
+            if (!dealerId) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Fetch real dealer data
+            fetch(`http://localhost:5000/api/dealers/${dealerId}`)
+                .then(res => res.json())
+                .then(json => {
+                    if (json.success) {
+                        const d = json.data;
+                        localStorage.setItem('dealerData', JSON.stringify(d));
+                        if (typeof initDealerProfileSidebar === 'function') initDealerProfileSidebar();
+                        
+                        document.getElementById('profileName').value = d.contactPerson || '';
+                        document.getElementById('profileEmail').value = d.email || '';
+                        document.getElementById('profilePhone').value = d.phone || '';
+                        document.getElementById('profileRegion').value = d.region || '';
+                        document.getElementById('profileCompany').value = d.companyNameEn || '';
+                        document.getElementById('profileTaxId').value = d.taxId || '';
+                        document.getElementById('profileAddress').value = d.address || '';
+                        document.getElementById('profileMapsUrl').value = d.mapsUrl || '';
+                        
+                        document.querySelector('.profile-header-card h2').textContent = d.contactPerson || '--';
+                        document.querySelectorAll('.profile-header-card h2 + div').forEach(el => el.textContent = d.companyNameEn || '--');
+                        
+                        if (d.logoUrl) {
+                            const fullUrl = 'http://localhost:5000' + d.logoUrl;
+                            document.getElementById('logoIcon').style.display = 'none';
+                            const previewImg = document.getElementById('logoPreviewImg');
+                            previewImg.src = fullUrl;
+                            previewImg.style.display = 'block';
+                            document.querySelectorAll('.profile-avatar-lg, .topbar-avatar').forEach(el => {
+                                el.style.background = 'none';
+                                el.innerHTML = `<img src="${fullUrl}" style="width:100%; height:100%; object-fit:cover; border-radius:inherit;" />`;
+                            });
+                        }
+                    }
+                })
+                .catch(err => console.log('Error fetching dealer data', err));
+
+            // Fetch pending orders
+            fetch('http://localhost:5000/api/orders')
+                .then(res => res.json())
+                .then(json => {
+                    if (json.success) {
+                        const pendingCount = json.data.filter(o => o.status === 'Pending').length;
+                        document.getElementById('sidebarPendingBadge').textContent = pendingCount;
+                    }
+                })
+                .catch(err => console.log('Mock orders fetch error', err));
+        });
+    </script>
+<script src="../js/shared.js"></script>
+</body>
+
+</html>

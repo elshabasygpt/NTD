@@ -142,7 +142,7 @@
                 </a>
 
                 <div class="sidebar-section-label" data-en="Account" data-ar="الحساب">Account</div>
-                <a href="#" class="sidebar-link" onclick="alert(currentLang === 'ar' ? 'قريباً!' : 'Coming soon!'); return false;">
+                <a href="profile.html" class="sidebar-link">
                     <span class="icon"><i class="fa fa-user-gear"></i></span>
                     <span data-en="Profile" data-ar="الملف الشخصي">Profile</span>
                 </a>
@@ -335,28 +335,7 @@
     </div>
 
     <script>
-        let currentLang = localStorage.getItem('lang') || 'en';
-
-        function setLang(lang) {
-            currentLang = lang;
-            localStorage.setItem('lang', lang);
-            document.documentElement.lang = lang;
-            document.body.classList.toggle('lang-ar', lang === 'ar');
-            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-            
-            const btnEn = document.getElementById('btn-en');
-            const btnAr = document.getElementById('btn-ar');
-            if (btnEn) btnEn.classList.toggle('active', lang === 'en');
-            if (btnAr) btnAr.classList.toggle('active', lang === 'ar');
-            
-            document.querySelectorAll('[data-en]').forEach(el => {
-                const t = el.getAttribute('data-' + lang);
-                if (t) el.innerHTML = t;
-            });
-            document.querySelectorAll('[data-placeholder-en]').forEach(el => {
-                el.placeholder = el.getAttribute('data-placeholder-' + lang) || el.placeholder;
-            });
-        }
+        
 
         let allOrders = [];
         let currentlyEditingOrder = null;

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Vehicles Matrix – NUTD Admin</title>
+    <link rel="icon" type="image/svg+xml" href="../img/favicon.svg" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        .sidebar { background: #0c0c0c; border-right: 1px solid rgba(232, 35, 26, 0.3); } 
+        .sidebar-link.active, .sidebar-link:hover { background: rgba(232, 35, 26, 0.1); border-left: 3px solid var(--red); color: var(--red); }
+        .sidebar-link.active .icon, .sidebar-link:hover .icon { color: var(--red); }
+        
+        .vehicle-table th { padding: 16px; text-transform: uppercase; letter-spacing: .05em; color: var(--gray-500); font-size: .8rem; border-bottom: 1px solid rgba(255, 255, 255, .08); }
+        .vehicle-table td { padding: 16px; border-bottom: 1px solid rgba(255, 255, 255, .05); font-size: .9rem; color: var(--gray-300); }
+        body.lang-ar .vehicle-table th { text-align: right; }
+        
+        .search-bar { display: flex; align-items: center; gap: 12px; background: var(--dark-2); border: 1px solid rgba(255,255,255,.1); padding: 12px 20px; border-radius: var(--r-md); margin-bottom: 24px; }
+        .search-bar input { flex:1; background: transparent; border: none; color: var(--white); outline: none; font-size: .95rem; }
+        
+        .year-tag { background: rgba(255,255,255,0.05); color: var(--gray-200); padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; margin: 2px; display: inline-block; }
+    </style>
+</head>
+
+<body>
+    <div class="portal-layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <img src="../img/logo.svg" alt="NUTD" style="height:32px" />
+                <span style="color:var(--red); font-weight:800; padding:0 8px; font-size:1.1rem;">ADMIN</span>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="sidebar-section-label" data-en="Management" data-ar="الإدارة">Management</div>
+                <a href="dashboard.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-gauge"></i></span>
+                    <span data-en="Overview" data-ar="نظرة عامة">Overview</span>
+                </a>
+                <a href="dealers.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-users"></i></span>
+                    <span data-en="Manage Dealers" data-ar="إدارة الوكلاء">Manage Dealers</span>
+                </a>
+                <a href="orders.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-list-check"></i></span>
+                    <span data-en="Approve Orders" data-ar="اعتماد الطلبات">Approve Orders</span>
+                </a>
+                <a href="products.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-boxes-stacked"></i></span>
+                    <span data-en="Manage Products" data-ar="إدارة المنتجات">Manage Products</span>
+                </a>
+                <a href="vehicles.html" class="sidebar-link active">
+                    <span class="icon"><i class="fa fa-car"></i></span>
+                    <span data-en="Cars Database" data-ar="قاعدة بيانات السيارات">Cars Database</span>
+                </a>
+                <a href="articles.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-newspaper"></i></span>
+                    <span data-en="Manage News & Media" data-ar="إدارة الأخبار">Manage News & Media</span>
+                </a>
+                <div class="sidebar-section-label" data-en="System" data-ar="النظام">System</div>
+                <a href="settings.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-gear"></i></span>
+                    <span data-en="Site Settings" data-ar="إعدادات الموقع">Site Settings</span>
+                </a>
+            </nav>
+        </aside>
+
+        <main class="portal-main">
+            <div class="portal-topbar">
+                <div><span class="topbar-title" data-en="Vehicle Compatibility Database" data-ar="مصفوفة توافق السيارات">Vehicle Compatibility Database</span></div>
+                <div class="topbar-actions">
+                    <div class="lang-toggle">
+                        <button onclick="setLang('en')" class="active" id="btn-en">EN</button>
+                        <button onclick="setLang('ar')" id="btn-ar">AR</button>
+                    </div>
+                    <div class="topbar-avatar" style="background:var(--red);">AM</div>
+                </div>
+            </div>
+
+            <div class="portal-content">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px;">
+                    <div class="search-bar glass-panel" style="margin-bottom:0; width:50%;">
+                        <i class="fa fa-search text-muted"></i>
+                        <input type="text" id="searchInput" onkeyup="renderVehicles()" placeholder="Search Matrix by Make or Model..." data-placeholder-ar="بحث بالماركة أو الموديل..." />
+                    </div>
+                    <button class="btn btn-primary" onclick="openVehicleModal()">
+                        <i class="fa fa-plus"></i> <span data-en="Add Vehicle Make/Model" data-ar="إضافة سيارة">Add Vehicle Make/Model</span>
+                    </button>
+                </div>
+                
+                <div class="table-wrap glass-panel mt-24">
+                    <table class="vehicle-table" style="width:100%; border-collapse:collapse;">
+                        <thead>
+                            <tr>
+                                <th data-en="Make" data-ar="الماركة">Make</th>
+                                <th data-en="Model" data-ar="الموديل">Model</th>
+                                <th data-en="Years Supported" data-ar="سنوات التوافق">Years Supported</th>
+                                <th style="width:120px"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="vehiclesTbody">
+                            <tr><td colspan="4" style="text-align:center;padding:32px;"><i class="fa fa-spinner fa-spin text-muted"></i></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Vehicle Modal -->
+    <div class="modal-overlay" id="vehicleModalOverlay" onclick="if(event.target===this)closeVehicleModal()">
+        <div class="modal" id="vehicleModal" style="width: 500px">
+            <div class="modal-header">
+                <h3 id="modalTitle" data-en="Add/Edit Vehicle" data-ar="إضافة/تعديل سيارة">Add/Edit Vehicle</h3>
+                <button class="modal-close" onclick="closeVehicleModal()"><i class="fa fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="vehicleForm" onsubmit="saveVehicle(event)">
+                    <input type="hidden" id="vId" />
+                    
+                    <div class="form-group" style="margin-bottom:16px;">
+                        <label data-en="Auto Maker (Make)" data-ar="الماركة">Auto Maker (Make)</label>
+                        <input type="text" class="form-control" id="vMake" placeholder="e.g. Volkswagen" required />
+                    </div>
+                    
+                    <div class="form-group" style="margin-bottom:16px;">
+                        <label data-en="Model" data-ar="الموديل">Model</label>
+                        <input type="text" class="form-control" id="vModel" placeholder="e.g. Golf" required />
+                    </div>
+                    
+                    <div class="form-group" style="margin-bottom:24px;">
+                        <label data-en="Years (comma separated)" data-ar="السنوات (مفصول بفاصلة)">Years (comma separated)</label>
+                        <input type="text" class="form-control" id="vYears" placeholder="e.g. 2015, 2016, 2017" />
+                        <span style="font-size:0.75rem; color:var(--gray-500); margin-top:4px; display:block;" data-en="Separate years using commas. e.g. 2010, 2011, 2012" data-ar="افصل السنوات باستخدام الفاصلة ,">Separate years using commas. e.g. 2010, 2011, 2012</span>
+                    </div>
+
+                    <div style="display:flex; gap:12px; justify-content:flex-end;">
+                        <button type="button" class="btn btn-outline" onclick="closeVehicleModal()" data-en="Cancel" data-ar="إلغاء">Cancel</button>
+                        <button type="submit" class="btn btn-primary" data-en="Save Vehicle Matrix" data-ar="حفظ التوافق">Save Vehicle Matrix</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentLang = localStorage.getItem('lang') || 'en';
+        let allVehicles = [];
+
+        function setLang(lang) {
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+            document.documentElement.lang = lang;
+            document.body.classList.toggle('lang-ar', lang === 'ar');
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+            document.getElementById('btn-ar').classList.toggle('active', lang === 'ar');
+            document.querySelectorAll('[data-en]').forEach(el => {
+                const t = el.getAttribute('data-' + lang);
+                if (t && t !== 'undefined') el.innerHTML = t;
+            });
+            const searchInput = document.getElementById('searchInput');
+            searchInput.placeholder = searchInput.getAttribute('data-placeholder-' + lang) || searchInput.placeholder;
+        }
+
+        async function fetchVehicles() {
+            try {
+                const res = await fetch('http://localhost:5000/api/vehicles');
+                const json = await res.json();
+                if(json.success) {
+                    allVehicles = json.data;
+                    renderVehicles();
+                }
+            } catch(e) {
+                console.error(e);
+                document.getElementById('vehiclesTbody').innerHTML = `<tr><td colspan="4" class="text-center">Connection error</td></tr>`;
+            }
+        }
+
+        function renderVehicles() {
+            const q = document.getElementById('searchInput').value.toLowerCase();
+            let filtered = allVehicles;
+            
+            if(q) {
+                filtered = allVehicles.filter(v => 
+                    v.make.toLowerCase().includes(q) || 
+                    v.model.toLowerCase().includes(q)
+                );
+            }
+
+            const tbody = document.getElementById('vehiclesTbody');
+            if(!filtered.length) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center" data-en="No records mapped." data-ar="لا يوجد سجلات التوافق.">${currentLang==='ar'?'لا يوجد سجلات التوافق.':'No records mapped.'}</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(v => {
+                const yearsHtml = (v.years || []).map(y => `<span class="year-tag">${y}</span>`).join('');
+                return `
+                <tr>
+                    <td class="text-white fw-600">${v.make}</td>
+                    <td style="color: var(--gray-300)">${v.model}</td>
+                    <td>${yearsHtml}</td>
+                    <td style="text-align:right">
+                        <button class="btn btn-sm btn-ghost" onclick="openVehicleModal('${v._id}')" title="Edit"><i class="fa fa-pen"></i></button>
+                        <button class="btn btn-sm btn-ghost" style="color:var(--danger)" onclick="deleteVehicle('${v._id}')" title="Delete"><i class="fa fa-trash"></i></button>
+                    </td>
+                </tr>
+                `;
+            }).join('');
+        }
+
+        function openVehicleModal(id) {
+            const form = document.getElementById('vehicleForm');
+            form.reset();
+            document.getElementById('vId').value = '';
+            
+            if(id) {
+                const v = allVehicles.find(x => x._id === id);
+                if(v) {
+                    document.getElementById('vId').value = v._id;
+                    document.getElementById('vMake').value = v.make;
+                    document.getElementById('vModel').value = v.model;
+                    document.getElementById('vYears').value = (v.years || []).join(', ');
+                }
+                document.getElementById('modalTitle').textContent = currentLang === 'ar' ? 'تعديل سيارة' : 'Edit Vehicle';
+            } else {
+                document.getElementById('modalTitle').textContent = currentLang === 'ar' ? 'إضافة سيارة جديدة' : 'Add Vehicle Make/Model';
+            }
+            
+            document.getElementById('vehicleModalOverlay').classList.add('open');
+        }
+
+        function closeVehicleModal() {
+            document.getElementById('vehicleModalOverlay').classList.remove('open');
+        }
+
+        async function saveVehicle(e) {
+            e.preventDefault();
+            const id = document.getElementById('vId').value;
+            const make = document.getElementById('vMake').value.trim();
+            const model = document.getElementById('vModel').value.trim();
+            const yearsStr = document.getElementById('vYears').value.trim();
+            
+            // parse years
+            let years = [];
+            if(yearsStr) {
+                years = yearsStr.split(',').map(y => y.trim()).filter(y => y !== '');
+            }
+
+            const payload = { make, model, years };
+            const method = id ? 'PUT' : 'POST';
+            const url = 'http://localhost:5000/api/vehicles' + (id ? '/' + id : '');
+
+            try {
+                const res = await fetch(url, {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const json = await res.json();
+                if(json.success) {
+                    closeVehicleModal();
+                    fetchVehicles();
+                } else {
+                    alert('Error saving data: ' + json.error);
+                }
+            } catch(error) {
+                alert('Connection error');
+            }
+        }
+        
+        async function deleteVehicle(id) {
+            if(!confirm(currentLang==='ar'?`تأكيد حذف هذا الموديل بشكل كامل؟`:`Confirm deleting this model entirely?`)) return;
+            try {
+                const res = await fetch(`http://localhost:5000/api/vehicles/${id}`, { method: 'DELETE' });
+                if(res.ok) {
+                    fetchVehicles();
+                }
+            } catch(e) {
+                alert('Error deleting vehicle');
+            }
+        }
+
+        window.addEventListener('languageChanged', (e) => { renderVehicles(); });
+        document.addEventListener('DOMContentLoaded', () => { setLang(currentLang); fetchVehicles(); });
+    </script>
+</body>
+</html>

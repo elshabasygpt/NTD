@@ -7,6 +7,9 @@
     <link rel="icon" type="image/svg+xml" href="../img/favicon.svg" />
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
     <style>
         .sidebar { background: #0c0c0c; border-right: 1px solid rgba(232, 35, 26, 0.3); }
         .sidebar-link.active, .sidebar-link:hover { background: rgba(232, 35, 26, 0.1); border-left: 3px solid var(--red); color: var(--red); }
@@ -28,6 +31,10 @@
                 <a href="dashboard.html" class="sidebar-link">
                     <span class="icon"><i class="fa fa-gauge"></i></span>
                     <span data-en="Overview" data-ar="نظرة عامة">Overview</span>
+                </a>
+                <a href="dealers.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-users"></i></span>
+                    <span data-en="Manage Dealers" data-ar="إدارة الوكلاء">Manage Dealers</span>
                 </a>
                 <a href="orders.html" class="sidebar-link active">
                     <span class="icon"><i class="fa fa-list-check"></i></span>
@@ -80,6 +87,10 @@
                         <option value="Rejected">Rejected / مرفوض</option>
                         <option value="">All / الكل</option>
                     </select>
+                    <div style="display:flex; gap:8px;">
+                        <button class="btn btn-outline" style="color:#10b981; border-color:#10b981; white-space:nowrap;" onclick="exportToExcel()" data-en="<i class='fa fa-file-excel'></i> Excel" data-ar="<i class='fa fa-file-excel'></i> إكسل"><i class="fa fa-file-excel"></i> Excel</button>
+                        <button class="btn btn-outline" style="color:#ef4444; border-color:#ef4444; white-space:nowrap;" onclick="exportToPDF()" data-en="<i class='fa fa-file-pdf'></i> PDF" data-ar="<i class='fa fa-file-pdf'></i> PDF"><i class="fa fa-file-pdf"></i> PDF</button>
+                    </div>
                 </div>
 
                 <div class="table-wrap glass-panel">
@@ -290,6 +301,59 @@
             } catch(e) {
                 alert('Connection error');
             }
+        }
+
+        function exportToExcel() {
+            if (allOrders.length === 0) return alert(currentLang === 'ar' ? 'لا توجد فواتير' : 'No orders to export.');
+            
+            const headers = ['Invoice Number', 'Date', 'Status', 'Total Amount', 'Item Count', 'Reference'];
+            const rows = allOrders.map(o => {
+                const trStatus = (currentLang === 'ar' && o.status === 'Pending') ? 'معلق' : 
+                                 (currentLang === 'ar' && o.status === 'Approved') ? 'مقبول' : 
+                                 (currentLang === 'ar' && o.status === 'Completed') ? 'مكتمل' : 
+                                 (currentLang === 'ar' && o.status === 'Rejected') ? 'مرفوض' : o.status;
+                return [
+                    o.invoiceNumber,
+                    new Date(o.date).toLocaleDateString(),
+                    trStatus,
+                    o.totalAmount,
+                    o.itemCount,
+                    o.reference || ''
+                ]
+            });
+            
+            const worksheet = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Orders");
+            XLSX.writeFile(workbook, "Orders_Report.xlsx");
+        }
+
+        function exportToPDF() {
+            if (allOrders.length === 0) return alert(currentLang === 'ar' ? 'لا توجد فواتير' : 'No orders to export.');
+            
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            const headers = [['Invoice Number', 'Date', 'Status', 'Total Amount', 'Items', 'Reference']];
+            const rows = allOrders.map(o => [
+                o.invoiceNumber,
+                new Date(o.date).toLocaleDateString(),
+                o.status, // Keeping EN status to avoid PDF font scrambling
+                `${o.totalAmount} EGP`,
+                o.itemCount,
+                o.reference || 'N/A'
+            ]);
+
+            doc.text("NUTD Orders Report", 14, 15);
+            doc.autoTable({
+                head: headers,
+                body: rows,
+                startY: 20,
+                styles: { fontSize: 9 },
+                headStyles: { fillColor: [232, 35, 26] }
+            });
+            
+            doc.save("Orders_Report.pdf");
         }
 
         window.addEventListener('languageChanged', (e) => {

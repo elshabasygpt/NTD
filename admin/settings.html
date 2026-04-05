@@ -42,6 +42,16 @@
         
         .cms-content-section { display: none; animation: fadeIn 0.3s ease; }
         .cms-content-section.active { display: block; }
+        
+        /* Dealers View Additions */
+        .settings-tab-btn { background:transparent; border:none; color:var(--gray-400); padding:16px 24px; font-size:0.95rem; font-weight:600; cursor:pointer; border-bottom:2px solid transparent; transition:0.2s; }
+        .settings-tab-btn:hover { color:white; }
+        .settings-tab-btn.active { color:var(--red); border-bottom-color:var(--red); }
+        .dataTable { width: 100%; border-collapse: collapse; }
+        .dataTable th { text-align: left; padding: 12px 16px; font-size: 0.8rem; color: var(--gray-500); text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.08); }
+        .lang-ar .dataTable th { text-align: right; }
+        .dataTable td { padding: 16px; border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--gray-200); font-size: 0.9rem; vertical-align: middle; }
+
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         @media(max-width: 1000px) {
@@ -66,6 +76,10 @@
                 <a href="dashboard.html" class="sidebar-link">
                     <span class="icon"><i class="fa fa-gauge"></i></span>
                     <span data-en="Overview" data-ar="نظرة عامة">Overview</span>
+                </a>
+                <a href="dealers.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-users"></i></span>
+                    <span data-en="Manage Dealers" data-ar="إدارة الوكلاء">Manage Dealers</span>
                 </a>
                 <a href="orders.html" class="sidebar-link">
                     <span class="icon"><i class="fa fa-list-check"></i></span>
@@ -103,6 +117,11 @@
                         <button onclick="setLang('ar')" id="btn-ar">AR</button>
                     </div>
                 </div>
+            </div>
+
+            <div id="settingsMenuTabs" class="d-flex" style="background:#000; border-bottom:1px solid rgba(255,255,255,0.05);">
+                <button class="settings-tab-btn active" onclick="switchMainView('cms')" data-en="Visual Builder (CMS)" data-ar="المحرر المرئي للموقع">Visual Builder (CMS)</button>
+                <button class="settings-tab-btn" onclick="switchMainView('dealers')" data-en="Dealer Accounts" data-ar="حسابات التجار">Dealer Accounts</button>
             </div>
 
             <!-- PORTAL CONTENT -->
@@ -151,6 +170,31 @@
 
                 </div>
             </form>
+
+            <div id="dealersView" style="display:none; padding:24px; overflow-y:auto; height:calc(100vh - 120px);">
+                <div class="d-flex justify-between align-center mb-24">
+                    <h2 class="text-white" data-en="Dealer Registration Requests" data-ar="طلبات تسجيل التجار">Dealer Registration Requests</h2>
+                </div>
+                <div class="glass-panel" style="border-radius: var(--r-lg); overflow: hidden;">
+                    <table class="dataTable">
+                        <thead>
+                            <tr>
+                                <th data-en="Company Name" data-ar="اسم الشركة">Company Name</th>
+                                <th data-en="Contact Person" data-ar="مسؤول التواصل">Contact Person</th>
+                                <th data-en="Email" data-ar="البريد">Email</th>
+                                <th data-en="Phone" data-ar="الهاتف">Phone</th>
+                                <th data-en="Status" data-ar="الحالة">Status</th>
+                                <th data-en="Actions" data-ar="إجراءات" style="text-align:right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dealersTbody">
+                            <tr>
+                                <td colspan="6" style="text-align:center; padding: 40px;"><i class="fa fa-spinner fa-spin"></i></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </main>
     </div>
 
@@ -391,6 +435,81 @@
                         ]
                     }
                 ]
+            },
+            {
+                id: 'contact', icon: 'fa-envelope', titleEn: 'Contact Page', titleAr: 'صفحة التواصل',
+                groups: [
+                    {
+                        titleEn: 'Contact Information', titleAr: 'معلومات التواصل',
+                        fields: [
+                            { type: 'text', key: 'contact_page_phone', labelEn: 'Primary Phone', labelAr: 'الهاتف الأساسي', localized: false },
+                            { type: 'text', key: 'contact_page_phone2', labelEn: 'Secondary Phone', labelAr: 'الهاتف البديل', localized: false },
+                            { type: 'text', key: 'contact_page_email', labelEn: 'Primary Email', labelAr: 'البريد الأساسي', localized: false },
+                            { type: 'text', key: 'contact_page_email2', labelEn: 'Secondary Email', labelAr: 'البريد البديل', localized: false },
+                            { type: 'textarea', key: 'contact_page_address', labelEn: 'Headquarters Address', labelAr: 'عنوان المقر الرئيسي', localized: true },
+                            { type: 'textarea', key: 'contact_page_hours', labelEn: 'Business Hours', labelAr: 'أوقات العمل', localized: true },
+                            { type: 'textarea', key: 'contact_page_map', labelEn: 'Google Map iFrame src', labelAr: 'رابط الخريطة المضمن (Src)', localized: false }
+                        ]
+                    },
+                    {
+                        titleEn: 'Hero Section', titleAr: 'قسم الهيرو',
+                        fields: [
+                            { type: 'text', key: 'contact_hero_label', labelEn: 'Section Label', labelAr: 'الوسم', localized: true },
+                            { type: 'text', key: 'contact_hero_title', labelEn: 'Hero Title', labelAr: 'العنوان الرئيسي', localized: true },
+                            { type: 'textarea', key: 'contact_hero_desc', labelEn: 'Hero Description', labelAr: 'الوصف', localized: true }
+                        ]
+                    },
+                    {
+                        titleEn: 'Form & Side Cards Text', titleAr: 'نصوص نموذج الاتصال والبطاقات',
+                        fields: [
+                            { type: 'text', key: 'contact_form_label', labelEn: 'Form Section Label', labelAr: 'وسم قسم النموذج', localized: true },
+                            { type: 'text', key: 'contact_form_title', labelEn: 'Form Title', labelAr: 'عنوان النموذج', localized: true },
+                            { type: 'textarea', key: 'contact_form_desc', labelEn: 'Form Description', labelAr: 'وصف النموذج', localized: true },
+                            { type: 'text', key: 'contact_form_lbl_name', labelEn: 'Full Name Label', labelAr: 'تسمية الاسم الكامل', localized: true },
+                            { type: 'text', key: 'contact_form_lbl_company', labelEn: 'Company Name Label', labelAr: 'تسمية اسم الشركة', localized: true },
+                            { type: 'text', key: 'contact_form_lbl_email', labelEn: 'Email Label', labelAr: 'تسمية البريد الإلكتروني', localized: true },
+                            { type: 'text', key: 'contact_form_lbl_phone', labelEn: 'Phone Label', labelAr: 'تسمية الهاتف', localized: true },
+                            { type: 'text', key: 'contact_form_lbl_city', labelEn: 'City Label', labelAr: 'تسمية المدينة', localized: true },
+                            { type: 'text', key: 'contact_form_lbl_message', labelEn: 'Message Label', labelAr: 'تسمية الرسالة', localized: true },
+                            { type: 'text', key: 'contact_form_btn_text', labelEn: 'Button Text', labelAr: 'نص زر الإرسال', localized: true },
+                            { type: 'text', key: 'contact_form_reply_note', labelEn: 'Reply Note', labelAr: 'ملاحظة الرد', localized: true },
+                            { type: 'text', key: 'contact_wa_title', labelEn: 'WhatsApp Card Title', labelAr: 'عنوان بطاقة واتساب', localized: true },
+                            { type: 'textarea', key: 'contact_wa_desc', labelEn: 'WhatsApp Card Desc', labelAr: 'وصف بطاقة واتساب', localized: true },
+                            { type: 'text', key: 'contact_wa_btn_text', labelEn: 'WhatsApp Button Text', labelAr: 'نص زر الواتساب', localized: true }
+                        ]
+                    },
+                    {
+                        titleEn: 'Join Network CTA & Map', titleAr: 'قسم الانضمام والخريطة',
+                        fields: [
+                            { type: 'text', key: 'contact_cta_label', labelEn: 'CTA Label', labelAr: 'الوسم', localized: true },
+                            { type: 'text', key: 'contact_cta_title', labelEn: 'CTA Title', labelAr: 'العنوان', localized: true },
+                            { type: 'textarea', key: 'contact_cta_desc', labelEn: 'CTA Description', labelAr: 'الوصف', localized: true },
+                            { type: 'text', key: 'contact_cta_btn1', labelEn: 'Apply Button Text', labelAr: 'نص زر التقديم', localized: true },
+                            { type: 'text', key: 'contact_cta_btn2', labelEn: 'Login Button Text', labelAr: 'نص زر الدخول', localized: true },
+                            { type: 'text', key: 'contact_map_btn_text', labelEn: 'Map Directions Button', labelAr: 'نص زر الاتجاهات بالخريطة', localized: true }
+                        ]
+                    },
+                    {
+                        titleEn: 'FAQ Section', titleAr: 'قسم الأسئلة الشائعة',
+                        fields: [
+                            { type: 'text', key: 'contact_faq_label', labelEn: 'FAQ Label', labelAr: 'الوسم', localized: true },
+                            { type: 'text', key: 'contact_faq_title', labelEn: 'FAQ Title', labelAr: 'العنوان', localized: true },
+                            { type: 'textarea', key: 'contact_faq_desc', labelEn: 'FAQ Description', labelAr: 'الوصف', localized: true },
+                            { type: 'text', key: 'contact_faq1_q', labelEn: 'Q1', labelAr: 'سؤال 1', localized: true },
+                            { type: 'textarea', key: 'contact_faq1_a', labelEn: 'A1', labelAr: 'إجابة 1', localized: true },
+                            { type: 'text', key: 'contact_faq2_q', labelEn: 'Q2', labelAr: 'سؤال 2', localized: true },
+                            { type: 'textarea', key: 'contact_faq2_a', labelEn: 'A2', labelAr: 'إجابة 2', localized: true },
+                            { type: 'text', key: 'contact_faq3_q', labelEn: 'Q3', labelAr: 'سؤال 3', localized: true },
+                            { type: 'textarea', key: 'contact_faq3_a', labelEn: 'A3', labelAr: 'إجابة 3', localized: true },
+                            { type: 'text', key: 'contact_faq4_q', labelEn: 'Q4', labelAr: 'سؤال 4', localized: true },
+                            { type: 'textarea', key: 'contact_faq4_a', labelEn: 'A4', labelAr: 'إجابة 4', localized: true },
+                            { type: 'text', key: 'contact_faq5_q', labelEn: 'Q5', labelAr: 'سؤال 5', localized: true },
+                            { type: 'textarea', key: 'contact_faq5_a', labelEn: 'A5', labelAr: 'إجابة 5', localized: true },
+                            { type: 'text', key: 'contact_faq6_q', labelEn: 'Q6', labelAr: 'سؤال 6', localized: true },
+                            { type: 'textarea', key: 'contact_faq6_a', labelEn: 'A6', labelAr: 'إجابة 6', localized: true }
+                        ]
+                    }
+                ]
             }
         ];
 
@@ -510,21 +629,7 @@
             }
         }
 
-        let currentLang = localStorage.getItem('lang') || 'en';
-
-        function setLang(lang) {
-            currentLang = lang;
-            localStorage.setItem('lang', lang);
-            document.documentElement.lang = lang;
-            document.body.classList.toggle('lang-ar', lang === 'ar');
-            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-            document.getElementById('btn-ar').classList.toggle('active', lang === 'ar');
-            document.querySelectorAll('[data-en]').forEach(el => {
-                const t = el.getAttribute('data-' + lang);
-                if (t && t !== 'undefined') el.innerHTML = t;
-            });
-        }
+        
 
         async function fetchSettings() {
             try {
@@ -622,6 +727,98 @@
             setLang(currentLang); // Apply Language
             fetchSettings(); // Fill forms
         });
+
+        /* ================= DEALERS MANAGEMENT LOGIC ================= */
+        let dealersData = [];
+        
+        function switchMainView(view) {
+            document.querySelectorAll('.settings-tab-btn').forEach(b => b.classList.remove('active'));
+            if(view === 'cms') {
+                document.getElementById('settingsForm').style.display = 'contents';
+                document.getElementById('dealersView').style.display = 'none';
+                document.querySelector('.settings-tab-btn:nth-child(1)').classList.add('active');
+            } else {
+                document.getElementById('settingsForm').style.display = 'none';
+                document.getElementById('dealersView').style.display = 'block';
+                document.querySelector('.settings-tab-btn:nth-child(2)').classList.add('active');
+                fetchDealers();
+            }
+        }
+
+        async function fetchDealers() {
+            try {
+                const res = await fetch('http://localhost:5000/api/dealers');
+                const json = await res.json();
+                if(json.success) {
+                    dealersData = json.data;
+                    renderDealers();
+                }
+            } catch(e) {
+                document.getElementById('dealersTbody').innerHTML = `<tr><td colspan="6" style="text-align:center">Failed to fetch dealers</td></tr>`;
+            }
+        }
+
+        function renderDealers() {
+            const tbody = document.getElementById('dealersTbody');
+            if(!dealersData.length) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center">No dealers registered yet.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = dealersData.map(d => {
+                const compName = currentLang === 'ar' ? (d.companyNameAr || d.companyNameEn) : d.companyNameEn;
+                let badgeClass = 'badge-pending';
+                let statusText = d.status;
+                if(d.status === 'Approved') badgeClass = 'badge-success';
+                if(d.status === 'Rejected') badgeClass = 'badge-danger';
+                
+                if(currentLang === 'ar') {
+                    if(d.status === 'Pending') statusText = 'قيد الانتظار';
+                    if(d.status === 'Approved') statusText = 'مقبول';
+                    if(d.status === 'Rejected') statusText = 'مرفوض';
+                }
+
+                return `
+                <tr>
+                    <td style="font-weight:600; color:white;">${compName}</td>
+                    <td>${d.contactPerson}</td>
+                    <td><a href="mailto:${d.email}" style="color:var(--blue)">${d.email}</a></td>
+                    <td>${d.phone || '--'}</td>
+                    <td><span class="status-badge ${badgeClass}">${statusText}</span></td>
+                    <td style="text-align:right">
+                        ${d.status !== 'Approved' ? `<button class="btn btn-sm btn-primary" onclick="updateDealer('${d._id}', 'Approved')" title="Approve"><i class="fa fa-check"></i></button>` : ''}
+                        ${d.status !== 'Rejected' ? `<button class="btn btn-sm btn-outline text-danger" onclick="updateDealer('${d._id}', 'Rejected')" title="Reject"><i class="fa fa-times"></i></button>` : ''}
+                        <button class="btn btn-sm btn-outline" style="border-color:transparent; color:var(--gray-500);" onclick="deleteDealer('${d._id}')" title="Delete"><i class="fa fa-trash"></i></button>
+                    </td>
+                </tr>
+                `;
+            }).join('');
+        }
+
+        async function updateDealer(id, status) {
+            try {
+                const res = await fetch(`http://localhost:5000/api/dealers/${id}/status`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status })
+                });
+                const json = await res.json();
+                if(json.success) fetchDealers();
+            } catch(e) {
+                alert('Connection error');
+            }
+        }
+
+        async function deleteDealer(id) {
+            if(!confirm(currentLang === 'ar' ? 'تأكيد الحذف؟' : 'Confirm delete?')) return;
+            try {
+                const res = await fetch(`http://localhost:5000/api/dealers/${id}`, { method: 'DELETE' });
+                const json = await res.json();
+                if(json.success) fetchDealers();
+            } catch(e) {
+                alert('Connection error');
+            }
+        }
     </script>
 </body>
 </html>

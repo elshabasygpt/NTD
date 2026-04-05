@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Dealers – NUTD Admin</title>
+    <link rel="icon" type="image/svg+xml" href="../img/favicon.svg" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        .sidebar { background: #0c0c0c; border-right: 1px solid rgba(232, 35, 26, 0.3); } 
+        .sidebar-link.active, .sidebar-link:hover { background: rgba(232, 35, 26, 0.1); border-left: 3px solid var(--red); color: var(--red); }
+        .sidebar-link.active .icon, .sidebar-link:hover .icon { color: var(--red); }
+        
+        .dealer-table th { padding: 16px; text-transform: uppercase; letter-spacing: .05em; color: var(--gray-500); font-size: .8rem; border-bottom: 1px solid rgba(255, 255, 255, .08); }
+        .dealer-table td { padding: 16px; border-bottom: 1px solid rgba(255, 255, 255, .05); font-size: .9rem; color: var(--gray-300); }
+        .dealer-table tbody tr { transition: background 0.2s; }
+        .dealer-table tbody tr:hover { background: rgba(255,255,255,0.03); }
+        body.lang-ar .dealer-table th { text-align: right; }
+        
+        .status-badge { padding: 4px 10px; border-radius: var(--r-full); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+        .status-Pending { background: rgba(245, 158, 11, 0.15); color: var(--warning); border: 1px solid var(--warning); }
+        .status-Approved { background: rgba(34, 197, 94, 0.15); color: var(--success); border: 1px solid var(--success); }
+        .status-Rejected { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid var(--danger); }
+        
+        .search-bar { display: flex; align-items: center; gap: 12px; background: var(--dark-2); border: 1px solid rgba(255,255,255,.1); padding: 12px 20px; border-radius: var(--r-md); margin-bottom: 24px; }
+        .search-bar input { flex:1; background: transparent; border: none; color: var(--white); outline: none; font-size: .95rem; }
+    </style>
+</head>
+
+<body>
+    <div class="portal-layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <img src="../img/logo.svg" alt="NUTD" style="height:32px" />
+                <span style="color:var(--red); font-weight:800; padding:0 8px; font-size:1.1rem;">ADMIN</span>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="sidebar-section-label" data-en="Management" data-ar="الإدارة">Management</div>
+                <a href="dashboard.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-gauge"></i></span>
+                    <span data-en="Overview" data-ar="نظرة عامة">Overview</span>
+                </a>
+                <a href="dealers.html" class="sidebar-link active">
+                    <span class="icon"><i class="fa fa-users"></i></span>
+                    <span data-en="Manage Dealers" data-ar="إدارة الوكلاء">Manage Dealers</span>
+                </a>
+                <a href="orders.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-list-check"></i></span>
+                    <span data-en="Approve Orders" data-ar="اعتماد الطلبات">Approve Orders</span>
+                </a>
+                <a href="products.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-boxes-stacked"></i></span>
+                    <span data-en="Manage Products" data-ar="إدارة المنتجات">Manage Products</span>
+                </a>
+                <a href="articles.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-newspaper"></i></span>
+                    <span data-en="Manage News & Media" data-ar="إدارة الأخبار">Manage News & Media</span>
+                </a>
+                <div class="sidebar-section-label" data-en="System" data-ar="النظام">System</div>
+                <a href="settings.html" class="sidebar-link">
+                    <span class="icon"><i class="fa fa-gear"></i></span>
+                    <span data-en="Site Settings" data-ar="إعدادات الموقع">Site Settings</span>
+                </a>
+            </nav>
+        </aside>
+
+        <main class="portal-main">
+            <div class="portal-topbar">
+                <div><span class="topbar-title" data-en="Dealer Management" data-ar="إدارة حسابات الوكلاء">Dealer Management</span></div>
+                <div class="topbar-actions">
+                    <div class="lang-toggle">
+                        <button onclick="setLang('en')" class="active" id="btn-en">EN</button>
+                        <button onclick="setLang('ar')" id="btn-ar">AR</button>
+                    </div>
+                    <div class="topbar-avatar" style="background:var(--red);">AM</div>
+                </div>
+            </div>
+
+            <div class="portal-content">
+                <div class="search-bar glass-panel mt-12">
+                    <i class="fa fa-search text-muted"></i>
+                    <input type="text" id="dealerSearch" oninput="renderDealers()" placeholder="Search dealers by company, contact, or email..." data-placeholder-ar="بحث عن طريق الشركة، المسؤول، أو البريد الإلكتروني..." />
+                    <select id="statusFilter" onchange="renderDealers()" style="background:var(--dark-3); border:1px solid rgba(255,255,255,.1); color:var(--white); padding:8px; border-radius:4px;">
+                        <option value="All" data-en="All Statuses" data-ar="الجميع">All Statuses</option>
+                        <option value="Pending" data-en="Pending" data-ar="معلق">Pending</option>
+                        <option value="Approved" data-en="Approved" data-ar="مقبول">Approved</option>
+                        <option value="Rejected" data-en="Rejected" data-ar="مرفوض">Rejected</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="openAddDealerModal()" style="white-space: nowrap;">
+                        <i class="fa fa-plus"></i> <span data-en="Add Dealer" data-ar="إضافة تاجر">Add Dealer</span>
+                    </button>
+                </div>
+                
+                <div class="table-wrap glass-panel">
+                    <table class="dealer-table" style="width:100%; border-collapse:collapse;">
+                        <thead>
+                            <tr>
+                                <th data-en="Company Name" data-ar="اسم الشركة">Company Name</th>
+                                <th data-en="Contact Person" data-ar="المسؤول">Contact Person</th>
+                                <th data-en="Contact Details" data-ar="بيانات التواصل">Contact Details</th>
+                                <th data-en="Region" data-ar="المنطقة">Region</th>
+                                <th data-en="Status" data-ar="الحالة">Status</th>
+                                <th data-en="Actions" data-ar="الإجراءات" style="text-align:right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dealersTbody">
+                            <tr><td colspan="6" style="text-align:center;padding:32px;"><i class="fa fa-spinner fa-spin text-muted"></i></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Dealer Detail Modal -->
+    <div class="modal-overlay" id="dealerModalOverlay" onclick="if(event.target===this)closeDealerModal()">
+        <div class="modal" id="dealerModal">
+            <div class="modal-header">
+                <h3 id="mCompanyName">Company</h3>
+                <button class="modal-close" onclick="closeDealerModal()"><i class="fa fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <p style="color:var(--gray-300)" id="mDetails"></p>
+                <div style="margin-top:20px; display:flex; gap:12px; justify-content:flex-end;" id="mActions"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Dealer Modal -->
+    <div class="modal-overlay" id="addDealerModalOverlay" onclick="if(event.target===this)closeAddDealerModal()">
+        <div class="modal" id="addDealerModal" style="max-width: 550px;">
+            <div class="modal-header">
+                <h3 data-en="Add New Dealer" data-ar="إضافة تاجر جديد">Add New Dealer</h3>
+                <button class="modal-close" onclick="closeAddDealerModal()"><i class="fa fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="addDealerForm" onsubmit="submitAddDealer(event)" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div>
+                        <label style="display:block;margin-bottom:6px;font-size:0.85rem;color:var(--gray-300)" data-en="Company Name *" data-ar="اسم الشركة *">Company Name *</label>
+                        <input type="text" id="nd_company" class="form-control" required />
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:6px;font-size:0.85rem;color:var(--gray-300)" data-en="Contact Person *" data-ar="المسؤول *">Contact Person *</label>
+                        <input type="text" id="nd_contact" class="form-control" required />
+                    </div>
+
+                    <div>
+                        <label style="display:block;margin-bottom:6px;font-size:0.85rem;color:var(--gray-300)" data-en="Email" data-ar="البريد الإلكتروني">Email</label>
+                        <input type="email" id="nd_email" class="form-control" />
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:6px;font-size:0.85rem;color:var(--gray-300)" data-en="Phone" data-ar="رقم الجوال">Phone</label>
+                        <input type="text" id="nd_phone" class="form-control" oninput="if(document.getElementById('usePhoneAsUser').checked) document.getElementById('nd_username').value = this.value;" />
+                    </div>
+
+                    <div>
+                        <div style="display:flex; justify-content:space-between; margin-bottom:6px; align-items:center;">
+                            <label style="font-size:0.85rem;color:var(--gray-300); margin:0; white-space:nowrap;" data-en="Username *" data-ar="اسم المستخدم *">Username *</label>
+                            <label style="font-size:0.75rem;color:var(--success);cursor:pointer;display:flex;align-items:center;margin:0; white-space:nowrap;">
+                                <input type="checkbox" id="usePhoneAsUser" onchange="togglePhoneUser()"> <span style="margin-left:4px;" data-en="Use Phone" data-ar="استخدام الجوال">Use Phone</span>
+                            </label>
+                        </div>
+                        <input type="text" id="nd_username" class="form-control" required />
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:6px;font-size:0.85rem;color:var(--gray-300)" data-en="Password *" data-ar="كلمة المرور *">Password *</label>
+                        <input type="text" id="nd_password" class="form-control" required />
+                    </div>
+
+                    <div>
+                        <label style="display:block;margin-bottom:6px;font-size:0.85rem;color:var(--gray-300)" data-en="Region" data-ar="المنطقة">Region</label>
+                        <input type="text" id="nd_region" class="form-control" />
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:6px;font-size:0.85rem;color:var(--gray-300)" data-en="Status" data-ar="حالة التفعيل">Status</label>
+                        <select id="nd_status" class="form-control">
+                            <option value="Approved" data-en="Approved (Active)" data-ar="مقبول (مفعل)">Approved (Active)</option>
+                            <option value="Pending" data-en="Pending (Review)" data-ar="معلق (للمراجعة)">Pending (Review)</option>
+                        </select>
+                    </div>
+
+                    <div style="grid-column: 1 / -1;">
+                        <label style="display:block;margin-bottom:6px;font-size:0.85rem;color:var(--gray-300)" data-en="Address" data-ar="العنوان">Address</label>
+                        <input type="text" id="nd_address" class="form-control" />
+                    </div>
+
+                    <div style="grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div>
+                            <label style="display:block;margin-bottom:6px;font-size:0.85rem;color:var(--gray-300)" data-en="Google Maps URL" data-ar="رابط خرائط جوجل">Google Maps URL</label>
+                            <input type="url" id="nd_maps" class="form-control" placeholder="https://maps.google.com/..." />
+                        </div>
+                        <div>
+                            <label style="display:block;margin-bottom:6px;font-size:0.85rem;color:var(--gray-300)" data-en="Company Logo" data-ar="شعار الشركة">Company Logo</label>
+                            <input type="file" id="nd_logo" class="form-control" accept="image/*" />
+                        </div>
+                    </div>
+                    
+                    <div style="grid-column: 1 / -1; display: flex; gap: 12px; justify-content: flex-end; padding-top:16px; border-top:1px solid rgba(255,255,255,.05); margin-top: 8px;">
+                        <button type="button" class="btn btn-outline" onclick="closeAddDealerModal()" data-en="Cancel" data-ar="إلغاء">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="nd_btn_submit" data-en="Save Dealer" data-ar="حفظ التاجر">Save Dealer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Auth Modal -->
+    <div class="modal-overlay" id="editAuthModalOverlay" onclick="if(event.target===this)closeEditAuthModal()">
+        <div class="modal" id="editAuthModal" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3 data-en="Edit Login Credentials" data-ar="تعديل بيانات الدخول">Edit Login Credentials</h3>
+                <button class="modal-close" onclick="closeEditAuthModal()"><i class="fa fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="editAuthForm" onsubmit="submitEditAuth(event)">
+                    <input type="hidden" id="authDealerId" />
+                    <div style="margin-bottom:12px">
+                        <label style="display:block;margin-bottom:6px;font-size:0.85rem;color:var(--gray-300)" data-en="Email" data-ar="البريد الإلكتروني">Email</label>
+                        <input type="email" id="ea_email" class="form-control" />
+                    </div>
+                    <div style="margin-bottom:12px">
+                        <label style="display:block;margin-bottom:6px;font-size:0.85rem;color:var(--gray-300)" data-en="Username" data-ar="اسم المستخدم">Username</label>
+                        <input type="text" id="ea_username" class="form-control" />
+                    </div>
+                    <div style="margin-bottom:12px">
+                        <label style="display:block;margin-bottom:6px;font-size:0.85rem;color:var(--gray-300)" data-en="New Password" data-ar="كلمة المرور الجديدة">New Password</label>
+                        <input type="text" id="ea_password" class="form-control" placeholder="Leave blank to keep unchanged" data-placeholder-ar="اتركه فارغاً لعدم التغيير" />
+                    </div>
+                    
+                    <div style="display: flex; gap: 12px; justify-content: flex-end; padding-top:16px; border-top:1px solid rgba(255,255,255,.05); margin-top: 8px;">
+                        <button type="button" class="btn btn-outline" onclick="closeEditAuthModal()" data-en="Cancel" data-ar="إلغاء">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="ea_btn_submit" data-en="Update Data" data-ar="تحديث البيانات">Update Data</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentLang = localStorage.getItem('lang') || 'en';
+        let allDealers = [];
+
+        function setLang(lang) {
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+            document.documentElement.lang = lang;
+            document.body.classList.toggle('lang-ar', lang === 'ar');
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+            document.getElementById('btn-ar').classList.toggle('active', lang === 'ar');
+            document.querySelectorAll('[data-en]').forEach(el => {
+                const t = el.getAttribute('data-' + lang);
+                if (t) el.innerHTML = t;
+            });
+            const searchInput = document.getElementById('dealerSearch');
+            searchInput.placeholder = searchInput.getAttribute('data-placeholder-' + lang) || searchInput.placeholder;
+        }
+
+        async function fetchDealers() {
+            try {
+                const res = await fetch('http://localhost:5000/api/dealers');
+                const json = await res.json();
+                if(json.success) {
+                    allDealers = json.data;
+                    renderDealers();
+                }
+            } catch(e) {
+                console.error(e);
+                document.getElementById('dealersTbody').innerHTML = `<tr><td colspan="6" class="text-center">Connection error</td></tr>`;
+            }
+        }
+
+        function renderDealers() {
+            const q = document.getElementById('dealerSearch').value.toLowerCase();
+            const statusType = document.getElementById('statusFilter').value;
+            let filtered = allDealers.filter(d => {
+                if(statusType !== 'All' && d.status !== statusType) return false;
+                if(q) {
+                    const str = `${d.companyName} ${d.contactPerson} ${d.email} ${d.phone}`.toLowerCase();
+                    if(!str.includes(q)) return false;
+                }
+                return true;
+            });
+
+            const tbody = document.getElementById('dealersTbody');
+            if(!filtered.length) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center" data-en="No dealers found." data-ar="لا يوجد وكلاء.">${currentLang==='ar'?'لا يوجد وكلاء.':'No dealers found.'}</td></tr>`;
+                return;
+            }
+
+            const transStatus = { Pending: { en: 'Pending', ar: 'معلق' }, Approved: { en: 'Approved', ar: 'مقبول' }, Rejected: { en: 'Rejected', ar: 'مرفوض' } };
+
+            tbody.innerHTML = filtered.map(d => {
+                const sTrans = transStatus[d.status || 'Pending'];
+                const st = d.status || 'Pending';
+                
+                return `
+                <tr>
+                    <td class="text-white fw-600">${d.companyName}</td>
+                    <td>${d.contactPerson}</td>
+                    <td><div style="font-size:0.8rem">${d.email}<br/><span style="color:var(--gray-500)">${d.phone}</span></div></td>
+                    <td>${d.region}</td>
+                    <td><span class="status-badge status-${st}">${currentLang==='ar' ? sTrans.ar : sTrans.en}</span></td>
+                    <td style="text-align:right">
+                        <button class="btn btn-outline btn-sm" onclick="viewDealer('${d._id}')" data-en="Manage" data-ar="إدارة">${currentLang==='ar'?'إدارة':'Manage'}</button>
+                    </td>
+                </tr>
+                `;
+            }).join('');
+        }
+
+        async function updateStatus(id, newStatus) {
+            if(!confirm(currentLang==='ar'?`هل أنت متأكد من تغيير الحالة إلى ${newStatus}؟`:`Are you sure you want to change status to ${newStatus}?`)) return;
+            try {
+                const res = await fetch(`http://localhost:5000/api/dealers/${id}/status`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: newStatus })
+                });
+                if(res.ok) {
+                    closeDealerModal();
+                    fetchDealers();
+                }
+            } catch(e) {
+                alert('Error updating status');
+            }
+        }
+        
+        async function deleteDealer(id) {
+            if(!confirm(currentLang==='ar'?`هل أنت متأكد من مسح حساب الوكيل بشكل نهائي؟`:`Are you sure you want to permanently delete this dealer?`)) return;
+            try {
+                const res = await fetch(`http://localhost:5000/api/dealers/${id}`, { method: 'DELETE' });
+                if(res.ok) {
+                    closeDealerModal();
+                    fetchDealers();
+                }
+            } catch(e) {
+                alert('Error deleting dealer');
+            }
+        }
+
+        function viewDealer(id) {
+            const d = allDealers.find(x => x._id === id);
+            if(!d) return;
+            
+            document.getElementById('mCompanyName').textContent = d.companyName;
+            
+            let logoImg = d.logoUrl ? `<img src="http://localhost:5000${d.logoUrl}" alt="Logo" style="width: 50px; height: 50px; border-radius: 8px; object-fit: cover; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 12px;" />` : '';
+            let mapsLink = d.mapsUrl ? `<div style="margin-bottom:8px"><strong>Google Maps:</strong> <a href="${d.mapsUrl}" target="_blank" style="color:var(--red);">Open Map <i class="fa fa-external-link-alt"></i></a></div>` : '';
+
+            document.getElementById('mDetails').innerHTML = `
+                ${logoImg}
+                <div style="grid-template-columns: 1fr 1fr; display: grid; gap: 10px;">
+                    <div><strong>Contact:</strong> ${d.contactPerson}</div>
+                    <div style="position:relative; padding:8px; border-radius:8px; background:rgba(255,255,255,0.03); border:1px dashed rgba(255,255,255,0.1); grid-column: 1 / -1;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <div>
+                                <div style="margin-bottom:6px;"><strong>Email:</strong> ${d.email || 'N/A'}</div>
+                                <div style="margin-bottom:6px;"><strong>Username:</strong> ${d.username || 'N/A'}</div>
+                                <div><strong>Password:</strong> ******** (Hidden)</div>
+                            </div>
+                            <button class="btn btn-outline btn-sm" onclick="openEditAuthModal('${d._id}')" data-en="Edit Info" data-ar="تعديل"><i class="fa fa-pen"></i></button>
+                        </div>
+                    </div>
+                    <div><strong>Phone:</strong> ${d.phone || 'N/A'}</div>
+                </div>
+                <div style="margin-top:12px; margin-bottom:8px"><strong>Address:</strong> ${d.address || ''}, ${d.region || ''}</div>
+                ${mapsLink}
+                <div style="margin-bottom:8px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,.05)"><strong>Current Status:</strong> <span class="status-badge status-${d.status}">${d.status}</span></div>
+            `;
+            
+            const btnApprove = `<button class="btn btn-primary" style="background:var(--success)" onclick="updateStatus('${d._id}', 'Approved')"><i class="fa fa-check"></i> Approve</button>`;
+            const btnReject = `<button class="btn btn-outline" style="color:var(--danger); border-color:var(--danger)" onclick="updateStatus('${d._id}', 'Rejected')"><i class="fa fa-ban"></i> Reject</button>`;
+            const btnDelete = `<button class="btn btn-ghost" style="color:var(--danger);" onclick="deleteDealer('${d._id}')"><i class="fa fa-trash"></i> Delete completely</button>`;
+            
+            let actions = '';
+            if(d.status === 'Pending') actions = btnApprove + btnReject;
+            else if(d.status === 'Approved') actions = btnReject;
+            else if(d.status === 'Rejected') actions = btnApprove + btnDelete;
+            
+            document.getElementById('mActions').innerHTML = actions;
+            document.getElementById('dealerModalOverlay').classList.add('open');
+        }
+
+        function closeDealerModal() {
+            document.getElementById('dealerModalOverlay').classList.remove('open');
+        }
+
+        function openEditAuthModal(id) {
+            const d = allDealers.find(x => x._id === id);
+            if(!d) return;
+            document.getElementById('authDealerId').value = id;
+            document.getElementById('ea_username').value = d.username || '';
+            document.getElementById('ea_email').value = d.email || '';
+            document.getElementById('ea_password').value = '';
+            document.getElementById('editAuthModalOverlay').classList.add('open');
+            setLang(currentLang);
+        }
+
+        function closeEditAuthModal() {
+            document.getElementById('editAuthModalOverlay').classList.remove('open');
+        }
+
+        async function submitEditAuth(e) {
+            e.preventDefault();
+            const btn = document.getElementById('ea_btn_submit');
+            const orig = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
+            
+            const id = document.getElementById('authDealerId').value;
+            const username = document.getElementById('ea_username').value;
+            const email = document.getElementById('ea_email').value;
+            const password = document.getElementById('ea_password').value;
+            
+            try {
+                const updateData = {};
+                if(username) updateData.username = username;
+                if(email) updateData.email = email;
+                if(password) updateData.password = password; // Only modify password if explicitly passed
+
+                const res = await fetch(`http://localhost:5000/api/dealers/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updateData)
+                });
+                
+                const json = await res.json();
+                if(res.ok && json.success) {
+                    closeEditAuthModal();
+                    // Update frontend state
+                    const d = allDealers.find(x => x._id === id);
+                    if(d) {
+                        d.username = updateData.username || d.username;
+                        d.email = updateData.email || d.email;
+                        viewDealer(id); // Reload the modal view UI seamlessly
+                        renderDealers(); // Re-render the table dynamically
+                    }
+                } else {
+                    alert('Error: ' + json.message);
+                }
+            } catch(ex) {
+                alert("Connection error occurred.");
+            }
+            btn.innerHTML = orig;
+            btn.disabled = false;
+        }
+
+        function openAddDealerModal() {
+            document.getElementById('addDealerForm').reset();
+            document.getElementById('usePhoneAsUser').checked = false;
+            document.getElementById('nd_username').readOnly = false;
+            // Generate random password by default
+            document.getElementById('nd_password').value = Math.random().toString(36).slice(-8);
+            document.getElementById('addDealerModalOverlay').classList.add('open');
+        }
+        function closeAddDealerModal() {
+            document.getElementById('addDealerModalOverlay').classList.remove('open');
+        }
+
+        function togglePhoneUser() {
+            const chk = document.getElementById('usePhoneAsUser');
+            const un = document.getElementById('nd_username');
+            const ph = document.getElementById('nd_phone');
+            if(chk.checked) {
+                un.value = ph.value;
+                un.readOnly = true;
+            } else {
+                un.readOnly = false;
+                un.value = '';
+            }
+        }
+
+        async function submitAddDealer(e) {
+            e.preventDefault();
+            const btn = document.getElementById('nd_btn_submit');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
+            try {
+                const formData = new FormData();
+                formData.append('companyName', document.getElementById('nd_company').value);
+                formData.append('contactPerson', document.getElementById('nd_contact').value);
+                formData.append('email', document.getElementById('nd_email').value);
+                formData.append('phone', document.getElementById('nd_phone').value);
+                formData.append('username', document.getElementById('nd_username').value);
+                formData.append('password', document.getElementById('nd_password').value);
+                formData.append('region', document.getElementById('nd_region').value);
+                formData.append('address', document.getElementById('nd_address').value);
+                formData.append('status', document.getElementById('nd_status').value);
+                
+                const mapsUrl = document.getElementById('nd_maps').value;
+                if(mapsUrl) formData.append('mapsUrl', mapsUrl);
+                
+                const logoFile = document.getElementById('nd_logo').files[0];
+                if(logoFile) formData.append('logo', logoFile);
+
+                const res = await fetch('http://localhost:5000/api/dealers', {
+                    method: 'POST',
+                    body: formData
+                });
+                const json = await res.json();
+                if(json.success) {
+                    closeAddDealerModal();
+                    fetchDealers();
+                } else {
+                    alert('Error: ' + json.error);
+                }
+            } catch(error) {
+                alert('Connection error');
+            }
+            btn.disabled = false;
+            btn.innerHTML = currentLang === 'ar' ? 'حفظ التاجر' : 'Save Dealer';
+        }
+
+        window.addEventListener('languageChanged', (e) => { renderDealers(); });
+        document.addEventListener('DOMContentLoaded', () => { setLang(currentLang); fetchDealers(); });
+    </script>
+</body>
+</html>

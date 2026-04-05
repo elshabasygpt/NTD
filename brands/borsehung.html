@@ -260,6 +260,7 @@
                 <li><a href="../catalog.html" class="nav-link" data-en="Products" data-ar="المنتجات">Products</a></li>
                 <li><a href="#" class="nav-link active" data-en="Brands" data-ar="العلامات">Brands</a></li>
                 <li><a href="../about.html" class="nav-link" data-en="About" data-ar="عن الشركة">About</a></li>
+                <li><a href="../warranty.html" class="nav-link" data-en="Warranty" data-ar="الضمان">Warranty</a></li>
             </ul>
             <div class="nav-actions">
                 <div class="lang-toggle">
@@ -548,20 +549,7 @@
     </footer>
 
     <script>
-        let currentLang = localStorage.getItem('lang') || 'en';
-        function setLang(lang) {
-            currentLang = lang;
-            localStorage.setItem('lang', lang);
-            document.documentElement.lang = lang;
-            document.body.classList.toggle('lang-ar', lang === 'ar');
-            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-            document.getElementById('btn-ar').classList.toggle('active', lang === 'ar');
-            document.querySelectorAll('[data-en]').forEach(el => {
-                const t = el.getAttribute('data-' + lang);
-                if (t) el.innerHTML = t;
-            });
-        }
+        
         window.addEventListener('scroll', () => { document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50); });
         setLang(currentLang);
     </script>
